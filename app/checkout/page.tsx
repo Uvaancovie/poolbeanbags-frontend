@@ -6,9 +6,11 @@ import { useCart } from '../../components/CartContext';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
 import Card from '../../components/ui/Card';
+import { API_BASE } from 'lib/api';
 
 interface CustomerInfo { firstName: string; lastName: string; email: string; phone: string }
 interface ShippingAddress { addressLine1: string; addressLine2: string; city: string; state: string; postalCode: string; country: string }
+interface OrderPayload { items: { productId: number; quantity: number }[]; deliveryMethod: 'pickup' | 'shipping'; customerInfo: CustomerInfo; pickupDate?: string; pickupTime?: string; shippingAddress?: ShippingAddress }
 
 export default function CheckoutPage() {
   const { items, getTotal, clearCart } = useCart();
@@ -21,7 +23,7 @@ export default function CheckoutPage() {
   const [orderPlaced, setOrderPlaced] = useState<{ id: number; orderNo: string; deliveryMethod: string } | null>(null);
 
   const router = useRouter();
-  const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:4000';
+  
 
   const formatPrice = (cents: number) => `R${(cents / 100).toFixed(2)}`;
 
@@ -30,7 +32,7 @@ export default function CheckoutPage() {
     if (items.length === 0) return router.push('/cart');
     setLoading(true);
     try {
-      const payload: any = { items: items.map(i => ({ productId: i.productId, quantity: i.quantity })), deliveryMethod, customerInfo };
+      const payload: OrderPayload = { items: items.map(i => ({ productId: i.productId, quantity: i.quantity })), deliveryMethod, customerInfo };
       if (deliveryMethod === 'pickup') {
         payload.pickupDate = pickupDate;
         payload.pickupTime = pickupTime;

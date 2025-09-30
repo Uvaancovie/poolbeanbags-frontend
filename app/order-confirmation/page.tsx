@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Button from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
+import { API_BASE } from 'lib/api';
 
 interface Order {
   id: number;
@@ -22,7 +23,7 @@ export default function OrderConfirmationPage() {
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:4000';
+  
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -210,7 +211,7 @@ export default function OrderConfirmationPage() {
           <Button
             onClick={async () => {
               try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:4000'}/api/invoices/${order.orderNo}`);
+                const res = await fetch(`${API_BASE}/api/invoices/${order.orderNo}`);
                 if (!res.ok) throw new Error('Invoice not ready');
                 const blob = await res.blob();
                 const url = URL.createObjectURL(blob);

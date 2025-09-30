@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Button from '../../../components/ui/Button';
 import Card from '../../../components/ui/Card';
 import Badge from '../../../components/ui/Badge';
+import { API_BASE } from 'lib/api';
 
 type Contact = {
   id: number;
@@ -18,7 +19,6 @@ type Contact = {
 
 export default function AdminContactsPage() {
   const router = useRouter();
-  const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:4000';
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [authLoading, setAuthLoading] = useState(true);
   const [loading, setLoading] = useState(true);

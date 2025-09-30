@@ -1,6 +1,7 @@
 import Card from '../../../components/ui/Card';
 import { formatPriceFromCents } from '../../../lib/formatPrice';
 import Button from '../../../components/ui/Button';
+import { API_BASE } from 'lib/api';
 
 type Product = {
   id: number;
@@ -13,7 +14,6 @@ type Product = {
 
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:4000';
   try {
     const res = await fetch(`${API_BASE}/api/products/${encodeURIComponent(slug)}`, { cache: 'no-store' });
     if (!res.ok) {

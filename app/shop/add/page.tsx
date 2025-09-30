@@ -6,10 +6,10 @@ import Button from '../../../components/ui/Button';
 import Input from '../../../components/ui/Input';
 import Textarea from '../../../components/ui/Textarea';
 import Card from '../../../components/ui/Card';
+import { API_BASE } from 'lib/api';
 
 export default function AddProductPage() {
   const router = useRouter();
-  const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:4000';
   const [slug, setSlug] = useState('');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');

@@ -3,6 +3,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
+import { API_BASE } from 'lib/api';
 import Button from '../../components/ui/Button';
 import { formatPriceFromCents, formatPriceNumber } from '../../lib/formatPrice';
 import Input from '../../components/ui/Input';
@@ -23,7 +24,7 @@ type Product = {
 };
 
 export default function ShopPage() {
-	const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:4000';
+	// use shared API_BASE from lib/api
 	const { addItem } = useCart();
 	const [products, setProducts] = useState<Product[]>([]);
 	const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);

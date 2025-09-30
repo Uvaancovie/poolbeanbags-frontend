@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Button from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
 import Badge from '../../components/ui/Badge';
+import { API_BASE } from 'lib/api';
 
 interface Order {
   id: number;
@@ -22,7 +23,7 @@ export default function OrdersPage() {
   const [email, setEmail] = useState('');
   const [searched, setSearched] = useState(false);
 
-  const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:4000';
+  
 
   const fetchOrders = async () => {
     if (!email.trim()) return;

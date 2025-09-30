@@ -5,6 +5,7 @@ import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
 import Textarea from '../../components/ui/Textarea';
+import { API_BASE } from 'lib/api';
 
 interface ContactForm {
   name: string;
@@ -24,7 +25,7 @@ export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
 
-  const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:4000';
+  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

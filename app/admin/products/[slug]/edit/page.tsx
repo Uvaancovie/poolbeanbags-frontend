@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, use } from 'react';
+import { API_BASE } from 'lib/api';
 import { useRouter } from 'next/navigation';
 import Button from '../../../../../components/ui/Button';
 import Input from '../../../../../components/ui/Input';
@@ -35,7 +36,6 @@ export default function EditProductPage({ params }: { params: Promise<{ slug: st
     }
 
     try {
-      const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:4000';
       const res = await fetch(`${API_BASE}/api/auth/me`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -63,7 +63,6 @@ export default function EditProductPage({ params }: { params: Promise<{ slug: st
   }
 
   async function loadProduct() {
-    const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:4000';
     const res = await fetch(`${API_BASE}/api/products/${encodeURIComponent(slug)}`);
     const data = await res.json();
     setProduct(data.product);
@@ -84,7 +83,6 @@ export default function EditProductPage({ params }: { params: Promise<{ slug: st
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
     setSaving(true);
-    const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:4000';
     const fd = new FormData();
     // Don't send slug as it's the identifier and shouldn't be updated
     fd.append('title', title);

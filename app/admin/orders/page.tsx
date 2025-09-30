@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Button from '../../../components/ui/Button';
 import Card from '../../../components/ui/Card';
 import Badge from '../../../components/ui/Badge';
+import { API_BASE } from 'lib/api';
 
 interface Order {
   id: number;
@@ -24,7 +25,6 @@ interface Order {
 
 export default function AdminOrdersPage() {
   const router = useRouter();
-  const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:4000';
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [authLoading, setAuthLoading] = useState(true);

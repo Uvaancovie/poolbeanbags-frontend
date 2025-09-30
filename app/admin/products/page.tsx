@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Button from '../../../components/ui/Button';
 import Card from '../../../components/ui/Card';
 import Badge from '../../../components/ui/Badge';
+import { API_BASE } from 'lib/api';
 
 type Product = {
   id: number;
@@ -21,7 +22,6 @@ type Product = {
 
 export default function AdminProductsPage() {
   const router = useRouter();
-  const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:4000';
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [authLoading, setAuthLoading] = useState(true);

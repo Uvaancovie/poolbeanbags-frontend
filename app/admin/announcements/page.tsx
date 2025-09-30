@@ -6,6 +6,7 @@ import Button from '../../../components/ui/Button';
 import Input from '../../../components/ui/Input';
 import Textarea from '../../../components/ui/Textarea';
 import Card from '../../../components/ui/Card';
+import { API_BASE } from 'lib/api';
 
 type Announcement = {
   id: number;
@@ -23,7 +24,6 @@ type Announcement = {
 
 export default function AdminAnnouncementsPage() {
   const router = useRouter();
-  const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:4000';
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreateForm, setShowCreateForm] = useState(false);
