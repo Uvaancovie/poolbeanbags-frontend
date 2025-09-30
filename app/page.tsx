@@ -206,7 +206,7 @@ export default function LandingPage() {
             </div>
             <div>
               <img
-                src="https://images.unsplash.com/photo-1505765050516-f72dcac9c60e?q=80&w=1640&auto=format&fit=crop"
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKFG_D8XfrOvKFxpqzaCFiTWK6TE3ebb6bsg&s"
                 alt="Fabric detail"
                 className="rounded-2xl shadow-xl w-full object-cover aspect-[4/3]"
               />
