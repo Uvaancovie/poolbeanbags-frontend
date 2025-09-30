@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Button from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
@@ -17,22 +16,27 @@ interface Order {
 }
 
 export default function OrderConfirmationPage() {
-  const searchParams = useSearchParams();
-  const orderId = searchParams.get('orderId');
+  // Avoid using next/navigation useSearchParams in a component that may be prerendered.
+  // Use window.location.search on the client to safely read the query param.
+  const [orderId, setOrderId] = useState<string | null>(null);
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
 
   const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:4000';
 
   useEffect(() => {
-    if (orderId) {
-      fetchOrder();
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('orderId');
+      setOrderId(id);
+      if (id) fetchOrder(id);
     }
-  }, [orderId]);
-
-  const fetchOrder = async () => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const fetchOrder = async (id: string | null) => {
+    if (!id) return;
     try {
-      const response = await fetch(`${API_BASE}/api/orders/${orderId}`);
+      const response = await fetch(`${API_BASE}/api/orders/${id}`);
       if (response.ok) {
         const data = await response.json();
         setOrder(data.order);

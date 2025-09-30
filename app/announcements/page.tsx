@@ -22,7 +22,8 @@ export default async function AnnouncementsPage() {
 
   let announcements: Announcement[] = [];
   try {
-    const res = await fetch(`${API_BASE}/api/announcements`, { cache: 'no-store' });
+    // Allow Next to decide caching strategy during build; avoid `no-store` which forces dynamic server usage
+    const res = await fetch(`${API_BASE}/api/announcements`);
     const data = await res.json();
     announcements = data.announcements || [];
   } catch (err) {
