@@ -202,6 +202,29 @@ export default function OrderConfirmationPage() {
           >
             Print Order
           </Button>
+          {/* Invoice download - attempts to fetch PDF from backend invoices endpoint */}
+          <Button
+            onClick={async () => {
+              try {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:4000'}/api/invoices/${order.orderNo}`);
+                if (!res.ok) throw new Error('Invoice not ready');
+                const blob = await res.blob();
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `invoice-${order.orderNo}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                URL.revokeObjectURL(url);
+              } catch (err) {
+                alert('Invoice not ready yet. The admin will generate and send it shortly.');
+              }
+            }}
+            className="btn btn-outline"
+          >
+            Download Invoice
+          </Button>
         </div>
       </div>
     </div>

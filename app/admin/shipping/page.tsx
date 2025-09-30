@@ -67,11 +67,50 @@ export default function AdminShippingPage() {
   async function loadShippingOrders() {
     try {
       setLoading(true);
-      // TODO: Replace with actual shipping orders API call when implemented
-      // For now, we'll show a placeholder
-      setShippingOrders([]);
+      const token = localStorage.getItem('admin_token');
+      const res = await fetch(`${API_BASE}/api/admin/orders`, { headers: { 'Authorization': `Bearer ${token}` } });
+      if (!res.ok) throw new Error('Failed to load orders');
+      const data = await res.json();
+      const allOrders = data.orders || [];
+
+      const shipping = allOrders
+        .filter((o: any) => o.delivery && o.delivery.delivery_method === 'shipping')
+        .map((o: any) => {
+            const delivery = o.delivery || {};
+            // Prefer resolved shippingAddress on delivery, fallback to top-level shippingAddress or notes
+            const addr = delivery.shippingAddress || o.shippingAddress;
+            const parts: string[] = [];
+            if (addr) {
+              if (addr.firstName || addr.lastName) parts.push(`${(addr.firstName || '')} ${(addr.lastName || '')}`.trim());
+              if (addr.addressLine1) parts.push(addr.addressLine1);
+              if (addr.addressLine2) parts.push(addr.addressLine2);
+              const cityState = [addr.city, addr.state].filter(Boolean).join(', ');
+              if (cityState) parts.push(cityState);
+              if (addr.postalCode) parts.push(addr.postalCode);
+              if (addr.country) parts.push(addr.country);
+            }
+            const shippingAddressStr = parts.length ? parts.join(', ') : (delivery.notes || '');
+
+          const rawStatus = delivery.delivery_status || 'pending';
+          const status = rawStatus === 'pending' ? 'preparing' : (rawStatus === 'shipped' ? 'shipped' : (rawStatus === 'in_transit' ? 'in_transit' : (rawStatus === 'delivered' ? 'delivered' : rawStatus)));
+
+          return {
+            id: o.id,
+            order_id: o.orderNo,
+            customer_name: o.customer ? o.customer.name : (o.email || 'Guest'),
+            shipping_address: shippingAddressStr,
+            status,
+            tracking_number: delivery?.tracking_number || undefined,
+            carrier: undefined,
+            estimated_delivery: undefined,
+            created_at: o.createdAt
+          } as ShippingOrder;
+        });
+
+      setShippingOrders(shipping);
     } catch (err) {
       console.error('Error loading shipping orders:', err);
+      setShippingOrders([]);
     } finally {
       setLoading(false);
     }
@@ -79,16 +118,31 @@ export default function AdminShippingPage() {
 
   async function updateShippingStatus(orderId: number, newStatus: ShippingOrder['status']) {
     try {
-      // TODO: Implement shipping status update API
-      console.log(`Updating shipping for order ${orderId} to status ${newStatus}`);
-      // For now, just update locally
-      setShippingOrders(shippingOrders.map(order =>
-        order.id === orderId ? { ...order, status: newStatus } : order
-      ));
+      const token = localStorage.getItem('admin_token');
+      const payload = { deliveryStatus: newStatus };
+      const res = await fetch(`${API_BASE}/api/admin/orders/${orderId}/delivery`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) throw new Error('Failed to update delivery status');
+
+      // refresh list after update
+      await loadShippingOrders();
     } catch (err) {
       console.error('Error updating shipping status:', err);
     }
   }
+
+  // Poll for shipping orders every 10s once auth check completes
+  useEffect(() => {
+    if (authLoading) return;
+    loadShippingOrders();
+    const interval = setInterval(() => {
+      loadShippingOrders();
+    }, 10000);
+    return () => clearInterval(interval);
+  }, [authLoading]);
 
   function addTrackingInfo(order: ShippingOrder) {
     // TODO: Implement tracking info modal/form

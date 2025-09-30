@@ -13,6 +13,8 @@ type DashboardStats = {
   totalAnnouncements: number;
   totalCustomers: number;
   recentOrders: any[];
+  recentContacts: any[];
+  unreadContacts: number;
 };
 
 export default function AdminDashboard() {
@@ -24,9 +26,13 @@ export default function AdminDashboard() {
     totalRevenue: 0,
     totalAnnouncements: 0,
     totalCustomers: 0,
-    recentOrders: []
+    recentOrders: [],
+    recentContacts: [],
+    unreadContacts: 0
   });
   const [authLoading, setAuthLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [orderStatusFilter, setOrderStatusFilter] = useState<string>('all');
 
   useEffect(() => {
     checkAuth();
@@ -68,32 +74,38 @@ export default function AdminDashboard() {
 
   async function loadDashboardData() {
     try {
+      setLoading(true);
       const token = localStorage.getItem('admin_token');
 
-      // Load products count
-      const productsRes = await fetch(`${API_BASE}/api/products`);
+      // Parallelize independent requests
+      const [productsRes, announcementsRes, ordersRes, contactsRes] = await Promise.all([
+        fetch(`${API_BASE}/api/products`),
+        fetch(`${API_BASE}/api/announcements`),
+        fetch(`${API_BASE}/api/admin/orders`, { headers: { 'Authorization': `Bearer ${token}` } }),
+        fetch(`${API_BASE}/api/admin/contacts`, { headers: { 'Authorization': `Bearer ${token}` } }),
+      ]);
+
       const productsData = await productsRes.json();
       const products = productsData.products || [];
-
-      // Load announcements count
-      const announcementsRes = await fetch(`${API_BASE}/api/announcements`);
       const announcementsData = await announcementsRes.json();
       const announcements = announcementsData.announcements || [];
 
-      // Load orders data
-      const ordersRes = await fetch(`${API_BASE}/api/admin/orders`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
       const ordersData = await ordersRes.json();
       const orders = ordersData.orders || [];
 
-      // Calculate total revenue from orders
-      const totalRevenue = orders.reduce((sum: number, order: any) =>
-        sum + (order.total || 0), 0);
+      const contactsData = await contactsRes.json();
+      const contacts = contactsData.contacts || [];
+
+      // Calculate total revenue from orders, excluding cancelled orders
+      const totalRevenue = orders
+        .filter((order: any) => order.status !== 'cancelled')
+        .reduce((sum: number, order: any) => sum + (order.total || 0), 0);
 
       // Get unique customers
       const uniqueCustomers = new Set(orders.map((order: any) => order.customer?.email).filter(Boolean));
       const totalCustomers = uniqueCustomers.size;
+
+      const unreadContacts = contacts.filter((contact: any) => !contact.is_read).length;
 
       setStats({
         totalProducts: products.length,
@@ -101,12 +113,25 @@ export default function AdminDashboard() {
         totalRevenue,
         totalAnnouncements: announcements.length,
         totalCustomers,
-        recentOrders: orders.slice(0, 5)
+        recentOrders: orders.slice(0, 20),
+        recentContacts: contacts.slice(0, 5),
+        unreadContacts
       });
     } catch (err) {
       console.error('Error loading dashboard data:', err);
+    } finally {
+      setLoading(false);
     }
   }
+
+  // Poll for updates while admin is authenticated
+  useEffect(() => {
+    if (authLoading) return;
+    const interval = setInterval(() => {
+      loadDashboardData();
+    }, 10000);
+    return () => clearInterval(interval);
+  }, [authLoading]);
 
   if (authLoading) {
     return (
@@ -145,12 +170,16 @@ export default function AdminDashboard() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
           <Card className="p-6 shadow-xl border-0 bg-white/80 backdrop-blur-sm">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-lg font-semibold text-base-content mb-1">Total Products</h3>
-                <p className="text-3xl font-bold text-primary">{stats.totalProducts}</p>
+                {loading ? (
+                  <span className="loading loading-spinner loading-lg text-primary"></span>
+                ) : (
+                  <p className="text-3xl font-bold text-primary">{stats.totalProducts}</p>
+                )}
               </div>
               <div className="text-4xl">📦</div>
             </div>
@@ -160,7 +189,11 @@ export default function AdminDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-lg font-semibold text-base-content mb-1">Total Orders</h3>
-                <p className="text-3xl font-bold text-secondary">{stats.totalOrders}</p>
+                {loading ? (
+                  <span className="loading loading-spinner loading-lg text-secondary"></span>
+                ) : (
+                  <p className="text-3xl font-bold text-secondary">{stats.totalOrders}</p>
+                )}
               </div>
               <div className="text-4xl">🛒</div>
             </div>
@@ -170,7 +203,11 @@ export default function AdminDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-lg font-semibold text-base-content mb-1">Total Revenue</h3>
-                <p className="text-3xl font-bold text-success">R{stats.totalRevenue.toFixed(2)}</p>
+                {loading ? (
+                  <span className="loading loading-spinner loading-lg text-success"></span>
+                ) : (
+                  <p className="text-3xl font-bold text-success">R{stats.totalRevenue.toFixed(2)}</p>
+                )}
               </div>
               <div className="text-4xl">💰</div>
             </div>
@@ -180,15 +217,33 @@ export default function AdminDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-lg font-semibold text-base-content mb-1">Total Customers</h3>
-                <p className="text-3xl font-bold text-accent">{stats.totalCustomers}</p>
+                {loading ? (
+                  <span className="loading loading-spinner loading-lg text-accent"></span>
+                ) : (
+                  <p className="text-3xl font-bold text-accent">{stats.totalCustomers}</p>
+                )}
               </div>
               <div className="text-4xl">👥</div>
+            </div>
+          </Card>
+
+          <Card className="p-6 shadow-xl border-0 bg-white/80 backdrop-blur-sm">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold text-base-content mb-1">Unread Contacts</h3>
+                {loading ? (
+                  <span className="loading loading-spinner loading-lg text-info"></span>
+                ) : (
+                  <p className="text-3xl font-bold text-info">{stats.unreadContacts}</p>
+                )}
+              </div>
+              <div className="text-4xl">📬</div>
             </div>
           </Card>
         </div>
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
           {/* Management Actions */}
           <Card className="p-6 shadow-xl border-0 bg-white/80 backdrop-blur-sm">
             <h2 className="text-2xl font-bold text-base-content mb-6">Management</h2>
@@ -222,36 +277,95 @@ export default function AdminDashboard() {
                 </svg>
                 View Orders & Invoices
               </Button>
+
+              <Button
+                onClick={() => router.push('/admin/contacts')}
+                className="w-full bg-info hover:bg-info-focus text-info-content font-medium py-3 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                Manage Contacts
+              </Button>
             </div>
           </Card>
 
-          {/* Recent Activity */}
+          {/* Recent Orders */}
           <Card className="p-6 shadow-xl border-0 bg-white/80 backdrop-blur-sm">
-            <h2 className="text-2xl font-bold text-base-content mb-6">Recent Orders</h2>
-            {stats.recentOrders.length === 0 ? (
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-2xl font-bold text-base-content">Recent Orders</h2>
+              <div className="flex items-center gap-2">
+                <label className="text-sm">Status:</label>
+                <select className="select select-sm" value={orderStatusFilter} onChange={(e) => setOrderStatusFilter(e.target.value)}>
+                  <option value="all">All</option>
+                  <option value="pending">Pending</option>
+                  <option value="processing">Processing</option>
+                  <option value="shipped">Shipped</option>
+                  <option value="completed">Completed</option>
+                  <option value="cancelled">Cancelled</option>
+                </select>
+              </div>
+            </div>
+
+            {loading ? (
               <div className="text-center py-8">
-                <div className="text-4xl mb-4">📋</div>
-                <p className="text-base-content/70">No recent orders</p>
-                <p className="text-sm text-base-content/50 mt-2">Orders will appear here once customers start placing them</p>
+                <span className="loading loading-spinner loading-lg text-primary"></span>
+                <p className="mt-4 text-base-content/70">Loading orders...</p>
               </div>
             ) : (
               <div className="space-y-4">
-                {stats.recentOrders.map((order) => (
-                  <div key={order.id} className="flex items-center justify-between p-3 bg-base-100 rounded-lg">
+                {stats.recentOrders
+                  .filter((o) => orderStatusFilter === 'all' ? true : o.status === orderStatusFilter)
+                  .slice(0, 20)
+                  .map((order) => (
+                    <div key={order.id} className="flex items-center justify-between p-3 bg-base-100 rounded-lg">
+                      <div>
+                        <p className="font-medium text-base-content">Order #{order.orderNo}</p>
+                        <p className="text-sm text-base-content/70">
+                          {order.customer ? `${order.customer.name} (${order.customer.email})` : 'Guest'}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-medium text-base-content">R{order.total.toFixed(2)}</p>
+                        <Badge className={`badge badge-sm ${
+                          order.status === 'completed' ? 'badge-success' :
+                          order.status === 'processing' ? 'badge-info' :
+                          order.status === 'pending' ? 'badge-warning' : 'badge-neutral'
+                        }`}>
+                          {order.status}
+                        </Badge>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            )}
+          </Card>
+
+          {/* Recent Contacts */}
+          <Card className="p-6 shadow-xl border-0 bg-white/80 backdrop-blur-sm">
+            <h2 className="text-2xl font-bold text-base-content mb-6">Recent Contacts</h2>
+            {stats.recentContacts.length === 0 ? (
+              <div className="text-center py-8">
+                <div className="text-4xl mb-4">📬</div>
+                <p className="text-base-content/70">No recent contacts</p>
+                <p className="text-sm text-base-content/50 mt-2">Contact form submissions will appear here</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {stats.recentContacts.map((contact) => (
+                  <div key={contact.id} className="flex items-center justify-between p-3 bg-base-100 rounded-lg">
                     <div>
-                      <p className="font-medium text-base-content">Order #{order.orderNo}</p>
-                      <p className="text-sm text-base-content/70">
-                        {order.customer ? `${order.customer.name} (${order.customer.email})` : 'Guest'}
-                      </p>
+                      <p className="font-medium text-base-content">{contact.name}</p>
+                      <p className="text-sm text-base-content/70">{contact.email}</p>
+                      {contact.phone && (
+                        <p className="text-sm text-base-content/70">{contact.phone}</p>
+                      )}
                     </div>
                     <div className="text-right">
-                      <p className="font-medium text-base-content">R{order.total.toFixed(2)}</p>
                       <Badge className={`badge badge-sm ${
-                        order.status === 'completed' ? 'badge-success' :
-                        order.status === 'processing' ? 'badge-info' :
-                        order.status === 'pending' ? 'badge-warning' : 'badge-neutral'
+                        contact.is_read ? 'badge-success' : 'badge-warning'
                       }`}>
-                        {order.status}
+                        {contact.is_read ? 'Read' : 'Unread'}
                       </Badge>
                     </div>
                   </div>

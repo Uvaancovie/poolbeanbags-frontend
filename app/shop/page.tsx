@@ -4,6 +4,7 @@
 
 import { useEffect, useState } from 'react';
 import Button from '../../components/ui/Button';
+import { formatPriceFromCents, formatPriceNumber } from '../../lib/formatPrice';
 import Input from '../../components/ui/Input';
 import Badge from '../../components/ui/Badge';
 import Card from '../../components/ui/Card';
@@ -76,9 +77,7 @@ export default function ShopPage() {
 		setFilteredProducts(filtered);
 	}, [products, searchQuery, priceRange, selectedCategory]);
 
-	const formatPrice = (cents: number) => {
-		return `$${(cents / 100).toFixed(2)}`;
-	};
+	const formatPrice = (cents: number) => formatPriceFromCents(cents);
 
 	const getDisplayPrice = (product: Product) => {
 		if (product.is_promotional && product.promotion_discount_percent) {
@@ -130,7 +129,7 @@ export default function ShopPage() {
 
 							{/* Price Range */}
 							<div>
-								<label className="block text-sm font-medium text-base-content mb-2">Max Price: ${priceRange[1]}</label>
+								<label className="block text-sm font-medium text-base-content mb-2">Max Price: {formatPriceNumber(priceRange[1])}</label>
 								<input
 									type="range"
 									min="0"
@@ -210,25 +209,25 @@ export default function ShopPage() {
 											</p>
 
 											{/* Price */}
-											<div className="mb-4">
-												{priceInfo.discounted ? (
-													<div className="flex items-center gap-2">
-														<span className="text-lg font-bold text-error">
-															{priceInfo.discounted}
-														</span>
-														<span className="text-sm text-base-content/50 line-through">
-															{priceInfo.original}
-														</span>
-														<Badge className="badge-error badge-xs">
-															-{product.promotion_discount_percent}%
-														</Badge>
-													</div>
-												) : (
-													<span className="text-lg font-bold text-base-content">
-														{priceInfo.original}
-													</span>
-												)}
-											</div>
+																	<div className="mb-4">
+																		{priceInfo.discounted ? (
+																			<div className="flex items-center gap-2">
+																				<span className="text-lg font-bold text-error">
+																					{priceInfo.discounted}
+																				</span>
+																				<span className="text-sm text-base-content/50 line-through">
+																					{priceInfo.original}
+																				</span>
+																				<Badge className="badge-error badge-xs">
+																					-{product.promotion_discount_percent}%
+																				</Badge>
+																			</div>
+																		) : (
+																			<span className="text-lg font-bold text-base-content">
+																				{priceInfo.original}
+																			</span>
+																		)}
+																	</div>
 
 											{/* Action Buttons */}
 											<div className="space-y-2">

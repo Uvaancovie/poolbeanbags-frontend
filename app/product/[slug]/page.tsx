@@ -1,4 +1,5 @@
 import Card from '../../../components/ui/Card';
+import { formatPriceFromCents } from '../../../lib/formatPrice';
 import Button from '../../../components/ui/Button';
 
 type Product = {
@@ -64,7 +65,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
               <div>
                 <h1 className="text-4xl lg:text-5xl font-bold text-base-content mb-4">{prod.title}</h1>
                 <div className="text-3xl font-bold text-primary mb-6">
-                  R{((prod.base_price_cents || 0) / 100).toFixed(2)}
+                  {formatPriceFromCents(prod.base_price_cents || 0)}
                 </div>
                 <div className="text-base-content/70 text-lg leading-relaxed">
                   {prod.description || 'No description available for this product.'}

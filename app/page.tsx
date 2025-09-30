@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from "react";
+import Link from "next/link";
 
 // Minimal local UI components and icon placeholders so this page compiles
 function Button({ children, className = '', variant, ...rest }: any) {
@@ -94,12 +95,16 @@ export default function LandingPage() {
               Built for SA sun. Made to last.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
-              <Button className="btn btn-primary gap-2">
-                Shop Pool Beanbags <ArrowRight className="h-4 w-4" />
-              </Button>
-              <Button variant="outline" className="btn gap-2">
-                See Collections
-              </Button>
+              <Link href="/shop">
+                <Button className="btn btn-primary gap-2">
+                  Shop Pool Beanbags <ArrowRight className="h-4 w-4" />
+                </Button>
+              </Link>
+              <Link href="/announcements">
+                <Button variant="outline" className="btn gap-2">
+                  See Collections
+                </Button>
+              </Link>
             </div>
             <div className="mt-6 flex items-center gap-6 text-sm text-muted-foreground">
               <span className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-success"/> 2‑Year Stitch Guarantee</span>
@@ -250,8 +255,12 @@ export default function LandingPage() {
             Choose your size, pick a colour, and float into the weekend.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
-            <Button className="btn btn-primary gap-2"><ShoppingCart className="h-4 w-4"/> Shop Beanbags</Button>
-            <Button variant="outline" className="btn">Talk to Sales</Button>
+            <Link href="/shop">
+              <Button className="btn btn-primary gap-2"><ShoppingCart className="h-4 w-4"/> Shop Beanbags</Button>
+            </Link>
+            <Link href="/contact">
+              <Button variant="outline" className="btn">Talk to Sales</Button>
+            </Link>
           </div>
         </div>
       </section>
