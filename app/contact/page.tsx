@@ -83,13 +83,15 @@ export default function ContactPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-base-200 via-base-100 to-base-200">
+    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-blue-50">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-primary/10 to-secondary/10 py-16 px-4 sm:px-6 lg:px-8">
+      <div className="bg-gradient-to-r from-pink-500 via-yellow-400 to-blue-600 py-20 px-4 sm:px-6 lg:px-8 shadow-xl">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-5xl font-bold text-base-content mb-6">Contact Us</h1>
-          <p className="text-xl text-base-content/70 max-w-2xl mx-auto leading-relaxed">
-            Have questions about our pool beanbags? Need help with your order? We're here to help!
+          <h1 className="text-6xl md:text-7xl font-bold text-white mb-6 drop-shadow-2xl">
+            ✉️ Contact Us
+          </h1>
+          <p className="text-2xl text-white/95 max-w-2xl mx-auto leading-relaxed font-medium">
+            Have questions about our pool beanbags? Need help with your order? We're here to help! 👋
           </p>
         </div>
       </div>
@@ -97,8 +99,10 @@ export default function ContactPage() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Contact Form */}
-          <Card className="p-8 shadow-xl border-0 bg-white/90 backdrop-blur-sm">
-            <h2 className="text-2xl font-bold text-base-content mb-6">Send us a Message</h2>
+          <Card className="p-10 shadow-2xl border-l-8 border-pink-500 bg-white rounded-2xl">
+            <h2 className="text-3xl font-bold text-gray-800 mb-8 flex items-center gap-3">
+              <span className="text-4xl">📝</span> Send us a Message
+            </h2>
 
             {error && (
               <div className="alert alert-error mb-6">

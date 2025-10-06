@@ -40,13 +40,15 @@ export default async function AnnouncementsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-base-200 via-base-100 to-base-200">
+    <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-white to-pink-50">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-primary/10 to-secondary/10 py-16 px-4 sm:px-6 lg:px-8">
+      <div className="bg-gradient-to-r from-yellow-400 via-pink-500 to-blue-600 py-20 px-4 sm:px-6 lg:px-8 shadow-xl">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-5xl font-bold text-base-content mb-6">Announcements & Updates</h1>
-          <p className="text-xl text-base-content/70 max-w-2xl mx-auto leading-relaxed">
-            Stay informed with our latest news, promotions, and important updates from Pool Beanbags.
+          <h1 className="text-6xl md:text-7xl font-bold text-white mb-6 drop-shadow-2xl">
+            📢 Announcements & Updates
+          </h1>
+          <p className="text-2xl text-white/95 max-w-2xl mx-auto leading-relaxed font-medium">
+            Stay informed with our latest news, promotions, and important updates from Pool Beanbags! ✨
           </p>
         </div>
       </div>

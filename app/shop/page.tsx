@@ -105,16 +105,20 @@ export default function ShopPage() {
 	}
 
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-base-200 via-base-100 to-base-200 py-12 px-4 sm:px-6 lg:px-8">
+		<div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-pink-50 py-12 px-4 sm:px-6 lg:px-8">
 			<div className="max-w-7xl mx-auto">
-				<div className="text-center mb-12">
-					<h1 className="text-4xl font-bold text-base-content mb-4">Pool Beanbags Shop</h1>
-					<p className="text-lg text-base-content/70 max-w-2xl mx-auto">Discover our premium collection of pool beanbags. Find the perfect comfort for your poolside relaxation.</p>
+				{/* Colorful Header Banner */}
+				<div className="text-center mb-12 bg-gradient-to-r from-blue-600 via-pink-500 to-yellow-400 rounded-3xl p-12 shadow-2xl">
+					<h1 className="text-5xl md:text-6xl font-bold text-white mb-4 drop-shadow-lg">🏊 Pool Beanbags Shop</h1>
+					<p className="text-xl text-white/95 max-w-2xl mx-auto font-medium">Discover our premium collection of pool beanbags. Find the perfect comfort for your poolside relaxation.</p>
 				</div>
 
 				{/* Search and Filters */}
 				<div className="mb-8">
-					<Card className="p-6 shadow-xl border-0 bg-white/80 backdrop-blur-sm">
+					<Card className="p-8 shadow-2xl border-l-8 border-blue-600 bg-white rounded-2xl">
+						<h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+							<span className="text-3xl">🔍</span> Find Your Perfect Beanbag
+						</h2>
 						<div className="grid grid-cols-1 md:grid-cols-4 gap-4">
 							{/* Search */}
 							<div className="md:col-span-2">

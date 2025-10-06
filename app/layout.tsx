@@ -21,7 +21,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-theme="aquarius">
+    <html lang="en" data-theme="poolbeanbags">
       <body className={`${poppins.variable} antialiased` }>
         <CartProvider>
           <Navbar />

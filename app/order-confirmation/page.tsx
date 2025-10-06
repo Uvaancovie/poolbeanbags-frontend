@@ -66,35 +66,39 @@ export default function OrderConfirmationPage() {
 
   if (!order) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-base-200 via-base-100 to-base-200 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-pink-50 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-2xl mx-auto text-center">
-          <div className="text-6xl mb-4">❌</div>
-          <h1 className="text-4xl font-bold text-base-content mb-4">Order Not Found</h1>
-          <p className="text-base-content/70 mb-8">We couldn't find the order you're looking for.</p>
-          <Link href="/shop" className="btn btn-primary">
-            Continue Shopping
-          </Link>
+          <div className="bg-white rounded-3xl p-12 shadow-2xl border-t-8 border-red-500">
+            <div className="text-8xl mb-6">❌</div>
+            <h1 className="text-5xl font-bold text-gray-800 mb-6">Order Not Found</h1>
+            <p className="text-xl text-gray-600 mb-8">We couldn't find the order you're looking for. 🔍</p>
+            <Link href="/shop" className="px-8 py-4 bg-gradient-to-r from-blue-600 to-pink-600 text-white text-xl font-bold rounded-xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all inline-block">
+              🛍️ Continue Shopping
+            </Link>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-base-200 via-base-100 to-base-200 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-white to-green-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         {/* Success Header */}
-        <div className="text-center mb-8">
-          <div className="text-6xl mb-4">✅</div>
-          <h1 className="text-4xl font-bold text-base-content mb-4">Order Confirmed!</h1>
-          <p className="text-lg text-base-content/70">
-            Thank you for your order. Your order is being processed.
+        <div className="text-center mb-12 bg-gradient-to-r from-green-500 via-yellow-400 to-blue-600 rounded-3xl p-12 shadow-2xl">
+          <div className="text-8xl mb-6 animate-bounce">✅</div>
+          <h1 className="text-6xl font-bold text-white mb-6 drop-shadow-2xl">Order Confirmed!</h1>
+          <p className="text-2xl text-white/95 font-medium">
+            Thank you for your order! Your order is being processed. 🎉
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Order Details */}
-          <Card className="p-6 shadow-xl border-0 bg-white/80 backdrop-blur-sm">
-            <h2 className="text-xl font-semibold text-base-content mb-4">Order Details</h2>
+          <Card className="p-8 shadow-2xl border-l-8 border-green-500 bg-white rounded-2xl">
+            <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+              <span className="text-3xl">📦</span> Order Details
+            </h2>
 
             <div className="space-y-3 mb-6">
               <div className="flex justify-between">

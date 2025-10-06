@@ -70,9 +70,9 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-base-100 text-base-content">
-      {/* Top announcement bar */}
-      <div className="w-full bg-primary text-primary-content">
-        <div className="container mx-auto px-4 py-2 text-center text-sm">
+      {/* Top announcement bar with yellow accent */}
+      <div className="w-full bg-yellow-400 text-black">
+        <div className="container mx-auto px-4 py-2 text-center text-sm font-medium">
           Summer Special 🌞 — Save 10% on all Pool Beanbags this week only!
         </div>
       </div>
@@ -114,17 +114,17 @@ export default function LandingPage() {
           <div>
             <div className="relative">
               <img
-                src="https://scontent-jnb2-1.xx.fbcdn.net/v/t39.30808-6/482059248_654439077081221_5807789097237605750_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=cc71e4&_nc_eui2=AeG24KbBw_TYkVb6CLdV8FFdzg6seDtjga7ODqx4O2OBrobfyiyo37FvxNWiUbsVTpFhNMmVaxGqinFGT8ExxXnc&_nc_ohc=pmc1UyoaRNwQ7kNvwHuQoC3&_nc_oc=AdntERyzEuIAf1i7oJa99ngSshYjjN7VWBx7qlxOegVkW3Iof1KpYCSDpriQo0JiqlE&_nc_zt=23&_nc_ht=scontent-jnb2-1.xx&_nc_gid=iWB7IbkLT0CqCPgxEMdpgw&oh=00_Afbx0LJDZFNY_DSJ-TVanp6uJCQIO6j3v4jHxrmcHvOYQQ&oe=68E0D854"
-                alt="Poolside beanbag"
-                className="rounded-2xl shadow-xl w-full object-cover aspect-[4/3]"
+                src="/lifestyle.jpg"
+                alt="Poolside beanbag lifestyle"
+                className="rounded-2xl shadow-xl w-full object-cover aspect-[4/3] lifestyle-image"
               />
               <div className="absolute -bottom-6 -left-6 hidden sm:block">
-                <Card className="shadow-xl">
+                <Card className="shadow-xl bg-white border-2 border-blue-600">
                   <CardContent className="p-4 flex items-center gap-3">
-                    <Waves className="h-5 w-5" />
+                    <Waves className="h-5 w-5 text-blue-600" />
                     <div className="text-sm">
                       <div className="font-medium">Water‑Ready</div>
-                      <div className="text-muted-foreground">Drains fast • Quick‑dry</div>
+                      <div className="text-gray-600">Drains fast • Quick‑dry</div>
                     </div>
                   </CardContent>
                 </Card>
@@ -134,12 +134,12 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Feature Icons */}
-      <section id="features" className="bg-base-200">
+      {/* Feature Icons with colorful accents */}
+      <section id="features" className="bg-white border-t-4 border-blue-600">
         <div className="container mx-auto px-4 py-14 grid md:grid-cols-3 gap-6">
-          <Feature icon={<Sun className="h-6 w-6"/>} title="UV‑Resistant" desc="Fade‑resistant outdoor fabrics built for SA summers." />
-          <Feature icon={<Shield className="h-6 w-6"/>} title="Chlorine‑Friendly" desc="Durable inner liners and double‑stitched seams." />
-          <Feature icon={<Waves className="h-6 w-6"/>} title="Float & Lounge" desc="Perfect buoyancy for poolside relaxation." />
+          <Feature icon={<Sun className="h-6 w-6 text-yellow-400"/>} title="UV‑Resistant" desc="Fade‑resistant outdoor fabrics built for SA summers." />
+          <Feature icon={<Shield className="h-6 w-6 text-green-500"/>} title="Chlorine‑Friendly" desc="Durable inner liners and double‑stitched seams." />
+          <Feature icon={<Waves className="h-6 w-6 text-blue-600"/>} title="Float & Lounge" desc="Perfect buoyancy for poolside relaxation." />
         </div>
       </section>
 
@@ -176,13 +176,74 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Lifestyle Gallery - Showcasing all images */}
+      <section id="lifestyle" className="bg-gradient-to-br from-blue-50 to-white py-16">
+        <div className="container mx-auto px-4">
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-3">
+            <span className="text-blue-600">Live</span> the Pool Life
+          </h2>
+          <p className="text-center text-gray-600 mb-10 max-w-2xl mx-auto">
+            See how our beanbags bring comfort, style, and vibrant colors to poolside moments
+          </p>
+          
+          {/* Main featured grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+            <div className="col-span-2 row-span-2">
+              <img src="/lifestyle-1.jpg" alt="Pool beanbag lifestyle" className="rounded-xl shadow-lg w-full h-full object-cover lifestyle-image" />
+            </div>
+            <div>
+              <img src="/lifestyle-2.jpg" alt="Colorful pool beanbags" className="rounded-xl shadow-lg w-full h-full object-cover lifestyle-image" />
+            </div>
+            <div>
+              <img src="/lifestyle-3.jpg" alt="Family poolside" className="rounded-xl shadow-lg w-full h-full object-cover lifestyle-image" />
+            </div>
+            <div>
+              <img src="/lifestyle-5.jpg" alt="Pool beanbag close-up" className="rounded-xl shadow-lg w-full h-full object-cover lifestyle-image" />
+            </div>
+            <div>
+              <img src="/lifestyle.jpg" alt="Lifestyle shot" className="rounded-xl shadow-lg w-full h-full object-cover lifestyle-image" />
+            </div>
+          </div>
+
+          {/* Secondary row with themed images */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="relative group">
+              <img src="/colors.jpg" alt="Color patterns" className="rounded-xl shadow-lg w-full h-48 object-cover lifestyle-image" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                <span className="text-white font-semibold text-sm">Bold Colors</span>
+              </div>
+            </div>
+            <div className="relative group">
+              <img src="/patterns.jpg" alt="Pattern designs" className="rounded-xl shadow-lg w-full h-48 object-cover lifestyle-image" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                <span className="text-white font-semibold text-sm">Fun Patterns</span>
+              </div>
+            </div>
+            <div className="relative group">
+              <img src="/family.jpg" alt="Family enjoying pool" className="rounded-xl shadow-lg w-full h-48 object-cover lifestyle-image" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                <span className="text-white font-semibold text-sm">Family Fun</span>
+              </div>
+            </div>
+            <div className="relative group">
+              <img src="/dog.jpg" alt="Dog-friendly pool beanbags" className="rounded-xl shadow-lg w-full h-48 object-cover lifestyle-image" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                <span className="text-white font-semibold text-sm">Pet Friendly</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Fabric & Colours */}
-      <section id="fabric" className="bg-base-200">
-        <div className="container mx-auto px-4 py-16">
+      <section id="fabric" className="bg-white py-16 border-t-4 border-pink-500">
+        <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-10 items-center">
             <div>
-              <h2 className="text-2xl md:text-3xl font-bold flex items-center gap-3"><Palette className="h-6 w-6"/> Fabrics & Colours</h2>
-              <p className="mt-2 text-muted-foreground max-w-prose">
+              <h2 className="text-2xl md:text-3xl font-bold flex items-center gap-3">
+                <Palette className="h-6 w-6 text-pink-500"/> Fabrics & Colours
+              </h2>
+              <p className="mt-2 text-gray-600 max-w-prose">
                 Choose from marine‑grade canvas and outdoor‑performance fabrics. Removable, washable covers with heavy‑duty zips and double‑stitched seams.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
@@ -190,114 +251,154 @@ export default function LandingPage() {
                   <button
                     key={c.name}
                     onClick={() => setActiveColor(c.name)}
-                    className={`btn btn-sm ${activeColor === c.name ? "btn-primary" : "btn-outline"}`}
+                    className={`px-4 py-2 rounded-full font-medium transition-all ${
+                      activeColor === c.name 
+                        ? "bg-blue-600 text-white shadow-lg scale-105" 
+                        : "bg-gray-100 text-gray-800 hover:bg-gray-200"
+                    }`}
                     aria-label={`Select ${c.name}`}
                   >
-                    <span className="mr-2 inline-block h-3 w-3 rounded-full" style={{ backgroundColor: c.hex }} />
+                    <span className="mr-2 inline-block h-3 w-3 rounded-full border-2 border-white" style={{ backgroundColor: c.hex }} />
                     {c.name}
                   </button>
                 ))}
               </div>
-              <div className="mt-6 flex items-center gap-4 text-sm">
-                <span className="flex items-center gap-2"><Leaf className="h-4 w-4"/> Quick‑dry fill</span>
-                <span className="flex items-center gap-2"><Sun className="h-4 w-4"/> UV 50+ rated</span>
-                <span className="flex items-center gap-2"><Shield className="h-4 w-4"/> 2‑Year warranty</span>
+              <div className="mt-6 flex flex-wrap items-center gap-4 text-sm">
+                <span className="flex items-center gap-2 bg-green-50 px-3 py-1 rounded-full">
+                  <Leaf className="h-4 w-4 text-green-600"/> Quick‑dry fill
+                </span>
+                <span className="flex items-center gap-2 bg-yellow-50 px-3 py-1 rounded-full">
+                  <Sun className="h-4 w-4 text-yellow-600"/> UV 50+ rated
+                </span>
+                <span className="flex items-center gap-2 bg-blue-50 px-3 py-1 rounded-full">
+                  <Shield className="h-4 w-4 text-blue-600"/> 2‑Year warranty
+                </span>
               </div>
             </div>
             <div>
               <img
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKFG_D8XfrOvKFxpqzaCFiTWK6TE3ebb6bsg&s"
-                alt="Fabric detail"
-                className="rounded-2xl shadow-xl w-full object-cover aspect-[4/3]"
+                src="/patterns.jpg"
+                alt="Colorful fabric patterns and prints"
+                className="rounded-2xl shadow-xl w-full object-cover aspect-[4/3] lifestyle-image border-4 border-yellow-400"
               />
             </div>
           </div>
         </div>
       </section>
 
-      {/* Reviews */}
+      {/* Reviews with colorful accent borders */}
       <section id="reviews" className="container mx-auto px-4 py-16">
-        <h2 className="text-2xl md:text-3xl font-bold">Loved by SA Households</h2>
-        <p className="text-muted-foreground">Real comfort. Real quality.</p>
+        <h2 className="text-2xl md:text-3xl font-bold text-center">
+          Loved by <span className="text-blue-600">SA Households</span>
+        </h2>
+        <p className="text-gray-600 text-center">Real comfort. Real quality.</p>
         <div className="mt-8 grid md:grid-cols-3 gap-6">
-          {[1,2,3].map((i) => (
-            <Card key={i} className="">
-              <CardContent className="p-6">
-                <div className="flex items-center gap-1 text-warning mb-2">
-                  {Array.from({ length: 5 }).map((_, idx) => (
-                    <Star key={idx} className="h-4 w-4 fill-current" />
-                  ))}
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  "Super comfy and perfect for our Durban heat. Kids basically live on these in the pool. Quality stitching and dries fast!"
-                </p>
-                <div className="mt-4 text-sm font-semibold">Aisha • Umhlanga</div>
-              </CardContent>
-            </Card>
-          ))}
+          <Card className="border-t-4 border-yellow-400 shadow-lg hover:shadow-xl transition-shadow">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-1 text-yellow-400 mb-2">
+                {Array.from({ length: 5 }).map((_, idx) => (
+                  <Star key={idx} className="h-4 w-4 fill-current" />
+                ))}
+              </div>
+              <p className="text-sm text-gray-600">
+                "Super comfy and perfect for our Durban heat. Kids basically live on these in the pool. Quality stitching and dries fast!"
+              </p>
+              <div className="mt-4 text-sm font-semibold text-black">Aisha • Umhlanga</div>
+            </CardContent>
+          </Card>
+          <Card className="border-t-4 border-pink-500 shadow-lg hover:shadow-xl transition-shadow">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-1 text-yellow-400 mb-2">
+                {Array.from({ length: 5 }).map((_, idx) => (
+                  <Star key={idx} className="h-4 w-4 fill-current" />
+                ))}
+              </div>
+              <p className="text-sm text-gray-600">
+                "The bright colors match our pool deck vibe perfectly! Love the patterns and the quality is unbeatable. Worth every cent!"
+              </p>
+              <div className="mt-4 text-sm font-semibold text-black">Thabo • Johannesburg</div>
+            </CardContent>
+          </Card>
+          <Card className="border-t-4 border-green-500 shadow-lg hover:shadow-xl transition-shadow">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-1 text-yellow-400 mb-2">
+                {Array.from({ length: 5 }).map((_, idx) => (
+                  <Star key={idx} className="h-4 w-4 fill-current" />
+                ))}
+              </div>
+              <p className="text-sm text-gray-600">
+                "Best purchase ever! Floats perfectly, dries quickly, and the kids love the fun designs. Highly recommend for SA summers!"
+              </p>
+              <div className="mt-4 text-sm font-semibold text-black">Sarah • Cape Town</div>
+            </CardContent>
+          </Card>
         </div>
       </section>
 
-      {/* Store info */}
-      <section className="bg-base-200">
+      {/* Store info with colorful icons */}
+      <section className="bg-gradient-to-r from-blue-50 via-white to-blue-50">
         <div className="container mx-auto px-4 py-14 grid md:grid-cols-3 gap-6">
-          <StorePill icon={<Truck className="h-5 w-5"/>} title="Nationwide Delivery" desc="3–5 business days to main centres"/>
-          <StorePill icon={<MapPin className="h-5 w-5"/>} title="KZN Pickup" desc="Durban North (by appointment)"/>
-          <StorePill icon={<Shield className="h-5 w-5"/>} title="Secure Payments" desc="Ozow Instant EFT"/>
+          <StorePill icon={<Truck className="h-5 w-5 text-blue-600"/>} title="Nationwide Delivery" desc="3–5 business days to main centres"/>
+          <StorePill icon={<MapPin className="h-5 w-5 text-pink-500"/>} title="KZN Pickup" desc="Durban North (by appointment)"/>
+          <StorePill icon={<Shield className="h-5 w-5 text-green-500"/>} title="Secure Payments" desc="Ozow Instant EFT"/>
         </div>
       </section>
 
-      {/* CTA */}
+      {/* CTA with bold blue gradient */}
       <section className="container mx-auto px-4 py-16">
-        <div className="rounded-2xl bg-gradient-to-br from-primary/15 via-primary/10 to-transparent p-8 md:p-12 border">
-          <h3 className="text-2xl md:text-3xl font-bold">Ready to level up your pool days?</h3>
-          <p className="text-muted-foreground mt-2 max-w-prose">
+        <div className="rounded-2xl bg-gradient-to-br from-blue-600 via-blue-500 to-blue-400 p-8 md:p-12 shadow-2xl border-4 border-yellow-400">
+          <h3 className="text-2xl md:text-3xl font-bold text-white">Ready to level up your pool days?</h3>
+          <p className="text-white/90 mt-2 max-w-prose">
             Choose your size, pick a colour, and float into the weekend.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
             <Link href="/shop">
-              <Button className="btn btn-primary gap-2"><ShoppingCart className="h-4 w-4"/> Shop Beanbags</Button>
+              <Button className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all flex items-center gap-2">
+                <ShoppingCart className="h-4 w-4"/> Shop Beanbags
+              </Button>
             </Link>
             <Link href="/contact">
-              <Button variant="outline" className="btn">Talk to Sales</Button>
+              <Button className="bg-white hover:bg-gray-100 text-blue-600 font-bold px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all">
+                Talk to Sales
+              </Button>
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-base-200 border-t">
+      {/* Footer with black background and colorful accents */}
+      <footer className="bg-black text-white border-t-4 border-blue-600">
         <div className="container mx-auto px-4 py-10 grid md:grid-cols-4 gap-8">
           <div>
-            <div className="text-lg font-bold">Pool Beanbags</div>
-            <p className="text-sm text-muted-foreground mt-2">Premium outdoor beanbags engineered for South African summers.</p>
+            <div className="text-lg font-bold text-blue-400">Pool Beanbags</div>
+            <p className="text-sm text-gray-400 mt-2">Premium outdoor beanbags engineered for South African summers.</p>
           </div>
           <div>
-            <div className="font-semibold mb-2">Shop</div>
+            <div className="font-semibold mb-2 text-yellow-400">Shop</div>
             <ul className="space-y-1 text-sm">
-              <li><a className="link link-hover">All Products</a></li>
-              <li><a className="link link-hover">New Arrivals</a></li>
-              <li><a className="link link-hover">Gift Cards</a></li>
+              <li><a className="text-gray-400 hover:text-white transition-colors">All Products</a></li>
+              <li><a className="text-gray-400 hover:text-white transition-colors">New Arrivals</a></li>
+              <li><a className="text-gray-400 hover:text-white transition-colors">Gift Cards</a></li>
             </ul>
           </div>
           <div>
-            <div className="font-semibold mb-2">Company</div>
+            <div className="font-semibold mb-2 text-pink-400">Company</div>
             <ul className="space-y-1 text-sm">
-              <li><a className="link link-hover">About</a></li>
-              <li><a className="link link-hover">Announcements</a></li>
-              <li><a className="link link-hover">Contact</a></li>
+              <li><a className="text-gray-400 hover:text-white transition-colors">About</a></li>
+              <li><a className="text-gray-400 hover:text-white transition-colors">Announcements</a></li>
+              <li><a className="text-gray-400 hover:text-white transition-colors">Contact</a></li>
             </ul>
           </div>
           <div>
-            <div className="font-semibold mb-2">Help</div>
+            <div className="font-semibold mb-2 text-green-400">Help</div>
             <ul className="space-y-1 text-sm">
-              <li><a className="link link-hover">Shipping</a></li>
-              <li><a className="link link-hover">Returns</a></li>
-              <li><a className="link link-hover">Care Guide</a></li>
+              <li><a className="text-gray-400 hover:text-white transition-colors">Shipping</a></li>
+              <li><a className="text-gray-400 hover:text-white transition-colors">Returns</a></li>
+              <li><a className="text-gray-400 hover:text-white transition-colors">Care Guide</a></li>
             </ul>
           </div>
         </div>
-        <div className="border-t py-4 text-center text-xs text-muted-foreground">
+        <div className="border-t border-gray-800 py-4 text-center text-xs text-gray-500">
           © {new Date().getFullYear()} Pool Beanbags. All rights reserved.
         </div>
       </footer>
@@ -307,25 +408,23 @@ export default function LandingPage() {
 
 function Feature({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
   return (
-    <div className="card bg-base-100 shadow-sm">
-      <div className="card-body">
-        <div className="flex items-center gap-3">
-          <div className="btn btn-circle btn-ghost btn-sm">{icon}</div>
-          <div className="font-semibold">{title}</div>
-        </div>
-        <p className="mt-2 text-sm text-muted-foreground">{desc}</p>
+    <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-blue-600 hover:shadow-xl transition-shadow">
+      <div className="flex items-center gap-3 mb-3">
+        <div className="p-2 bg-blue-50 rounded-lg">{icon}</div>
+        <div className="font-semibold text-black">{title}</div>
       </div>
+      <p className="text-sm text-gray-600">{desc}</p>
     </div>
   );
 }
 
 function StorePill({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
   return (
-    <div className="rounded-2xl bg-base-100 border p-5 flex items-center gap-4">
-      <div className="btn btn-sm btn-circle btn-ghost">{icon}</div>
+    <div className="rounded-2xl bg-white border-2 border-gray-200 p-5 flex items-center gap-4 hover:border-blue-600 hover:shadow-lg transition-all">
+      <div className="p-2 bg-gray-100 rounded-full">{icon}</div>
       <div>
-        <div className="font-semibold">{title}</div>
-        <div className="text-sm text-muted-foreground">{desc}</div>
+        <div className="font-semibold text-black">{title}</div>
+        <div className="text-sm text-gray-600">{desc}</div>
       </div>
     </div>
   );

@@ -39,17 +39,19 @@ export default function CartPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-base-200 via-base-100 to-base-200 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-yellow-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-base-content mb-4">Shopping Cart</h1>
-          <p className="text-base-content/70">Review your items and proceed to checkout</p>
+        <div className="mb-10 bg-gradient-to-r from-blue-600 to-pink-500 rounded-2xl p-8 shadow-2xl">
+          <h1 className="text-5xl font-bold text-white mb-4 drop-shadow-lg flex items-center gap-3">
+            🛒 Shopping Cart
+          </h1>
+          <p className="text-xl text-white/90 font-medium">Review your items and proceed to checkout ✨</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Cart Items */}
           <div className="lg:col-span-2">
-            <Card className="p-6 shadow-xl border-0 bg-white/80 backdrop-blur-sm">
+            <Card className="p-8 shadow-2xl border-t-8 border-blue-600 bg-white rounded-2xl">
               <div className="space-y-4">
                 {items.map((item) => (
                   <div key={item.id} className="flex items-center gap-4 p-4 border border-base-300 rounded-lg">

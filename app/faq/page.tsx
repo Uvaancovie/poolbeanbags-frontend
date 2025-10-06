@@ -61,22 +61,28 @@ export default function FAQPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-base-200 via-base-100 to-base-200">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-primary/10 to-secondary/10 py-16 px-4 sm:px-6 lg:px-8">
+      <div className="bg-gradient-to-r from-green-500 via-blue-600 to-pink-500 py-20 px-4 sm:px-6 lg:px-8 shadow-xl">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-5xl font-bold text-base-content mb-6">Frequently Asked Questions</h1>
-          <p className="text-xl text-base-content/70 max-w-2xl mx-auto leading-relaxed">
-            Everything you need to know about our pool beanbags. Can't find what you're looking for? Contact us!
+          <h1 className="text-6xl md:text-7xl font-bold text-white mb-6 drop-shadow-2xl">
+            ❓ Frequently Asked Questions
+          </h1>
+          <p className="text-2xl text-white/95 max-w-2xl mx-auto leading-relaxed font-medium">
+            Everything you need to know about our pool beanbags. Can't find what you're looking for? Contact us! 💬
           </p>
         </div>
       </div>
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         {/* FAQ List */}
-        <div className="space-y-4 mb-16">
+        <div className="space-y-6 mb-16">
           {faqs.map((faq, index) => (
-            <Card key={index} className="shadow-lg border-0 bg-white/90 backdrop-blur-sm">
+            <Card key={index} className={`shadow-xl bg-white rounded-xl border-l-8 ${
+              index % 4 === 0 ? 'border-blue-500' :
+              index % 4 === 1 ? 'border-pink-500' :
+              index % 4 === 2 ? 'border-yellow-500' : 'border-green-500'
+            } hover:scale-102 transition-transform`}>
               <button
                 onClick={() => toggleFAQ(index)}
                 className="w-full text-left p-6 focus:outline-none focus:ring-2 focus:ring-primary rounded-lg"
