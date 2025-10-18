@@ -44,7 +44,7 @@ export default function AdminAnnouncementsPage() {
 
   async function fetchAnnouncements() {
     try {
-      const res = await fetch(`${API_BASE}/admin/announcements`);
+      const res = await fetch(`${API_BASE}/api/admin/announcements`);
       const data = await res.json();
       setAnnouncements(data.announcements || []);
     } catch (err) {
@@ -96,40 +96,38 @@ export default function AdminAnnouncementsPage() {
     e.preventDefault();
     setSaving(true);
     try {
+      const token = localStorage.getItem('admin_token');
+      if (!token) {
+        alert('Please log in first');
+        router.push('/admin/login');
+        return;
+      }
+
       const url = editingAnnouncement
-        ? `${API_BASE}/admin/announcements/${editingAnnouncement.id}`
-        : `${API_BASE}/admin/announcements`;
+        ? `${API_BASE}/api/admin/announcements/${editingAnnouncement.id}`
+        : `${API_BASE}/api/admin/announcements`;
 
       const method = editingAnnouncement ? 'PUT' : 'POST';
 
-      let res: Response;
-      if (bannerImageFile) {
-        const fd = new FormData();
-        fd.append('slug', slug);
-        fd.append('title', title);
-        fd.append('excerpt', excerpt);
-        fd.append('body_richtext', bodyRichtext);
-        fd.append('start_at', startAt || '');
-        fd.append('end_at', endAt || '');
-        fd.append('is_featured', String(isFeatured));
-        fd.append('banner_image', bannerImageFile, bannerImageFile.name);
-        res = await fetch(url, { method, body: fd });
-      } else {
-        const body = {
-          slug,
-          title,
-          excerpt,
-          body_richtext: bodyRichtext,
-          start_at: startAt || null,
-          end_at: endAt || null,
-          is_featured: isFeatured
-        };
-        res = await fetch(url, {
-          method,
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body)
-        });
-      }
+      // Use JSON (skip FormData for now)
+      const body = {
+        slug,
+        title,
+        excerpt,
+        body_richtext: bodyRichtext,
+        start_at: startAt || null,
+        end_at: endAt || null,
+        is_featured: isFeatured
+      };
+      const res = await fetch(url, {
+        method,
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        credentials: 'include',
+        body: JSON.stringify(body)
+      });
 
       if (res.ok) {
         fetchAnnouncements();
@@ -151,8 +149,19 @@ export default function AdminAnnouncementsPage() {
     if (!confirm('Are you sure you want to delete this announcement?')) return;
 
     try {
-      const res = await fetch(`${API_BASE}/admin/announcements/${id}`, {
-        method: 'DELETE'
+      const token = localStorage.getItem('admin_token');
+      if (!token) {
+        alert('Please log in first');
+        router.push('/admin/login');
+        return;
+      }
+
+      const res = await fetch(`${API_BASE}/api/admin/announcements/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        credentials: 'include'
       });
 
       if (res.ok) {
