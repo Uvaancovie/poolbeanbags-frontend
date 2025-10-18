@@ -44,7 +44,10 @@ export default function AdminAnnouncementsPage() {
 
   async function fetchAnnouncements() {
     try {
-      const res = await fetch(`${API_BASE}/api/admin/announcements`);
+      const token = localStorage.getItem('admin_token');
+      const res = await fetch(`${API_BASE}/api/admin/announcements`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
       const data = await res.json();
       setAnnouncements(data.announcements || []);
     } catch (err) {
