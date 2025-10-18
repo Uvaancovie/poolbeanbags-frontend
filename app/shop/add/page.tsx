@@ -38,7 +38,7 @@ export default function AddProductPage() {
         if (promotionText) fd.append('promotion_text', promotionText);
         if (promotionDiscountPercent) fd.append('promotion_discount_percent', promotionDiscountPercent);
         fd.append('image', imageFile, imageFile.name);
-        res = await fetch(`${API_BASE}/api/products`, { method: 'POST', body: fd });
+        res = await fetch(`${API_BASE}/api/admin/products`, { method: 'POST', body: fd });
       } else {
         const body = {
           slug,
@@ -49,7 +49,7 @@ export default function AddProductPage() {
           promotion_text: promotionText || undefined,
           promotion_discount_percent: promotionDiscountPercent ? Number(promotionDiscountPercent) : undefined
         };
-        res = await fetch(`${API_BASE}/api/products`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+        res = await fetch(`${API_BASE}/api/admin/products`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
       }
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));

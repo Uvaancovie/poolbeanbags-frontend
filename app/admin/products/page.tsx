@@ -79,7 +79,7 @@ export default function AdminProductsPage() {
 
   async function togglePromotion(productId: number, isPromotional: boolean) {
     try {
-      const res = await fetch(`${API_BASE}/api/products/${productId}`, {
+      const res = await fetch(`${API_BASE}/api/admin/products/${productId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ is_promotional: isPromotional })
@@ -100,7 +100,7 @@ export default function AdminProductsPage() {
     }
 
     try {
-      const res = await fetch(`${API_BASE}/api/products/${productId}`, {
+      const res = await fetch(`${API_BASE}/api/admin/products/${productId}`, {
         method: 'DELETE'
       });
       if (res.ok) {

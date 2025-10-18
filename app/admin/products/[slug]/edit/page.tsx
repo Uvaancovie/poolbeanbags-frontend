@@ -92,7 +92,7 @@ export default function EditProductPage({ params }: { params: Promise<{ slug: st
     if (promotionText) fd.append('promotion_text', promotionText);
     if (promotionDiscountPercent) fd.append('promotion_discount_percent', promotionDiscountPercent);
     if (imageFile) fd.append('image', imageFile, imageFile.name);
-    const res = await fetch(`${API_BASE}/api/products/${product.id}`, { method: 'PUT', body: fd });
+    const res = await fetch(`${API_BASE}/api/admin/products/${product.id}`, { method: 'PUT', body: fd });
     setSaving(false);
     if (res.ok) {
       alert('Product updated successfully!');
