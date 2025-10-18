@@ -5,7 +5,7 @@ import { API_BASE } from 'lib/api';
 
 type Product = {
   _id?: string;
-  id?: number;
+  id: string;
   slug: string;
   title: string;
   description?: string;

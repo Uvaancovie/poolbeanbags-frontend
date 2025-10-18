@@ -45,6 +45,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [items]);
 
   const addItem = (product: any, quantity = 1) => {
+    console.log('addItem called with product:', product);
+    console.log('product.id:', product.id, 'type:', typeof product.id);
     const existingItem = items.find(item => item.productId === product.id);
 
     if (existingItem) {
@@ -61,6 +63,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         quantity,
         image: product.images?.[0]?.url
       };
+      console.log('Created new cart item:', newItem);
       setItems([...items, newItem]);
     }
   };

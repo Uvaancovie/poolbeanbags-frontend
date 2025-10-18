@@ -13,7 +13,7 @@ import { useCart } from '../../components/CartContext';
 
 type Product = {
 	_id?: string;
-	id?: number;
+	id: string;
 	slug: string;
 	title: string;
 	description?: string;
