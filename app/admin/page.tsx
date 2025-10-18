@@ -334,8 +334,7 @@ export default function AdminDashboard() {
                         </p>
                       </div>
                       <div className="text-right">
-                        <p className="font-medium text-base-content">R{order.total.toFixed(2)}</p>
-                          <p className="font-medium text-base-content">{formatPrice(order.total)}</p>
+                        <p className="font-medium text-base-content">{formatPrice(order.total)}</p>
                         <Badge className={`badge badge-sm ${
                           order.status === 'completed' ? 'badge-success' :
                           order.status === 'processing' ? 'badge-info' :
