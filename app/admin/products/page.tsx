@@ -8,7 +8,7 @@ import Badge from '../../../components/ui/Badge';
 import { API_BASE } from 'lib/api';
 
 type Product = {
-  id: number;
+  _id: string;
   slug: string;
   title: string;
   description?: string;
@@ -17,7 +17,7 @@ type Product = {
   promotion_text?: string;
   promotion_discount_percent?: number;
   status: string;
-  images?: { id: number; url: string; alt: string }[];
+  images?: { id: string; url: string; alt: string }[];
 };
 
 export default function AdminProductsPage() {
@@ -69,7 +69,7 @@ export default function AdminProductsPage() {
       setLoading(true);
       const res = await fetch(`${API_BASE}/api/products`);
       const data = await res.json();
-      setProducts(data.products || []);
+      setProducts(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error('Error loading products:', err);
     } finally {
@@ -77,7 +77,7 @@ export default function AdminProductsPage() {
     }
   }
 
-  async function togglePromotion(productId: number, isPromotional: boolean) {
+  async function togglePromotion(productId: string, isPromotional: boolean) {
     const token = localStorage.getItem('admin_token');
     try {
       const res = await fetch(`${API_BASE}/api/admin/products/${productId}`, {
@@ -94,7 +94,7 @@ export default function AdminProductsPage() {
     }
   }
 
-  async function deleteProduct(productId: number) {
+  async function deleteProduct(productId: string) {
     if (!confirm('Are you sure you want to delete this product?')) return;
     const token = localStorage.getItem('admin_token');
     try {
@@ -180,7 +180,7 @@ export default function AdminProductsPage() {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {products.map((product) => (
-                  <Card key={product.id} className="shadow-lg border-0 bg-base-100 hover:shadow-xl transition-all duration-300 overflow-hidden group">
+                  <Card key={product._id} className="shadow-lg border-0 bg-base-100 hover:shadow-xl transition-all duration-300 overflow-hidden group">
                     {/* Product Image */}
                     <div className="aspect-square bg-base-200 relative overflow-hidden">
                       {product.images && product.images.length > 0 ? (
@@ -241,14 +241,14 @@ export default function AdminProductsPage() {
                           Edit
                         </Button>
                         <Button
-                          onClick={() => togglePromotion(product.id, !product.is_promotional)}
+                          onClick={() => togglePromotion(product._id, !product.is_promotional)}
                           className={`btn btn-sm ${product.is_promotional ? 'btn-error' : 'btn-warning'}`}
                           title={product.is_promotional ? 'Remove promotion' : 'Mark as promotional'}
                         >
                           {product.is_promotional ? '★' : '☆'}
                         </Button>
                         <Button
-                          onClick={() => deleteProduct(product.id)}
+                          onClick={() => deleteProduct(product._id)}
                           className="btn btn-sm btn-error"
                           title="Delete product"
                         >

@@ -86,9 +86,9 @@ export default function AdminDashboard() {
       ]);
 
       const productsData = await productsRes.json();
-      const products = productsData.products || [];
+      const products = Array.isArray(productsData) ? productsData : [];
       const announcementsData = await announcementsRes.json();
-      const announcements = announcementsData.announcements || [];
+      const announcements = Array.isArray(announcementsData) ? announcementsData : [];
 
       const ordersData = await ordersRes.json();
       const orders = ordersData.orders || [];
