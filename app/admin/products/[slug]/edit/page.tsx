@@ -69,7 +69,7 @@ export default function EditProductPage({ params }: { params: Promise<{ slug: st
     if (data) {
       setTitle(data.title || '');
       setDescription(data.description || '');
-      setPrice(((data.base_price_cents || 0) / 100).toFixed(2));
+  setPrice((((data.base_price_cents || 0) / 100)).toFixed(2));
       setIsPromotional(!!data.is_promotional);
       setPromotionText(data.promotion_text || '');
       setPromotionDiscountPercent(data.promotion_discount_percent ? String(data.promotion_discount_percent) : '');
@@ -178,7 +178,7 @@ export default function EditProductPage({ params }: { params: Promise<{ slug: st
                   <h3 className="text-lg font-bold text-base-content">{product.title}</h3>
                   <p className="text-base-content/70 text-sm mt-1">{product.description || 'No description'}</p>
                   <p className="text-primary font-semibold text-lg mt-2">
-                    R{((product.base_price_cents || 0) / 100).toFixed(2)}
+                    R{(((product.base_price_cents || 0) / 100)).toFixed(2)}
                   </p>
                 </div>
               </div>

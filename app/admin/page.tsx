@@ -33,6 +33,14 @@ export default function AdminDashboard() {
   const [authLoading, setAuthLoading] = useState(true);
   const [loading, setLoading] = useState(false);
   const [orderStatusFilter, setOrderStatusFilter] = useState<string>('all');
+    const safeNumber = (n: any) => {
+      if (n === null || n === undefined) return 0;
+      if (typeof n === 'number') return n;
+      if (typeof n === 'string' && !isNaN(Number(n))) return Number(n);
+      return 0;
+    };
+
+    const formatPrice = (value: any) => `R${(safeNumber(value)).toFixed(2)}`;
 
   useEffect(() => {
     checkAuth();
@@ -206,7 +214,7 @@ export default function AdminDashboard() {
                 {loading ? (
                   <span className="loading loading-spinner loading-lg text-success"></span>
                 ) : (
-                  <p className="text-3xl font-bold text-success">R{stats.totalRevenue.toFixed(2)}</p>
+              <p className="text-3xl font-bold text-success">{formatPrice(stats.totalRevenue)}</p>
                 )}
               </div>
               <div className="text-4xl">💰</div>
@@ -327,6 +335,7 @@ export default function AdminDashboard() {
                       </div>
                       <div className="text-right">
                         <p className="font-medium text-base-content">R{order.total.toFixed(2)}</p>
+                          <p className="font-medium text-base-content">{formatPrice(order.total)}</p>
                         <Badge className={`badge badge-sm ${
                           order.status === 'completed' ? 'badge-success' :
                           order.status === 'processing' ? 'badge-info' :

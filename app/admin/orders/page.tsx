@@ -131,7 +131,8 @@ export default function AdminOrdersPage() {
   }
 
   const formatPrice = (cents: number) => {
-    return `R${(cents / 100).toFixed(2)}`;
+    const n = cents ?? 0;
+    return `R${(n / 100).toFixed(2)}`;
   };
 
   const getStatusColor = (status: string) => {
