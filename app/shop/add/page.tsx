@@ -27,6 +27,14 @@ export default function AddProductPage() {
     setError(null);
     setLoading(true);
     try {
+      // Get JWT token for authentication
+      const token = localStorage.getItem('admin_token');
+      if (!token) {
+        setError('Please log in first');
+        router.push('/admin/login');
+        return;
+      }
+
       let res: Response;
       if (imageFile) {
         const fd = new FormData();
@@ -38,7 +46,13 @@ export default function AddProductPage() {
         if (promotionText) fd.append('promotion_text', promotionText);
         if (promotionDiscountPercent) fd.append('promotion_discount_percent', promotionDiscountPercent);
         fd.append('image', imageFile, imageFile.name);
-        res = await fetch(`${API_BASE}/api/admin/products`, { method: 'POST', body: fd });
+        res = await fetch(`${API_BASE}/api/admin/products`, { 
+          method: 'POST', 
+          headers: {
+            'Authorization': `Bearer ${token}`
+          },
+          body: fd 
+        });
       } else {
         const body = {
           slug,
@@ -49,7 +63,14 @@ export default function AddProductPage() {
           promotion_text: promotionText || undefined,
           promotion_discount_percent: promotionDiscountPercent ? Number(promotionDiscountPercent) : undefined
         };
-        res = await fetch(`${API_BASE}/api/admin/products`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+        res = await fetch(`${API_BASE}/api/admin/products`, { 
+          method: 'POST', 
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }, 
+          body: JSON.stringify(body) 
+        });
       }
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));

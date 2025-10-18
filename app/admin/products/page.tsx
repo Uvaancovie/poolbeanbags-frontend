@@ -137,7 +137,7 @@ export default function AdminProductsPage() {
             </div>
             <div className="flex gap-4">
               <Button
-                onClick={() => router.push('/admin/products/add')}
+                onClick={() => router.push('/shop/add')}
                 className="bg-primary hover:bg-primary-focus text-primary-content font-medium py-2 px-4 rounded-lg transition-all duration-200"
               >
                 + Add Product
@@ -173,7 +173,7 @@ export default function AdminProductsPage() {
                 <h3 className="text-xl font-semibold text-base-content mb-2">No products yet</h3>
                 <p className="text-base-content/70 mb-4">Create your first product to get started</p>
                 <Button
-                  onClick={() => router.push('/admin/products/add')}
+                  onClick={() => router.push('/shop/add')}
                   className="bg-primary hover:bg-primary-focus text-primary-content font-medium py-3 px-6 rounded-lg transition-all duration-200"
                 >
                   Add Your First Product
