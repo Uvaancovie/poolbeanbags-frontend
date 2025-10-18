@@ -35,43 +35,27 @@ export default function AddProductPage() {
         return;
       }
 
-      let res: Response;
-      if (imageFile) {
-        const fd = new FormData();
-        fd.append('slug', slug);
-        fd.append('title', title);
-        fd.append('description', description);
-        fd.append('base_price_cents', String(Math.round((parseFloat(price || '0') || 0) * 100)));
-        fd.append('is_promotional', String(isPromotional));
-        if (promotionText) fd.append('promotion_text', promotionText);
-        if (promotionDiscountPercent) fd.append('promotion_discount_percent', promotionDiscountPercent);
-        fd.append('image', imageFile, imageFile.name);
-        res = await fetch(`${API_BASE}/api/admin/products`, { 
-          method: 'POST', 
-          headers: {
-            'Authorization': `Bearer ${token}`
-          },
-          body: fd 
-        });
-      } else {
-        const body = {
-          slug,
-          title,
-          description,
-          base_price_cents: Math.round((parseFloat(price || '0') || 0) * 100),
-          is_promotional: isPromotional,
-          promotion_text: promotionText || undefined,
-          promotion_discount_percent: promotionDiscountPercent ? Number(promotionDiscountPercent) : undefined
-        };
-        res = await fetch(`${API_BASE}/api/admin/products`, { 
-          method: 'POST', 
-          headers: { 
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          }, 
-          body: JSON.stringify(body) 
-        });
-      }
+      // For now, just send JSON (image upload will be added later)
+      const body = {
+        slug,
+        title,
+        description,
+        base_price_cents: Math.round((parseFloat(price || '0') || 0) * 100),
+        status: 'active', // Default status
+        is_promotional: isPromotional,
+        promotion_text: promotionText || undefined,
+        promotion_discount_percent: promotionDiscountPercent ? Number(promotionDiscountPercent) : undefined
+      };
+
+      const res = await fetch(`${API_BASE}/api/admin/products`, { 
+        method: 'POST', 
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }, 
+        credentials: 'include',
+        body: JSON.stringify(body) 
+      });
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
         setError(err?.error || 'Failed to create product');
