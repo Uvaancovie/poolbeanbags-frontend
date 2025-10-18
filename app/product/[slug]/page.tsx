@@ -4,12 +4,13 @@ import Button from '../../../components/ui/Button';
 import { API_BASE } from 'lib/api';
 
 type Product = {
-  id: number;
+  _id?: string;
+  id?: number;
   slug: string;
   title: string;
   description?: string;
   base_price_cents?: number;
-  images?: { id: number; url: string; alt: string }[];
+  images?: { _id?: string; id?: string; url: string; alt: string }[];
 };
 
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -29,7 +30,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       );
     }
     const data = await res.json();
-    const prod: Product = data.product;
+    // MongoDB returns the product directly, not wrapped in { product: ... }
+    const prod: Product = data.product || data;
 
     return (
       <div className="min-h-screen bg-gradient-to-br from-base-200 via-base-100 to-base-200 py-12 px-4 sm:px-6 lg:px-8">
@@ -74,7 +76,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
               <div className="space-y-4">
                 <div className="flex items-center gap-4 text-sm text-base-content/60">
-                  <span>Product ID: {prod.id}</span>
+                  <span>Product ID: {prod._id || prod.id}</span>
                   <span>•</span>
                   <span>Slug: {prod.slug}</span>
                 </div>

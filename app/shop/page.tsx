@@ -12,7 +12,8 @@ import Card from '../../components/ui/Card';
 import { useCart } from '../../components/CartContext';
 
 type Product = {
-	id: number;
+	_id?: string;
+	id?: number;
 	slug: string;
 	title: string;
 	description?: string;
@@ -20,7 +21,7 @@ type Product = {
 	is_promotional?: boolean;
 	promotion_text?: string;
 	promotion_discount_percent?: number;
-	images?: { id: number; url: string; alt: string }[];
+	images?: { id?: string; _id?: string; url: string; alt: string }[];
 };
 
 export default function ShopPage() {
@@ -38,8 +39,10 @@ export default function ShopPage() {
 			setLoading(true);
 			const res = await fetch(`${API_BASE}/api/products`);
 			const data = await res.json();
-			setProducts(data.products || []);
-			setFilteredProducts(data.products || []);
+			// MongoDB returns array directly, not wrapped in { products: [...] }
+			const products = Array.isArray(data) ? data : (data.products || []);
+			setProducts(products);
+			setFilteredProducts(products);
 		} catch (err) {
 			console.error(err);
 		} finally {
