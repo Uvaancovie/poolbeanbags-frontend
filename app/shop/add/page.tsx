@@ -16,6 +16,7 @@ export default function AddProductPage() {
   const [price, setPrice] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isPromotional, setIsPromotional] = useState(false);
@@ -25,6 +26,7 @@ export default function AddProductPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+    setSuccess(null);
     setLoading(true);
     try {
       // Get JWT token for authentication
@@ -35,13 +37,13 @@ export default function AddProductPage() {
         return;
       }
 
-      // For now, just send JSON (image upload will be added later)
+      // Create the product first (without image)
       const body = {
         slug,
         title,
         description,
         base_price_cents: Math.round((parseFloat(price || '0') || 0) * 100),
-        status: 'active', // Default status
+        status: 'active',
         is_promotional: isPromotional,
         promotion_text: promotionText || undefined,
         promotion_discount_percent: promotionDiscountPercent ? Number(promotionDiscountPercent) : undefined
@@ -56,12 +58,90 @@ export default function AddProductPage() {
         credentials: 'include',
         body: JSON.stringify(body) 
       });
+
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
         setError(err?.error || 'Failed to create product');
-      } else {
-        router.push('/shop');
+        return;
       }
+
+      const product = await res.json();
+
+      // If there's an image, upload it to Cloudinary and add to product
+      if (imageFile) {
+        try {
+          // Get signature from backend
+          const signRes = await fetch(`${API_BASE}/api/uploads/sign`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+              slug: slug || 'product',
+              uuid: Date.now().toString()
+            })
+          });
+
+          if (!signRes.ok) {
+            throw new Error('Failed to get upload signature');
+          }
+
+          const signData = await signRes.json();
+
+          // Upload to Cloudinary
+          const formData = new FormData();
+          formData.append('file', imageFile);
+          formData.append('api_key', signData.apiKey);
+          formData.append('timestamp', signData.timestamp.toString());
+          formData.append('signature', signData.signature);
+          formData.append('folder', signData.folder);
+          formData.append('public_id', signData.public_id);
+
+          const uploadRes = await fetch(
+            `https://api.cloudinary.com/v1_1/${signData.cloudName}/image/upload`,
+            {
+              method: 'POST',
+              body: formData
+            }
+          );
+
+          if (!uploadRes.ok) {
+            throw new Error('Failed to upload image to Cloudinary');
+          }
+
+          const uploadData = await uploadRes.json();
+
+          // Add image to product
+          await fetch(`${API_BASE}/api/admin/products/${product._id}/images`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+              url: uploadData.secure_url,
+              alt: title,
+              sort: 0
+            })
+          });
+        } catch (imgErr: any) {
+          console.error('Image upload error:', imgErr);
+          setError(`Product created but image upload failed: ${imgErr.message}`);
+          setTimeout(() => {
+            router.push('/admin/products');
+          }, 3000);
+          return;
+        }
+      }
+
+      // Success!
+      setSuccess('Product created successfully!');
+      setTimeout(() => {
+        router.push('/admin/products');
+      }, 1500);
     } catch (err: any) {
       setError(err?.message || String(err));
     } finally {
@@ -236,6 +316,15 @@ export default function AddProductPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01M21 12A9 9 0 1 1 3 12a9 9 0 0 1 18 0z"></path>
                 </svg>
                 <span className="text-sm">{error}</span>
+              </div>
+            )}
+
+            {success && (
+              <div className="alert alert-success shadow-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span className="text-sm">{success}</span>
               </div>
             )}
           </form>
