@@ -78,38 +78,36 @@ export default function AdminProductsPage() {
   }
 
   async function togglePromotion(productId: number, isPromotional: boolean) {
+    const token = localStorage.getItem('admin_token');
     try {
       const res = await fetch(`${API_BASE}/api/admin/products/${productId}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({ is_promotional: isPromotional })
       });
-      if (res.ok) {
-        loadProducts(); // Refresh the list
-      } else {
-        console.error('Failed to toggle promotion');
-      }
+      if (res.ok) loadProducts();
     } catch (err) {
       console.error('Error toggling promotion:', err);
     }
   }
 
   async function deleteProduct(productId: number) {
-    if (!confirm('Are you sure you want to delete this product?')) {
-      return;
-    }
-
+    if (!confirm('Are you sure you want to delete this product?')) return;
+    const token = localStorage.getItem('admin_token');
     try {
       const res = await fetch(`${API_BASE}/api/admin/products/${productId}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) {
-        loadProducts(); // Refresh the list
+        loadProducts();
       } else {
         alert('Failed to delete product');
       }
     } catch (err) {
-      console.error('Error deleting product:', err);
       alert('Error deleting product');
     }
   }

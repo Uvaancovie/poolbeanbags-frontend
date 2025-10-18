@@ -83,21 +83,32 @@ export default function EditProductPage({ params }: { params: Promise<{ slug: st
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
     setSaving(true);
-    const fd = new FormData();
-    // Don't send slug as it's the identifier and shouldn't be updated
-    fd.append('title', title);
-    fd.append('description', description);
-    fd.append('base_price_cents', String(Math.round((parseFloat(price || '0') || 0) * 100)));
-    fd.append('is_promotional', String(isPromotional));
-    if (promotionText) fd.append('promotion_text', promotionText);
-    if (promotionDiscountPercent) fd.append('promotion_discount_percent', promotionDiscountPercent);
-    if (imageFile) fd.append('image', imageFile, imageFile.name);
-    const res = await fetch(`${API_BASE}/api/admin/products/${product.id}`, { method: 'PUT', body: fd });
+    const token = localStorage.getItem('admin_token');
+    
+    const body = {
+      title,
+      description,
+      base_price_cents: Math.round((parseFloat(price || '0') || 0) * 100),
+      is_promotional: isPromotional,
+      promotion_text: promotionText || undefined,
+      promotion_discount_percent: promotionDiscountPercent ? Number(promotionDiscountPercent) : undefined
+    };
+
+    const res = await fetch(`${API_BASE}/api/admin/products/${product._id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(body)
+    });
+    
     setSaving(false);
     if (res.ok) {
-      alert('Product updated successfully!');
+      alert('Product updated!');
+      router.push('/admin/products');
     } else {
-      alert('Failed to update product');
+      alert('Failed to update');
     }
   }
 
