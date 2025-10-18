@@ -65,16 +65,16 @@ export default function EditProductPage({ params }: { params: Promise<{ slug: st
   async function loadProduct() {
     const res = await fetch(`${API_BASE}/api/products/${encodeURIComponent(slug)}`);
     const data = await res.json();
-    setProduct(data.product);
-    if (data.product) {
-      setTitle(data.product.title || '');
-      setDescription(data.product.description || '');
-      setPrice(((data.product.base_price_cents || 0) / 100).toFixed(2));
-      setIsPromotional(!!data.product.is_promotional);
-      setPromotionText(data.product.promotion_text || '');
-      setPromotionDiscountPercent(data.product.promotion_discount_percent ? String(data.product.promotion_discount_percent) : '');
-      if (data.product.images && data.product.images.length > 0) {
-        setImagePreview(data.product.images[0].url);
+    setProduct(data); // API returns product directly, not wrapped
+    if (data) {
+      setTitle(data.title || '');
+      setDescription(data.description || '');
+      setPrice(((data.base_price_cents || 0) / 100).toFixed(2));
+      setIsPromotional(!!data.is_promotional);
+      setPromotionText(data.promotion_text || '');
+      setPromotionDiscountPercent(data.promotion_discount_percent ? String(data.promotion_discount_percent) : '');
+      if (data.images && data.images.length > 0) {
+        setImagePreview(data.images[0].url);
       }
     }
     setLoading(false);
