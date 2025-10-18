@@ -32,9 +32,7 @@ export default function CheckoutPage() {
     if (items.length === 0) return router.push('/cart');
     setLoading(true);
     try {
-      console.log('Cart items before order submission:', items);
       const payload: OrderPayload = { items: items.map(i => ({ product_id: i.productId, quantity: i.quantity })), deliveryMethod, customerInfo };
-      console.log('Order payload:', payload);
       if (deliveryMethod === 'pickup') {
         payload.pickupDate = pickupDate;
         payload.pickupTime = pickupTime;
