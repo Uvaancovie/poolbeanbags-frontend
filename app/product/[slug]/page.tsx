@@ -16,7 +16,9 @@ type Product = {
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   try {
-    const res = await fetch(`${API_BASE}/api/products/${encodeURIComponent(slug)}`, { cache: 'no-store' });
+    const res = await fetch(`${API_BASE}/api/products/${encodeURIComponent(slug)}`, { 
+      next: { revalidate: 120 } // ISR: cache for 2 minutes, then revalidate
+    });
     if (!res.ok) {
       return (
         <div className="min-h-screen bg-gradient-to-br from-base-200 via-base-100 to-base-200 flex items-center justify-center">

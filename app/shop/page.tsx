@@ -37,7 +37,9 @@ export default function ShopPage() {
 	async function fetchProducts() {
 		try {
 			setLoading(true);
-			const res = await fetch(`${API_BASE}/api/products`);
+			const res = await fetch(`${API_BASE}/api/products`, {
+				next: { revalidate: 60 } // ISR: cache for 60 seconds, then revalidate in background
+			});
 			const data = await res.json();
 			// MongoDB returns array directly, not wrapped in { products: [...] }
 			const products = Array.isArray(data) ? data : (data.products || []);
