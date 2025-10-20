@@ -30,18 +30,88 @@ export default function CheckoutPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (items.length === 0) return router.push('/cart');
+    
+    // Basic validation
+    if (!customerInfo.firstName || !customerInfo.lastName || !customerInfo.email || !customerInfo.phone) {
+      alert('Please fill in all customer information fields.');
+      return;
+    }
+    
+    if (deliveryMethod === 'shipping' && (!shippingAddress.addressLine1 || !shippingAddress.city || !shippingAddress.postalCode)) {
+      alert('Please fill in all address fields.');
+      return;
+    }
+    
+    if (deliveryMethod === 'pickup' && (!pickupDate || !pickupTime)) {
+      alert('Please select pickup date and time.');
+      return;
+    }
+    
     setLoading(true);
     try {
-      const payload: OrderPayload = { items: items.map(i => ({ product_id: i.productId, quantity: i.quantity })), deliveryMethod, customerInfo };
-      if (deliveryMethod === 'pickup') {
-        payload.pickupDate = pickupDate;
-        payload.pickupTime = pickupTime;
-      } else {
-        payload.shippingAddress = shippingAddress;
-      }
+      // Transform frontend data to match backend expectations
+      const shipping_address = deliveryMethod === 'shipping' ? {
+        type: 'shipping',
+        first_name: customerInfo.firstName,
+        last_name: customerInfo.lastName,
+        email: customerInfo.email,
+        phone: customerInfo.phone,
+        address_line_1: shippingAddress.addressLine1,
+        address_line_2: shippingAddress.addressLine2 || '',
+        city: shippingAddress.city,
+        state: shippingAddress.state,
+        postal_code: shippingAddress.postalCode,
+        country: shippingAddress.country
+      } : null;
+
+      const billing_address = deliveryMethod === 'pickup' ? {
+        type: 'billing',
+        first_name: customerInfo.firstName,
+        last_name: customerInfo.lastName,
+        email: customerInfo.email,
+        phone: customerInfo.phone,
+        address_line_1: '35A Ashley Avenue',
+        address_line_2: '',
+        city: 'Durban North',
+        state: 'KwaZulu-Natal',
+        postal_code: '4051',
+        country: 'South Africa'
+      } : {
+        type: 'billing',
+        first_name: customerInfo.firstName,
+        last_name: customerInfo.lastName,
+        email: customerInfo.email,
+        phone: customerInfo.phone,
+        address_line_1: shippingAddress.addressLine1,
+        address_line_2: shippingAddress.addressLine2 || '',
+        city: shippingAddress.city,
+        state: shippingAddress.state,
+        postal_code: shippingAddress.postalCode,
+        country: shippingAddress.country
+      };
+
+      const delivery_info = deliveryMethod === 'pickup' ? {
+        delivery_method: 'pickup',
+        ...(pickupDate && { pickup_date: pickupDate }),
+        ...(pickupTime && { pickup_time: pickupTime })
+      } : {
+        delivery_method: 'shipping'
+      };
+
+      const payload = {
+        items: items.map(i => ({ product_id: i.productId, quantity: i.quantity })),
+        shipping_address,
+        billing_address,
+        delivery_info,
+        customer_email: customerInfo.email,
+        total_cents: getTotal() * 100
+      };
 
       const res = await fetch(`${API_BASE}/api/orders`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-      if (!res.ok) throw new Error('Failed to create order');
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.details || errorData.error || 'Failed to create order');
+      }
       const data = await res.json();
 
       clearCart();
@@ -155,6 +225,23 @@ export default function CheckoutPage() {
                         <option value="16:00">4:00 PM</option>
                         <option value="17:00">5:00 PM</option>
                       </select>
+                    </div>
+                  </div>
+                </Card>
+              ) : null}
+
+              {deliveryMethod === 'pickup' ? (
+                <Card className="p-6 shadow-xl border-0 bg-white/80 backdrop-blur-sm mb-6">
+                  <h2 className="text-xl font-semibold text-base-content mb-4">Store Location</h2>
+                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                    <div className="flex items-start gap-3">
+                      <span className="text-2xl">📍</span>
+                      <div>
+                        <p className="font-semibold text-gray-800">Pool Beanbags Store</p>
+                        <p className="text-gray-600">35A Ashley Avenue</p>
+                        <p className="text-gray-600">Durban North, South Africa</p>
+                        <p className="text-sm text-gray-500 mt-2">Please arrive at your selected pickup time. We'll have your order ready!</p>
+                      </div>
                     </div>
                   </div>
                 </Card>

@@ -14,6 +14,8 @@ interface Order {
   createdAt: string;
   items: any[];
   delivery: any;
+  shipping_address: any;
+  billing_address: any;
 }
 
 export default function OrderConfirmationPage() {
@@ -173,6 +175,20 @@ export default function OrderConfirmationPage() {
                   <span className="text-2xl">🚚</span>
                   <span className="font-medium">Shipping</span>
                 </div>
+                {order.shipping_address && (
+                  <div>
+                    <p className="text-base-content/70 mb-2">Shipping Address:</p>
+                    <div className="bg-base-100 p-3 rounded-lg">
+                      <p className="font-semibold">{order.shipping_address.first_name} {order.shipping_address.last_name}</p>
+                      <p>{order.shipping_address.address_line_1}</p>
+                      {order.shipping_address.address_line_2 && <p>{order.shipping_address.address_line_2}</p>}
+                      <p>{order.shipping_address.city}, {order.shipping_address.state} {order.shipping_address.postal_code}</p>
+                      <p>{order.shipping_address.country}</p>
+                      {order.shipping_address.phone && <p className="mt-2">📞 {order.shipping_address.phone}</p>}
+                      {order.shipping_address.email && <p>✉️ {order.shipping_address.email}</p>}
+                    </div>
+                  </div>
+                )}
                 <div>
                   <p className="text-base-content/70">Delivery Status:</p>
                   <p className="font-semibold capitalize">{order.delivery?.delivery_status || 'Pending'}</p>

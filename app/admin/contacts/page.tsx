@@ -8,12 +8,11 @@ import Badge from '../../../components/ui/Badge';
 import { API_BASE } from 'lib/api';
 
 type Contact = {
-  id: number;
+  _id: string;
   name: string;
   email: string;
   phone: string | null;
   message: string;
-  is_read: boolean;
   created_at: string;
 };
 
@@ -70,30 +69,12 @@ export default function AdminContactsPage() {
 
       if (res.ok) {
         const data = await res.json();
-        setContacts(data.contacts || []);
+        setContacts(data || []);
       }
     } catch (err) {
       console.error('Error loading contacts:', err);
     } finally {
       setLoading(false);
-    }
-  }
-
-  async function markAsRead(contactId: number) {
-    try {
-      const token = localStorage.getItem('admin_token');
-      const res = await fetch(`${API_BASE}/api/admin/contacts/${contactId}/read`, {
-        method: 'PATCH',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-
-      if (res.ok) {
-        setContacts(contacts.map(contact =>
-          contact.id === contactId ? { ...contact, is_read: true } : contact
-        ));
-      }
-    } catch (err) {
-      console.error('Error marking contact as read:', err);
     }
   }
 
@@ -171,30 +152,6 @@ export default function AdminContactsPage() {
                   <div className="text-4xl">📬</div>
                 </div>
               </Card>
-
-              <Card className="p-6 shadow-xl border-0 bg-white/80 backdrop-blur-sm">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-lg font-semibold text-base-content mb-1">Unread</h3>
-                    <p className="text-3xl font-bold text-warning">
-                      {contacts.filter(c => !c.is_read).length}
-                    </p>
-                  </div>
-                  <div className="text-4xl">✉️</div>
-                </div>
-              </Card>
-
-              <Card className="p-6 shadow-xl border-0 bg-white/80 backdrop-blur-sm">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-lg font-semibold text-base-content mb-1">Read</h3>
-                    <p className="text-3xl font-bold text-success">
-                      {contacts.filter(c => c.is_read).length}
-                    </p>
-                  </div>
-                  <div className="text-4xl">✅</div>
-                </div>
-              </Card>
             </div>
 
             {/* Contacts List */}
@@ -206,16 +163,11 @@ export default function AdminContactsPage() {
 
               <div className="divide-y divide-base-200">
                 {contacts.map((contact) => (
-                  <div key={contact.id} className="p-6 hover:bg-base-100/50 transition-colors">
+                  <div key={contact._id} className="p-6 hover:bg-base-100/50 transition-colors">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-3">
                           <h3 className="text-lg font-semibold text-base-content">{contact.name}</h3>
-                          <Badge className={`badge badge-sm ${
-                            contact.is_read ? 'badge-success' : 'badge-warning'
-                          }`}>
-                            {contact.is_read ? 'Read' : 'Unread'}
-                          </Badge>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -243,15 +195,6 @@ export default function AdminContactsPage() {
                             Submitted on {new Date(contact.created_at).toLocaleDateString()} at{' '}
                             {new Date(contact.created_at).toLocaleTimeString()}
                           </p>
-
-                          {!contact.is_read && (
-                            <Button
-                              onClick={() => markAsRead(contact.id)}
-                              className="btn btn-sm btn-success"
-                            >
-                              Mark as Read
-                            </Button>
-                          )}
                         </div>
                       </div>
                     </div>

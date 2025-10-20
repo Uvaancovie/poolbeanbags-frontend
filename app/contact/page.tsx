@@ -33,7 +33,7 @@ export default function ContactPage() {
     setError('');
 
     try {
-      const response = await fetch(`${API_BASE}/api/contact`, {
+      const response = await fetch(`${API_BASE}/api/contacts`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

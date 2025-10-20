@@ -77,19 +77,18 @@ export default function AdminShippingPage() {
         .filter((o: any) => o.delivery && o.delivery.delivery_method === 'shipping')
         .map((o: any) => {
             const delivery = o.delivery || {};
-            // Prefer resolved shippingAddress on delivery, fallback to top-level shippingAddress or notes
-            const addr = delivery.shippingAddress || o.shippingAddress;
+            const addr = o.shipping_address;
             const parts: string[] = [];
             if (addr) {
-              if (addr.firstName || addr.lastName) parts.push(`${(addr.firstName || '')} ${(addr.lastName || '')}`.trim());
-              if (addr.addressLine1) parts.push(addr.addressLine1);
-              if (addr.addressLine2) parts.push(addr.addressLine2);
+              if (addr.first_name || addr.last_name) parts.push(`${addr.first_name || ''} ${addr.last_name || ''}`.trim());
+              if (addr.address_line_1) parts.push(addr.address_line_1);
+              if (addr.address_line_2) parts.push(addr.address_line_2);
               const cityState = [addr.city, addr.state].filter(Boolean).join(', ');
               if (cityState) parts.push(cityState);
-              if (addr.postalCode) parts.push(addr.postalCode);
+              if (addr.postal_code) parts.push(addr.postal_code);
               if (addr.country) parts.push(addr.country);
             }
-            const shippingAddressStr = parts.length ? parts.join(', ') : (delivery.notes || '');
+            const shippingAddressStr = parts.length ? parts.join(', ') : 'No address';
 
           const rawStatus = delivery.delivery_status || 'pending';
           const status = rawStatus === 'pending' ? 'preparing' : (rawStatus === 'shipped' ? 'shipped' : (rawStatus === 'in_transit' ? 'in_transit' : (rawStatus === 'delivered' ? 'delivered' : rawStatus)));
@@ -125,7 +124,10 @@ export default function AdminShippingPage() {
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify(payload)
       });
-      if (!res.ok) throw new Error('Failed to update delivery status');
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.details || errorData.error || 'Failed to update delivery status');
+      }
 
       // refresh list after update
       await loadShippingOrders();
