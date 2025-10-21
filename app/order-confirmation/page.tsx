@@ -11,6 +11,7 @@ interface Order {
   orderNo: string;
   status: string;
   total: number;
+  shipping_cents?: number;
   createdAt: string;
   items: any[];
   delivery: any;
@@ -175,6 +176,21 @@ export default function OrderConfirmationPage() {
                   <span className="text-2xl">🚚</span>
                   <span className="font-medium">Shipping</span>
                 </div>
+                {order.shipping_cents !== undefined && order.shipping_cents > 0 && (
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                    <p className="text-base-content/70 text-sm">Shipping Cost:</p>
+                    <p className="font-bold text-lg text-blue-700">
+                      {order.shipping_cents === 0 ? 'FREE' : formatPrice(order.shipping_cents)}
+                    </p>
+                    {order.shipping_cents >= 12900 && order.shipping_cents <= 27900 && (
+                      <p className="text-xs text-base-content/60 mt-1">
+                        {order.shipping_cents === 12900 && '🚚 KZN • 1-2 business days'}
+                        {order.shipping_cents === 19900 && '🚚 Major centres • 2-3 business days'}
+                        {order.shipping_cents === 27900 && '🚚 Remote areas • 3-5 business days'}
+                      </p>
+                    )}
+                  </div>
+                )}
                 {order.shipping_address && (
                   <div>
                     <p className="text-base-content/70 mb-2">Shipping Address:</p>
