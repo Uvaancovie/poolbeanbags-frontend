@@ -298,26 +298,56 @@ export default function PayfastCheckoutPage() {
                   </div>
                 ))}
               </div>
-              <div className="mt-6 space-y-2">
-                <div className="flex justify-between py-2 text-lg">
-                  <span>Subtotal:</span>
-                  <span className="font-medium">R{cartTotal.toFixed(2)}</span>
+              
+              {/* Pricing Breakdown */}
+              <div className="mt-6 space-y-3 border-t border-gray-200 pt-4">
+                <div className="flex justify-between py-2">
+                  <span className="text-gray-700">Subtotal:</span>
+                  <span className="font-semibold text-gray-900">R{cartTotal.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between py-2 text-lg">
-                  <span>Shipping:</span>
-                  <span className="font-medium">
+                
+                <div className="flex justify-between py-2 bg-blue-50 -mx-6 px-6 rounded-lg">
+                  <div>
+                    <span className="text-gray-700 font-medium">Shipping:</span>
+                    {selectedShipping && (
+                      <p className="text-xs text-gray-600 mt-1">
+                        {selectedShipping.name} • {selectedShipping.etaDays} business days
+                      </p>
+                    )}
+                  </div>
+                  <span className="font-bold text-lg">
                     {calculating ? (
                       <span className="text-sm text-gray-500">Calculating...</span>
                     ) : selectedShipping?.price === 0 ? (
-                      <span className="text-green-600 font-bold">FREE</span>
+                      <span className="text-green-600 font-bold">FREE 🎉</span>
+                    ) : selectedShipping ? (
+                      <span className="text-blue-600">R{selectedShipping.price.toFixed(2)}</span>
                     ) : (
-                      `R${selectedShipping?.price || 0}`
+                      <span className="text-sm text-gray-500">Enter address</span>
                     )}
                   </span>
                 </div>
-                <hr className="my-4" />
-                <div className="flex justify-between py-2 text-2xl font-bold">
-                  <span>Total:</span>
+
+                {cartTotal >= 1499 && selectedShipping?.price === 0 && (
+                  <div className="bg-green-50 border border-green-300 rounded-lg p-3 -mx-2">
+                    <p className="text-green-800 text-sm font-medium">
+                      🎉 Congrats! You qualified for FREE shipping (orders ≥ R1,499)
+                    </p>
+                  </div>
+                )}
+
+                {cartTotal < 1499 && cartTotal > 0 && (
+                  <div className="bg-yellow-50 border border-yellow-300 rounded-lg p-3 -mx-2">
+                    <p className="text-yellow-800 text-sm">
+                      💡 Add <strong>R{(1499 - cartTotal).toFixed(2)}</strong> more to qualify for FREE shipping!
+                    </p>
+                  </div>
+                )}
+                
+                <hr className="my-4 border-gray-300" />
+                
+                <div className="flex justify-between py-3 text-2xl font-bold bg-gradient-to-r from-purple-50 to-blue-50 -mx-6 px-6 rounded-lg">
+                  <span className="text-gray-900">Total:</span>
                   <span className="text-blue-600">R{grandTotal.toFixed(2)}</span>
                 </div>
               </div>

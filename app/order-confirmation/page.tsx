@@ -213,6 +213,42 @@ export default function OrderConfirmationPage() {
           </Card>
         </div>
 
+        {/* Payment Button - Show if order is pending */}
+        {order.status === 'pending' && (
+          <div className="mt-8 bg-gradient-to-r from-yellow-100 to-orange-100 border-2 border-orange-400 rounded-2xl p-8 text-center">
+            <div className="text-5xl mb-4">💳</div>
+            <h2 className="text-3xl font-bold text-gray-800 mb-3">Complete Your Payment</h2>
+            <p className="text-lg text-gray-700 mb-6">
+              Your order is reserved! Click below to complete payment via PayFast.
+            </p>
+            <Button
+              onClick={async () => {
+                try {
+                  setLoading(true);
+                  const response = await fetch(`${API_BASE}/api/checkout/pay/${order.id}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                  });
+                  if (!response.ok) throw new Error('Failed to generate payment link');
+                  const data = await response.json();
+                  window.location.href = data.redirect;
+                } catch (error) {
+                  console.error('Payment redirect failed:', error);
+                  alert('Unable to redirect to payment. Please contact support.');
+                  setLoading(false);
+                }
+              }}
+              className="bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 text-white font-bold py-4 px-12 rounded-xl text-xl shadow-2xl hover:shadow-3xl transition-all transform hover:scale-105"
+              disabled={loading}
+            >
+              {loading ? '🔄 Redirecting...' : '💰 Pay Now with PayFast'}
+            </Button>
+            <p className="text-sm text-gray-600 mt-4">
+              🔒 Secure payment powered by PayFast • All major cards accepted
+            </p>
+          </div>
+        )}
+
         {/* Actions */}
         <div className="mt-8 text-center space-x-4">
           <Link href="/orders" className="btn btn-primary">
