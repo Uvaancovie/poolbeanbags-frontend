@@ -37,6 +37,7 @@ export default function ShopPage() {
 	async function fetchProducts() {
 		try {
 			setLoading(true);
+			console.log('Fetching products from:', `${API_BASE}/api/products`);
 			const res = await fetch(`${API_BASE}/api/products`, {
 				cache: 'no-store', // Always fetch fresh data, no caching
 				headers: {
@@ -44,13 +45,31 @@ export default function ShopPage() {
 					'Pragma': 'no-cache'
 				}
 			});
+			console.log('Response status:', res.status);
+			
+			if (!res.ok) {
+				console.error(`API returned ${res.status}: ${res.statusText}`);
+				const errorText = await res.text();
+				console.error('Response body:', errorText);
+				setProducts([]);
+				setFilteredProducts([]);
+				return;
+			}
+			
 			const data = await res.json();
+			console.log('Raw API response:', data);
+			
 			// MongoDB returns array directly, not wrapped in { products: [...] }
 			const products = Array.isArray(data) ? data : (data.products || []);
+			console.log('Parsed products:', products);
+			
 			setProducts(products);
 			setFilteredProducts(products);
-		} catch (err) {
-			console.error(err);
+		} catch (err: any) {
+			console.error('Fetch error:', err.message);
+			console.error('Full error:', err);
+			setProducts([]);
+			setFilteredProducts([]);
 		} finally {
 			setLoading(false);
 		}
