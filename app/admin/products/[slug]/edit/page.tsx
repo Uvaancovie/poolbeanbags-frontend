@@ -3,7 +3,7 @@
 import { useEffect, useState, use } from 'react';
 import { API_BASE } from 'lib/api';
 import { useRouter } from 'next/navigation';
-import Button from '../../../../../components/ui/Button';
+import { Button } from '../../../../../components/ui/Button';
 import Input from '../../../../../components/ui/Input';
 import Textarea from '../../../../../components/ui/Textarea';
 import Card from '../../../../../components/ui/Card';

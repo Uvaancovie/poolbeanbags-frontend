@@ -10,20 +10,22 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="w-full bg-white shadow-md sticky top-0 z-40 border-b-4 border-blue-600">
+    <header className="w-full bg-white shadow-md sticky top-0 z-40 border-b-4" style={{ borderColor: 'var(--gold)' }}>
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between py-4">
-          <div className="text-2xl font-bold tracking-tight text-blue-600 hover:text-blue-700 transition-colors">
+          <div className="text-2xl font-bold tracking-tight" style={{ color: 'var(--ink)' }}>
             <Link href="/">🏊 Pool Beanbags</Link>
           </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-4">
-            <Link href="/announcements" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">📢 Announcements</Link>
-            <Link href="/about" className="text-gray-700 hover:text-green-600 font-medium transition-colors">ℹ️ About</Link>
-            <Link href="/faq" className="text-gray-700 hover:text-pink-600 font-medium transition-colors">❓ FAQ</Link>
-            <Link href="/contact" className="text-gray-700 hover:text-yellow-600 font-medium transition-colors">✉️ Contact</Link>
-            <Link href="/shop" className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold transition-all shadow-md hover:shadow-lg">🛍️ Shop</Link>
+            <Link href="/announcements" className="text-gray-700 hover:text-[var(--ink)] font-medium transition-colors">📢 Announcements</Link>
+            <Link href="/about" className="text-gray-700 hover:text-[var(--ink)] font-medium transition-colors">ℹ️ About</Link>
+            <Link href="/faq" className="text-gray-700 hover:text-[var(--ink)] font-medium transition-colors">❓ FAQ</Link>
+            <Link href="/contact" className="text-gray-700 hover:text-[var(--ink)] font-medium transition-colors">✉️ Contact</Link>
+            <Link href="/shop" className="px-4 py-2" style={{ backgroundColor: 'var(--ink)', color: 'white' }}>
+              🛍️ Shop
+            </Link>
             <Link href="/cart" className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-semibold transition-all relative">
               🛒 Cart
               {itemCount > 0 && (

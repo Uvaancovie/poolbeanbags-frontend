@@ -1,18 +1,26 @@
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
+import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import Navbar from "../components/Navbar";
 import { CartProvider } from "../components/CartContext";
 
-const poppins = Poppins({
+const inter = Inter({
   subsets: ["latin"],
-  weight: ["300","400","600","700"],
-  variable: "--font-poppins",
+  variable: "--font-inter",
+  display: 'swap',
+});
+
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-playfair",
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
-  title: "Pool Beanbags Durban North",
-  description: "Naomi Bassioni's Pool Beanbags shop in Durban North, South Africa. Premium quality pool beanbags, outdoor beanbags, waterproof beanbags, and accessories.",
+  title: "POOL BEAN BAGS — Luxury Outdoor Comfort",
+  icons: {
+    icon: "/logo.jpg",
+  },
 };
 
 export default function RootLayout({
@@ -21,8 +29,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-theme="poolbeanbags">
-      <body className={`${poppins.variable} antialiased` }>
+    <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
+      <head>
+        <meta name="theme-color" content="#0B1220" />
+      </head>
+      <body className="font-sans text-ink bg-white">
         <CartProvider>
           <Navbar />
           {children}

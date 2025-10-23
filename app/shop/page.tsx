@@ -4,7 +4,7 @@
 
 import { useEffect, useState } from 'react';
 import { API_BASE } from 'lib/api';
-import Button from '../../components/ui/Button';
+import { Button } from '../../components/ui/Button';
 import { formatPriceFromCents, formatPriceNumber } from '../../lib/formatPrice';
 import Input from '../../components/ui/Input';
 import Badge from '../../components/ui/Badge';

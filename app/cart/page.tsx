@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useCart } from '../../components/CartContext';
-import Button from '../../components/ui/Button';
+import { Button } from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
 
 export default function CartPage() {

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import Button from '../../components/ui/Button';
+import { Button } from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
 import { API_BASE } from 'lib/api';
 

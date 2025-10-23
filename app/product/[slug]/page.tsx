@@ -1,6 +1,6 @@
 import Card from '../../../components/ui/Card';
 import { formatPriceFromCents } from '../../../lib/formatPrice';
-import Button from '../../../components/ui/Button';
+import { Button } from '../../../components/ui/Button';
 import { API_BASE } from 'lib/api';
 
 type Product = {

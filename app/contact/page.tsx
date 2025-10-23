@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Card from '../../components/ui/Card';
-import Button from '../../components/ui/Button';
+import { Button } from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
 import Textarea from '../../components/ui/Textarea';
 import { API_BASE } from 'lib/api';
