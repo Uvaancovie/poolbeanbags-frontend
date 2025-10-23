@@ -11,10 +11,6 @@ import Badge from '../../components/ui/Badge';
 import Card from '../../components/ui/Card';
 import { useCart } from '../../components/CartContext';
 
-// Force dynamic rendering - no static generation or caching
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
-
 type Product = {
 	_id?: string;
 	id: string;
