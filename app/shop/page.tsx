@@ -11,6 +11,10 @@ import Badge from '../../components/ui/Badge';
 import Card from '../../components/ui/Card';
 import { useCart } from '../../components/CartContext';
 
+// Force dynamic rendering - no static generation or caching
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 type Product = {
 	_id?: string;
 	id: string;
@@ -38,7 +42,11 @@ export default function ShopPage() {
 		try {
 			setLoading(true);
 			const res = await fetch(`${API_BASE}/api/products`, {
-				next: { revalidate: 60 } // ISR: cache for 60 seconds, then revalidate in background
+				cache: 'no-store', // Always fetch fresh data, no caching
+				headers: {
+					'Cache-Control': 'no-cache, no-store, must-revalidate',
+					'Pragma': 'no-cache'
+				}
 			});
 			const data = await res.json();
 			// MongoDB returns array directly, not wrapped in { products: [...] }
