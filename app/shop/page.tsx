@@ -31,7 +31,7 @@ export default function ShopPage() {
 	const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [searchQuery, setSearchQuery] = useState('');
-	const [priceRange, setPriceRange] = useState<[number, number]>([0, 500]);
+	const [priceRange, setPriceRange] = useState<[number, number]>([0, 2000]);
 	const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
 	async function fetchProducts() {
@@ -60,7 +60,10 @@ export default function ShopPage() {
 			console.log('Raw API response:', data);
 			
 			// MongoDB returns array directly, not wrapped in { products: [...] }
-			const products = Array.isArray(data) ? data : (data.products || []);
+			// Map _id to id for compatibility
+			const products = Array.isArray(data) 
+				? data.map(p => ({ ...p, id: p._id || p.id }))
+				: (data.products || []).map((p: any) => ({ ...p, id: p._id || p.id }));
 			console.log('Parsed products:', products);
 			
 			setProducts(products);
@@ -166,8 +169,8 @@ export default function ShopPage() {
 								<input
 									type="range"
 									min="0"
-									max="500"
-									step="10"
+									max="2000"
+									step="50"
 									value={priceRange[1]}
 									onChange={(e) => setPriceRange([0, parseInt(e.target.value)])}
 									className="range range-primary w-full"
