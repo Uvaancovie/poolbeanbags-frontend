@@ -4,6 +4,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
+import Autoplay from 'embla-carousel-autoplay';
 
 const slides = [
   { src: '/lifestyle.jpg', alt: 'Luxury poolside lifestyle scene' },
@@ -16,7 +17,7 @@ const slides = [
 export default function LuxCarousel() {
   return (
     <section className="relative w-full h-[60vh] min-h-[520px] overflow-hidden">
-      <Carousel className="w-full h-full">
+      <Carousel className="w-full h-full" plugins={[Autoplay({ delay: 4000 })]}>
         <CarouselContent>
           {slides.map((slide, index) => (
             <CarouselItem key={index}>
@@ -39,8 +40,8 @@ export default function LuxCarousel() {
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious className="left-4 bg-white/80 hover:bg-white transition-colors" />
-        <CarouselNext className="right-4 bg-white/80 hover:bg-white transition-colors" />
+        <CarouselPrevious className="left-4 bg-white/80 hover:bg-white transition-colors z-20" />
+        <CarouselNext className="right-4 bg-white/80 hover:bg-white transition-colors z-20" />
       </Carousel>
 
       {/* Gradient overlay */}

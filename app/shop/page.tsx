@@ -269,13 +269,13 @@ export default function ShopPage() {
 											<div className="space-y-2">
 												<button
 													onClick={() => addItem(product)}
-													className="w-full bg-success hover:bg-success-focus text-success-content font-medium py-2 px-4 rounded-lg transition-all duration-200"
+													className="w-full bg-success hover:bg-success-focus text-white font-medium py-2 px-4 rounded-lg transition-all duration-200"
 												>
 													Add to Cart
 												</button>
 												<a
 													href={`/product/${product.slug}`}
-													className="w-full bg-primary hover:bg-primary-focus text-primary-content font-medium py-2 px-4 rounded-lg transition-all duration-200 text-center block"
+													className="w-full bg-primary hover:bg-primary-focus text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 text-center block"
 												>
 													View Details
 												</a>

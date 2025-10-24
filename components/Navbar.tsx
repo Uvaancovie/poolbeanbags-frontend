@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useCart } from "./CartContext";
+import Image from "next/image";
 
 export default function Navbar() {
   const { getItemCount } = useCart();
@@ -14,7 +15,9 @@ export default function Navbar() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between py-4">
           <div className="text-2xl font-bold tracking-tight" style={{ color: 'var(--ink)' }}>
-            <Link href="/">🏊 Pool Beanbags</Link>
+            <Link href="/">
+              <Image src="/logo.jpg" alt="Pool Beanbags Logo" width={120} height={60} />
+            </Link>
           </div>
 
           {/* Desktop Navigation */}
