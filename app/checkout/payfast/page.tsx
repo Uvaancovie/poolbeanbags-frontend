@@ -92,7 +92,7 @@ export default function PayfastCheckoutPage() {
     setLoading(true);
 
     try {
-      const response = await apiPost<{ redirect: string; orderNumber: string }>('/api/checkout', {
+      const response = await apiPost<{ redirect?: string; payfast?: any; orderNumber?: string }>('/api/checkout/create-order', {
         items: cart,
         shippingAddress: {
           name: contactName,
@@ -109,9 +109,25 @@ export default function PayfastCheckoutPage() {
       });
 
       console.log('Order created:', response.orderNumber);
-      
-      // Redirect to PayFast payment page
-      window.location.href = response.redirect;
+      // If server returned a redirect URL, go there. Otherwise if payfast fields were returned
+      // render/redirect accordingly. Here we prefer an immediate redirect if present.
+      if (response.redirect) {
+        window.location.href = response.redirect;
+      } else if (response.payfast) {
+        // Build a form and submit to PayFast
+        const form = document.createElement('form')
+        form.method = 'POST'
+        form.action = 'https://www.payfast.co.za/eng/process'
+        Object.entries(response.payfast).forEach(([k,v])=>{
+          const inp = document.createElement('input')
+          inp.type = 'hidden'; inp.name = k; inp.value = String(v)
+          form.appendChild(inp)
+        })
+        document.body.appendChild(form)
+        form.submit()
+      } else {
+        throw new Error('No payment data returned')
+      }
     } catch (error: any) {
       alert(`Checkout failed: ${error.message}`);
       setLoading(false);

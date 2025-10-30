@@ -6,10 +6,13 @@ export async function createOrderFromCart(items: any[]) {
   const total_cents = subtotal_cents + shipping_cents
 
   const base = process.env.NEXT_PUBLIC_API_BASE ?? '';
-  // Backend exposes POST /api/checkout (Express route). Use configured base or relative path fallback.
-  const endpoint = base ? `${base.replace(/\/$/, '')}/api/checkout` : '/api/checkout';
+  // Call the Express create-order endpoint directly. If NEXT_PUBLIC_API_BASE is set use it,
+  // otherwise fall back to the Render URL for the express service.
+  const endpoint = base
+    ? `${base.replace(/\/$/, '')}/api/checkout/create-order`
+    : 'https://pool-drizzle-express.onrender.com/api/checkout/create-order';
 
-  const res = await fetch(endpoint,{
+  const res = await fetch(endpoint, {
     method:"POST",
     headers:{ "Content-Type":"application/json" },
     body: JSON.stringify({ items, subtotal_cents, shipping_cents, total_cents, courier: "Fastway" })
