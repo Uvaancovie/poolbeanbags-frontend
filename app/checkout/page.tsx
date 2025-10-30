@@ -7,14 +7,18 @@ import { Button } from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
 import Card from '../../components/ui/Card';
 import { API_BASE } from 'lib/api';
+import { SHIPPING_FLAT_CENTS, SHIPPING_PROVIDER } from '../../lib/pricing';
+import { createOrderFromCart } from './actions';
+import PayfastForm from './payfast-form';
 
 interface CustomerInfo { firstName: string; lastName: string; email: string; phone: string }
 interface ShippingAddress { addressLine1: string; addressLine2: string; city: string; state: string; postalCode: string; country: string }
 interface OrderPayload { items: { product_id: string; quantity: number }[]; deliveryMethod: 'pickup' | 'shipping'; customerInfo: CustomerInfo; pickupDate?: string; pickupTime?: string; shippingAddress?: ShippingAddress }
 
 export default function CheckoutPage() {
-  const { items, getTotal, clearCart } = useCart();
+  const { items, getSubtotalCents, getTotalCents, clearCart } = useCart();
   const [loading, setLoading] = useState(false);
+  const [pfData, setPfData] = useState<Record<string,string> | null>(null);
   const [deliveryMethod, setDeliveryMethod] = useState<'pickup' | 'shipping'>('pickup');
   const [customerInfo, setCustomerInfo] = useState<CustomerInfo>({ firstName: '', lastName: '', email: '', phone: '' });
   const [pickupDate, setPickupDate] = useState('');
@@ -49,77 +53,28 @@ export default function CheckoutPage() {
     
     setLoading(true);
     try {
-      // Transform frontend data to match backend expectations
-      const shipping_address = deliveryMethod === 'shipping' ? {
-        type: 'shipping',
-        first_name: customerInfo.firstName,
-        last_name: customerInfo.lastName,
-        email: customerInfo.email,
-        phone: customerInfo.phone,
-        address_line_1: shippingAddress.addressLine1,
-        address_line_2: shippingAddress.addressLine2 || '',
-        city: shippingAddress.city,
-        state: shippingAddress.state,
-        postal_code: shippingAddress.postalCode,
-        country: shippingAddress.country
-      } : null;
+      // POST to express (server) to create order; backend returns { redirect } with PayFast URL
+      const resp = await createOrderFromCart(items);
+      if (!resp) throw new Error('Failed to create order');
 
-      const billing_address = deliveryMethod === 'pickup' ? {
-        type: 'billing',
-        first_name: customerInfo.firstName,
-        last_name: customerInfo.lastName,
-        email: customerInfo.email,
-        phone: customerInfo.phone,
-        address_line_1: '35A Ashley Avenue',
-        address_line_2: '',
-        city: 'Durban North',
-        state: 'KwaZulu-Natal',
-        postal_code: '4051',
-        country: 'South Africa'
-      } : {
-        type: 'billing',
-        first_name: customerInfo.firstName,
-        last_name: customerInfo.lastName,
-        email: customerInfo.email,
-        phone: customerInfo.phone,
-        address_line_1: shippingAddress.addressLine1,
-        address_line_2: shippingAddress.addressLine2 || '',
-        city: shippingAddress.city,
-        state: shippingAddress.state,
-        postal_code: shippingAddress.postalCode,
-        country: shippingAddress.country
-      };
-
-      const delivery_info = deliveryMethod === 'pickup' ? {
-        delivery_method: 'pickup',
-        ...(pickupDate && { pickup_date: pickupDate }),
-        ...(pickupTime && { pickup_time: pickupTime })
-      } : {
-        delivery_method: 'shipping'
-      };
-
-      const payload = {
-        items: items.map(i => ({ product_id: i.productId, quantity: i.quantity })),
-        shipping_address,
-        billing_address,
-        delivery_info,
-        customer_email: customerInfo.email,
-        total_cents: getTotal() * 100
-      };
-
-      const res = await fetch(`${API_BASE}/api/orders`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.details || errorData.error || 'Failed to create order');
+      // If backend returned a redirect URL, go there (PayFast). Otherwise, try to use a payfast payload if provided.
+      if (resp.redirect) {
+        clearCart();
+        // immediate redirect to PayFast payment URL
+        window.location.assign(resp.redirect);
+        return;
       }
-      const data = await res.json();
 
+      const pf = resp?.payfast ?? null;
+      if (!pf) throw new Error('No PayFast payload returned');
+
+      // clear cart and show short confirmation UI then submit to PayFast payload
       clearCart();
-      setOrderPlaced({ id: data.order.id, orderNo: data.order.orderNo, deliveryMethod });
-      setTimeout(() => router.push(`/order-confirmation?orderId=${data.order.id}`), 2200);
+      setOrderPlaced({ id: Date.now(), orderNo: `PF-${Date.now()}`, deliveryMethod });
+      setPfData(Object.fromEntries(Object.entries(pf).map(([k,v]) => [k, String(v)])));
     } catch (err) {
       console.error('Order submission error:', err);
-      alert('Failed to place order. Please try again.');
+      alert('Failed to create order. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -129,8 +84,12 @@ export default function CheckoutPage() {
     if (items.length === 0 && !loading) router.push('/cart');
   }, [items, loading, router]);
 
+  const subtotal = getSubtotalCents();
+  const shipping = deliveryMethod === 'pickup' ? 0 : (items.length > 0 ? SHIPPING_FLAT_CENTS : 0);
+  const total = subtotal + shipping;
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[var(--bg)] py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         <div className="mb-10 bg-gradient-to-r from-green-500 via-blue-600 to-pink-500 rounded-2xl p-8 shadow-2xl">
           <h1 className="text-5xl font-bold text-white mb-4 drop-shadow-lg flex items-center gap-3">
@@ -157,10 +116,18 @@ export default function CheckoutPage() {
                     </div>
                   ))}
                 </div>
-                <div className="border-t border-base-300 pt-4">
-                  <div className="flex justify-between text-lg font-semibold">
-                    <span>Total</span>
-                    <span>{formatPrice(getTotal() * 100)}</span>
+                <div className="border-t border-[var(--border)] pt-4">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-[var(--fg-muted)]">Subtotal</span>
+                    <span className="poppins-regular text-[var(--fg)]">{formatPrice(subtotal)}</span>
+                  </div>
+                  <div className="mt-1 flex justify-between text-sm">
+                    <span className="text-[var(--fg-muted)]">Shipping ({SHIPPING_PROVIDER})</span>
+                    <span className="poppins-regular text-[var(--fg)]">{formatPrice(shipping)}</span>
+                  </div>
+                  <div className="mt-3 flex justify-between text-lg font-semibold">
+                    <span className="poppins-regular text-[var(--fg)]">Total</span>
+                    <span className="poppins-regular text-[var(--fg)]">{formatPrice(total)}</span>
                   </div>
                 </div>
               </Card>
@@ -263,7 +230,7 @@ export default function CheckoutPage() {
                 </Card>
               )}
 
-              <Button type="submit" className="w-full bg-primary hover:bg-primary-focus text-primary-content font-medium py-3 px-6 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl" disabled={loading}>{loading ? 'Placing Order...' : 'Place Order'}</Button>
+              <Button type="submit" className="w-full bg-primary hover:bg-primary-focus text-white font-medium py-3 px-6 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl" disabled={loading}>{loading ? 'Placing Order...' : 'Place Order'}</Button>
             </div>
           </div>
         </form>
@@ -279,6 +246,13 @@ export default function CheckoutPage() {
                 </div>
               </div>
             </div>
+          </div>
+        )}
+
+        {/* Auto-submit PayFast payload when available */}
+        {pfData && (
+          <div className="hidden">
+            <PayfastForm pf={pfData} />
           </div>
         )}
 

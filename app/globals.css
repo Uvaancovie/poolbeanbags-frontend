@@ -4,49 +4,42 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Brand Colors: Blue, White, Black with bright accents (Yellow, Pink, Red, Green) */
+/* Strict monochrome tokens (black & white only) */
 :root {
-  --brand-blue: #2563eb;
-  --brand-blue-dark: #1e40af;
-  --brand-blue-light: #3b82f6;
   --brand-white: #ffffff;
   --brand-black: #000000;
-  --brand-yellow: #eab308;
-  --brand-pink: #ec4899;
-  --brand-red: #ef4444;
-  --brand-green: #22c55e;
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --background: #ffffff; /* page background */
+  --foreground: #000000; /* primary text */
+  --card: #ffffff; /* card backgrounds */
+  --card-foreground: #000000;
+  --popover: #ffffff;
+  --popover-foreground: #000000;
+  --primary: #000000; /* primary accent for buttons */
+  --primary-foreground: #ffffff;
+  --secondary: #ffffff;
+  --secondary-foreground: #000000;
+  --muted: #f3f3f3;
+  --muted-foreground: #666666;
+  --accent: #ffffff;
+  --accent-foreground: #000000;
+  --destructive: #000000;
+  --border: #e5e5e5;
+  --input: #ffffff;
+  --ring: #000000;
+  --chart-1: #000000;
+  --chart-2: #000000;
+  --chart-3: #000000;
+  --chart-4: #000000;
+  --chart-5: #000000;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #000000;
+  --sidebar-primary: #000000;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #ffffff;
+  --sidebar-accent-foreground: #000000;
+  --sidebar-border: #e5e5e5;
+  --sidebar-ring: #000000;
 }
 
 html {
@@ -57,17 +50,11 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
 }
 
-/* Accent gradient backgrounds for sections */
-.accent-gradient-yellow {
-  background: linear-gradient(135deg, var(--brand-yellow) 0%, var(--brand-white) 100%);
-}
-
-.accent-gradient-pink {
-  background: linear-gradient(135deg, var(--brand-pink) 0%, var(--brand-white) 100%);
-}
-
+/* Replace colorful gradients with subtle monochrome backgrounds */
+.accent-gradient-yellow,
+.accent-gradient-pink,
 .accent-gradient-blue {
-  background: linear-gradient(135deg, var(--brand-blue) 0%, var(--brand-blue-light) 100%);
+  background: linear-gradient(135deg, var(--card) 0%, var(--background) 100%);
 }
 
 /* Image hover effects */
@@ -161,16 +148,16 @@ body {
   }
 }
 
-/* Luxury styling tokens */
+/* Luxury styling tokens (monochrome) */
 :root {
-  --ink: #0B1220;
-  --gold: #C8A96A;
-  --muted: #667085;
+  --ink: #000000;
+  --gold: #FFFFFF;
+  --muted: #CCCCCC;
 }
 
 .h1 {
-  font-family: var(--font-playfair);
-  font-weight: 600;
+  font-family: var(--font-poppins);
+  font-weight: 300;
   font-size: 2.25rem;
 }
 
@@ -192,7 +179,7 @@ body {
 
 .btn-primary {
   background-color: var(--ink);
-  color: white;
+  color: var(--gold);
   padding: 0.75rem 1.5rem;
   border-radius: 0.5rem;
   font-weight: 500;

@@ -11,10 +11,10 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="w-full bg-white shadow-md sticky top-0 z-40 border-b-4" style={{ borderColor: 'var(--gold)' }}>
+    <header className="w-full bg-white shadow-md sticky top-0 z-40 border-b-4 border-black">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between py-4">
-          <div className="text-2xl font-bold tracking-tight" style={{ color: 'var(--ink)' }}>
+          <div className="text-2xl font-bold tracking-tight text-black">
             <Link href="/">
               <Image src="/logo.jpg" alt="Pool Beanbags Logo" width={120} height={60} />
             </Link>
@@ -22,15 +22,15 @@ export default function Navbar() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-4">
-            <Link href="/announcements" className="text-gray-700 hover:text-[var(--ink)] font-medium transition-colors">📢 Announcements</Link>
-            <Link href="/about" className="text-gray-700 hover:text-[var(--ink)] font-medium transition-colors">ℹ️ About</Link>
-            <Link href="/faq" className="text-gray-700 hover:text-[var(--ink)] font-medium transition-colors">❓ FAQ</Link>
-            <Link href="/contact" className="text-gray-700 hover:text-[var(--ink)] font-medium transition-colors">✉️ Contact</Link>
-            <Link href="/shop" className="px-4 py-2" style={{ backgroundColor: 'var(--ink)', color: 'white' }}>
-              🛍️ Shop
+            <Link href="/announcements" className="text-gray-700 hover:text-black font-light transition-colors">Announcements</Link>
+            <Link href="/about" className="text-gray-700 hover:text-black font-light transition-colors">About</Link>
+            <Link href="/faq" className="text-gray-700 hover:text-black font-light transition-colors">FAQ</Link>
+            <Link href="/contact" className="text-gray-700 hover:text-black font-light transition-colors">Contact</Link>
+            <Link href="/shop" className="px-4 py-2 bg-black text-white font-light">
+              Shop
             </Link>
             <Link href="/cart" className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-semibold transition-all relative">
-              🛒 Cart
+              Cart
               {itemCount > 0 && (
                 <span className="absolute -top-2 -right-2 bg-yellow-400 text-black text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center shadow-lg animate-pulse">
                   {itemCount}

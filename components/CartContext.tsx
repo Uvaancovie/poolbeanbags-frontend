@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { SHIPPING_FLAT_CENTS } from "@/lib/pricing";
 
 interface CartItem {
   id: string;
@@ -20,6 +21,8 @@ interface CartContextType {
   clearCart: () => void;
   getTotal: () => number;
   getItemCount: () => number;
+  getSubtotalCents: () => number;
+  getTotalCents: () => number;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -92,6 +95,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
     return items.reduce((count, item) => count + item.quantity, 0);
   };
 
+  const getSubtotalCents = () =>
+    items.reduce((total, item) => total + item.price * item.quantity, 0);
+
+  const getTotalCents = () => getSubtotalCents() + (items.length > 0 ? SHIPPING_FLAT_CENTS : 0);
+
   return (
     <CartContext.Provider value={{
       items,
@@ -100,7 +108,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
       updateQuantity,
       clearCart,
       getTotal,
-      getItemCount
+      getItemCount,
+      getSubtotalCents,
+      getTotalCents
     }}>
       {children}
     </CartContext.Provider>

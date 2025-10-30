@@ -1,94 +1,127 @@
-'use client';
+'use client'
 
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
-import { motion } from 'framer-motion';
-import Image from 'next/image';
-import Link from 'next/link';
-import Autoplay from 'embla-carousel-autoplay';
+import Image from 'next/image'
+import { motion } from 'framer-motion'
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/components/ui/carousel'
 
-const slides = [
-  { src: '/lifestyle.jpg', alt: 'Luxury poolside lifestyle scene' },
-  { src: '/lifestyle-1.jpg', alt: 'Outdoor comfort and relaxation' },
-  { src: '/lifestyle-2.jpg', alt: 'Premium poolside furnishings' },
-  { src: '/family.jpg', alt: 'Family enjoying poolside comfort' },
-  { src: '/kids.jpg', alt: 'Children playing by the pool' },
-];
+type Slide = {
+  src: string
+  alt: string
+  title?: string
+  blurb?: string
+  ctaHref?: string
+  ctaLabel?: string
+}
+
+const slides: Slide[] = [
+  {
+    src: '/lifestyle.jpg',
+    alt: 'Pool bean bags by a sunlit pool',
+    title: 'Luxury Poolside Comfort',
+    blurb: 'Minimal shapes, weather-ready fabrics, built for the coast.',
+    ctaHref: '/shop',
+    ctaLabel: 'Shop Now',
+  },
+  {
+    src: '/lifestyle-1.jpg',
+    alt: 'Close-up of stitching and fabric texture',
+    title: 'Craft in the Details',
+    blurb: 'Hand-finished seams and premium fillings.',
+    ctaHref: '/shop',
+    ctaLabel: 'View Collection',
+  },
+  {
+    src: '/family.jpg',
+    alt: 'Family relaxing on outdoor bean bags',
+    title: 'Relaxed Living',
+    blurb: 'Comfort that works from pool deck to patio.',
+    ctaHref: '/shop',
+    ctaLabel: 'Explore',
+  },
+]
 
 export default function LuxCarousel() {
   return (
-    <section className="relative w-full h-[60vh] min-h-[520px] overflow-hidden">
-      <Carousel className="w-full h-full" plugins={[Autoplay({ delay: 4000 })]}>
-        <CarouselContent>
-          {slides.map((slide, index) => (
-            <CarouselItem key={index}>
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-                className="relative w-full"
-                style={{ height: '60vh', minHeight: 520 }}
-              >
-                <Image
-                  src={slide.src}
-                  alt={slide.alt}
-                  fill
-                  priority={index === 0}
-                  sizes="100vw"
-                  className="object-cover"
-                />
-              </motion.div>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        <CarouselPrevious className="left-4 bg-white/80 hover:bg-white transition-colors z-20" />
-        <CarouselNext className="right-4 bg-white/80 hover:bg-white transition-colors z-20" />
-      </Carousel>
-
-      {/* Gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-transparent pointer-events-none" />
-
-      {/* Content overlay */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white z-10 px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="mb-6"
+    <section aria-label="Hero" className="relative">
+      <div className="relative overflow-hidden rounded-2xl md:rounded-3xl mx-auto max-w-[1280px]">
+        {/* NOTE: No autoplay. Drag/Prev/Next only. */}
+        <Carousel
+          opts={{
+            loop: false,
+            align: 'start',
+            // keep movement deliberate; no snap skipping
+            skipSnaps: false,
+            // if you want to also prevent swipe, set draggable: false
+          }}
+          aria-roledescription="carousel"
         >
-          <Image
-            src="/logo.jpg"
-            alt="Pool Bean Bags Logo"
-            width={120}
-            height={60}
-            className="mx-auto mb-4"
+          <CarouselContent>
+            {slides.map((s, i) => (
+              <CarouselItem key={i}>
+                <div className="relative h-[58vh] min-h-[520px] w-full">
+                  <Image
+                    src={s.src}
+                    alt={s.alt}
+                    fill
+                    priority={i === 0}
+                    sizes="100vw"
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/20 to-transparent" />
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 18 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: 0.08 }}
+                    className="absolute bottom-10 left-8 right-8 sm:left-12 sm:right-12"
+                  >
+                    <div className="max-w-xl text-white">
+                      {/* Brand mark */}
+                      <img
+                        src="/logo.jpg"
+                        alt="Pool Bean Bags"
+                        className="h-10 w-auto mb-4 rounded shadow-sm"
+                      />
+                      {s.title && (
+                        <h1 className="poppins-light text-[34px] md:text-[48px] leading-tight">
+                          {s.title}
+                        </h1>
+                      )}
+                      {s.blurb && (
+                        <p className="poppins-extralight text-white/90 mt-2">
+                          {s.blurb}
+                        </p>
+                      )}
+                      {s.ctaHref && s.ctaLabel && (
+                        <a href={s.ctaHref} className="btn-primary inline-flex mt-6">
+                          {s.ctaLabel}
+                        </a>
+                      )}
+                    </div>
+                  </motion.div>
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+
+          {/* Controls: visible, minimal, accessible */}
+          <CarouselPrevious
+            aria-label="Previous slide"
+            className="left-4 bg-white/90 text-[var(--fg)] hover:bg-white"
           />
-        </motion.div>
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="h1 mb-4 drop-shadow-lg"
-        >
-          Luxury Poolside Comfort
-        </motion.h1>
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          className="text-lg md:text-xl mb-8 max-w-2xl drop-shadow-md"
-        >
-          Premium outdoor fabrics. Hand-finished details.
-        </motion.p>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
-        >
-          <Link href="/shop" className="btn-primary">
-            Shop Now
-          </Link>
-        </motion.div>
+          <CarouselNext
+            aria-label="Next slide"
+            className="right-4 bg-white/90 text-[var(--fg)] hover:bg-white"
+          />
+        </Carousel>
       </div>
     </section>
-  );
+  )
 }

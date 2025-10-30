@@ -4,61 +4,110 @@ import LandingGallery from '@/components/LandingGallery'
 import Image from 'next/image'
 import Card from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
+import Reviews from '@/components/Reviews'
+import { API_BASE } from 'lib/api'
 
-export default function Page() {
+type Announcement = {
+  id: number
+  slug: string
+  title: string
+  excerpt?: string
+  body_richtext?: string
+  banner_image?: string
+  banner_image_url?: string
+  published_at?: string
+  start_at?: string
+  end_at?: string
+  is_featured: boolean
+  created_at: string
+}
+
+export default async function Page() {
+  let announcements: Announcement[] = []
+  try {
+    const res = await fetch(`${API_BASE}/api/announcements`, { next: { revalidate: 60 } })
+    const data = await res.json()
+    announcements = data.announcements || []
+  } catch (err) {
+    console.error('Failed to fetch announcements:', err)
+  }
+
+  const latestAnnouncement = announcements.length > 0 ? announcements[0] : null
+
   return (
-    <main>
-      {/* Announcement strip */}
-      <div className="bg-[var(--gold)] text-[var(--ink)] text-sm py-2">
-        <div className="container mx-auto px-4 text-center">New: We are available nationwide • Sample swatches available</div>
+    <main className="space-y-16 md:space-y-20">
+      {/* Announcement strip — crisp, single line */}
+      <div className="bg-black text-white text-sm">
+        <div className="mx-auto max-w-[1280px] px-4 py-2 text-center">
+          <span className="poppins-extralight">
+            {latestAnnouncement ? latestAnnouncement.title : 'New: Nationwide delivery • Sample swatches available'}
+          </span>
+        </div>
       </div>
 
-      <LuxCarousel />
+      {/* Hero */}
+      <div className="px-4">
+        <LuxCarousel />
+      </div>
 
-      <section className="py-16 px-4">
-        <div className="container mx-auto">
-          <h2 className="h1 text-center mb-12">Inspiration</h2>
+      {/* Mood / Inspiration */}
+      <section className="px-4">
+        <div className="mx-auto max-w-[1280px]">
+          <header className="mb-10 text-center">
+            <h2 className="poppins-light text-[28px] md:text-[34px] leading-tight text-[var(--fg)]">
+              Inspiration
+            </h2>
+            <p className="poppins-extralight text-[var(--fg-muted)]">
+              Calm lines, tactile fabrics, sunshine-ready comfort.
+            </p>
+          </header>
           <LandingGallery />
         </div>
       </section>
 
-      <section className="py-12 bg-white px-4">
-        <div className="container mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center block p-4 border rounded-md">
-              <h3 className="text-xl font-normal mb-2">Curated Comfort</h3>
-              <p className="text-muted">Premium fillings and hand-stitched seams for outdoor use.</p>
-            </div>
-            <div className="text-center block p-4 border rounded-md">
-              <h3 className="text-xl font-normal mb-2">Sustainable Fabrics</h3>
-              <p className="text-muted">Weather-resistant, fade-safe and easy to clean.</p>
-            </div>
-            <div className="text-center block p-4 border rounded-md">
-              <h3 className="text-xl font-normal mb-2">Design-Led</h3>
-              <p className="text-muted">Shapes and colours chosen by interior designers.</p>
-            </div>
+      {/* Three value props — rounder cards, cement copy */}
+      <section className="px-4">
+        <div className="mx-auto max-w-[1280px]">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              { title: 'Curated Comfort', copy: 'Premium fillings and hand-finished seams.' },
+              { title: 'Weather-Ready', copy: 'Fade-safe, easy-care outdoor fabrics.' },
+              { title: 'Design-Led', copy: 'Shapes specified by interior designers.' },
+            ].map((item) => (
+              <div key={item.title} className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-6 text-center">
+                <h3 className="poppins-light text-xl text-[var(--fg)] mb-1">{item.title}</h3>
+                <p className="text-[var(--fg-muted)]">{item.copy}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      <section className="py-16 px-4">
-        <div className="container mx-auto">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-3xl font-normal">Bestsellers</h2>
+      {/* Bestsellers — cleaner cards, fixed ratio, tidy meta */}
+      <section className="px-4">
+        <div className="mx-auto max-w-[1280px]">
+          <div className="mb-6 flex items-center justify-between">
+            <h2 className="poppins-light text-[26px] md:text-[32px] text-[var(--fg)]">Bestsellers</h2>
             <Button asChild>
               <a href="/shop" className="text-sm">View all</a>
             </Button>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {["lifestyle-1.jpg","lifestyle-2.jpg","lifestyle-3.jpg"].map((src, i) => (
-              <Card key={src} className="p-4">
-                <div className="w-full h-48 relative overflow-hidden rounded-md">
-                  <Image src={`/${src}`} alt={`Pool beanbag ${i + 1}`} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover" />
+            {['lifestyle-1.jpg', 'lifestyle-2.jpg', 'lifestyle-3.jpg'].map((src, i) => (
+              <Card key={src} className="p-0 overflow-hidden rounded-2xl border border-[var(--border)]">
+                <div className="relative aspect-[4/3] w-full">
+                  <Image
+                    src={`/${src}`}
+                    alt={`Pool bean bag ${i + 1}`}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="object-cover"
+                  />
                 </div>
-                <div className="mt-4">
-                  <h4 className="font-normal">Signature Beanbag {i + 1}</h4>
-                  <p className="text-muted text-sm">From R1500</p>
+                <div className="p-5">
+                  <h4 className="poppins-regular text-[var(--fg)]">Signature Beanbag {i + 1}</h4>
+                  <p className="text-sm text-[var(--fg-muted)] mt-1">From R1500</p>
                 </div>
               </Card>
             ))}
@@ -66,48 +115,45 @@ export default function Page() {
         </div>
       </section>
 
-      <section className="py-12 px-4 bg-[color:var(--background)]">
-        <div className="container mx-auto">
-          <h3 className="text-2xl font-normal mb-6">Fabrics & Finishes</h3>
+      {/* Fabrics & Finishes — tidy grid */}
+      <section className="px-4">
+        <div className="mx-auto max-w-[1280px]">
+          <h3 className="poppins-light text-[22px] md:text-[26px] text-[var(--fg)] mb-6">Fabrics &amp; Finishes</h3>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {["patterns.jpg","colors.jpg","kids.jpg","dog.jpg"].map((img) => (
-              <div key={img} className="rounded-md overflow-hidden">
-                <Image src={`/${img}`} alt={img} width={400} height={300} className="object-cover w-full h-36" />
+            {['patterns.jpg', 'colors.jpg', 'kids.jpg', 'dog.jpg'].map((img) => (
+              <div key={img} className="relative aspect-[4/3] overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--card)]">
+                <Image src={`/${img}`} alt={img} fill className="object-cover" sizes="(max-width: 768px) 50vw, 25vw" />
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="py-16 px-4">
-        <div className="container mx-auto">
-          <h3 className="text-2xl font-normal mb-6">What customers say</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <blockquote className="p-6 border rounded-md block">"Absolutely transformed our pool area — the quality is excellent." — Anna</blockquote>
-            <blockquote className="p-6 border rounded-md block">"Comfy, weatherproof and elegant." — Marcus</blockquote>
-            <blockquote className="p-6 border rounded-md block">"Quick delivery and lovely colour options." — Leila</blockquote>
-          </div>
-        </div>
-      </section>
+      {/* Reviews — your minimal, no-star version */}
+      <Reviews />
 
-      <section className="py-16 px-4 bg-[var(--ink)] text-white">
-        <div className="container mx-auto text-center">
-          <h3 className="text-3xl font-normal mb-4">Visit our showroom</h3>
-          <p className="max-w-2xl mx-auto mb-6 text-muted">Try samples and see finishes in person — appointments available by request.</p>
+      {/* Showroom CTA — calmer, monochrome */}
+      <section className="px-4">
+        <div className="mx-auto max-w-[1280px] rounded-2xl border border-[var(--border)] bg-[var(--card)] p-10 text-center">
+          <h3 className="poppins-light text-[26px] text-[var(--fg)] mb-2">Visit our showroom</h3>
+          <p className="poppins-extralight text-[var(--fg-muted)] max-w-2xl mx-auto mb-6">
+            See textures and scale in person. Private appointments available on request.
+          </p>
           <Button asChild>
             <a href="/contact" className="btn-primary">Book a visit</a>
           </Button>
         </div>
       </section>
 
-      <footer className="py-10 px-4 bg-white border-t">
-        <div className="container mx-auto text-sm text-muted flex flex-col md:flex-row justify-between items-center gap-4">
-          <div>© {new Date().getFullYear()} Pool Beanbags</div>
-          <div className="flex gap-4">
-            <a href="/about">About</a>
-            <a href="/faq">FAQ</a>
-            <a href="/contact">Contact</a>
-          </div>
+      {/* Footer */}
+      <footer className="px-4 pb-10">
+        <div className="mx-auto max-w-[1280px] border-t pt-8 text-sm text-[var(--fg-muted)] flex flex-col md:flex-row justify-between items-center gap-4">
+          <div>© {new Date().getFullYear()} Pool Bean Bags</div>
+          <nav className="flex gap-4">
+            <a href="/about" className="hover:opacity-80">About</a>
+            <a href="/faq" className="hover:opacity-80">FAQ</a>
+            <a href="/contact" className="hover:opacity-80">Contact</a>
+          </nav>
         </div>
       </footer>
     </main>

@@ -10,6 +10,9 @@ import Input from '../../components/ui/Input';
 import Badge from '../../components/ui/Badge';
 import Card from '../../components/ui/Card';
 import { useCart } from '../../components/CartContext';
+import Image from "next/image";
+import Link from "next/link";
+import Reviews from "@/components/Reviews";
 
 type Product = {
 	_id?: string;
@@ -126,159 +129,163 @@ export default function ShopPage() {
 
 	if (loading) {
 		return (
-			<div className="min-h-screen bg-gradient-to-br from-base-200 via-base-100 to-base-200 flex items-center justify-center">
+			<div className="min-h-screen bg-[var(--bg)] flex items-center justify-center">
 				<div className="text-center">
-					<span className="loading loading-spinner loading-lg text-primary"></span>
-					<p className="mt-4 text-base-content/70">Loading products...</p>
+					<span className="loading loading-spinner loading-lg text-[var(--fg)]"></span>
+					<p className="mt-4 text-[var(--fg-muted)]">Loading products...</p>
 				</div>
 			</div>
 		);
 	}
 
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-pink-50 py-12 px-4 sm:px-6 lg:px-8">
-			<div className="max-w-7xl mx-auto">
-				{/* Colorful Header Banner */}
-				<div className="text-center mb-12 bg-gradient-to-r from-blue-600 via-pink-500 to-yellow-400 rounded-3xl p-12 shadow-2xl">
-					<h1 className="text-5xl md:text-6xl font-bold text-white mb-4 drop-shadow-lg">🏊 Pool Beanbags Shop</h1>
-					<p className="text-xl text-white/95 max-w-2xl mx-auto font-medium">Discover our premium collection of pool beanbags. Find the perfect comfort for your poolside relaxation.</p>
-				</div>
-
-				{/* Search and Filters */}
-				<div className="mb-8">
-					<Card className="p-8 shadow-2xl border-l-8 border-blue-600 bg-white rounded-2xl">
-						<h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-							<span className="text-3xl">🔍</span> Find Your Perfect Beanbag
-						</h2>
-						<div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-							{/* Search */}
-							<div className="md:col-span-2">
-								<label className="block text-sm font-medium text-base-content mb-2">Search Products</label>
-								<Input
-									type="text"
-									placeholder="Search by name or description..."
-									value={searchQuery}
-									onChange={(e) => setSearchQuery(e.target.value)}
-									className="w-full"
-								/>
-							</div>
-
-							{/* Price Range */}
-							<div>
-								<label className="block text-sm font-medium text-base-content mb-2">Max Price: {formatPriceNumber(priceRange[1])}</label>
-								<input
-									type="range"
-									min="0"
-									max="2000"
-									step="50"
-									value={priceRange[1]}
-									onChange={(e) => setPriceRange([0, parseInt(e.target.value)])}
-									className="range range-primary w-full"
-								/>
-							</div>
-
-							{/* Category Filter */}
-							<div>
-								<label className="block text-sm font-medium text-base-content mb-2">Category</label>
-								<select
-									value={selectedCategory}
-									onChange={(e) => setSelectedCategory(e.target.value)}
-									className="select select-bordered w-full"
-								>
-									<option value="all">All Products</option>
-									<option value="promotional">On Sale</option>
-									<option value="regular">Regular Price</option>
-								</select>
-							</div>
+		<main className="bg-[var(--bg)]">
+			{/* HERO — quiet and minimal */}
+			<section className="relative">
+				<div className="relative h-[34vh] min-h-[280px]">
+					<Image
+						src="/lifestyle.jpg"
+						alt="Pool Bean Bags — shop hero"
+						fill
+						priority
+						sizes="100vw"
+						className="object-cover"
+					/>
+					<div className="absolute inset-0 bg-black/55" />
+					<div className="relative z-10 h-full flex items-center justify-center px-4">
+						<div className="text-center text-white">
+							<h1 className="poppins-light text-[32px] md:text-[44px] leading-tight">Shop</h1>
+							<p className="poppins-extralight text-white/90 mt-2">
+								Minimal forms. Weather-ready fabrics. Calm comfort.
+							</p>
 						</div>
-					</Card>
-				</div>
-
-				{/* Products Grid */}
-				<div className="mb-8">
-					<div className="flex items-center justify-between mb-6">
-						<h2 className="text-2xl font-bold text-base-content">Products</h2>
-						<Badge className="badge-primary badge-lg font-semibold">
-							{filteredProducts.length} {filteredProducts.length === 1 ? 'Product' : 'Products'}
-						</Badge>
 					</div>
+				</div>
+			</section>
 
+			{/* FILTER / SORT BAR — monochrome, subtle */}
+			<section className="px-4">
+				<div className="mx-auto max-w-[1280px] py-6 flex flex-col gap-3 md:flex-row md:items-center md:justify-between border-b border-[var(--border)]">
+					<div className="text-sm text-[var(--fg-muted)]">
+						{filteredProducts.length} products
+					</div>
+					<div className="flex items-center gap-3">
+						{/* Search */}
+						<div className="md:col-span-2">
+							<Input
+								type="text"
+								placeholder="Search products..."
+								value={searchQuery}
+								onChange={(e) => setSearchQuery(e.target.value)}
+								className="w-40"
+							/>
+						</div>
+
+						{/* Price Range */}
+						<div>
+							<label className="block text-sm font-medium text-[var(--fg)] mb-2">Max Price: {formatPriceNumber(priceRange[1])}</label>
+							<input
+								type="range"
+								min="0"
+								max="2000"
+								step="50"
+								value={priceRange[1]}
+								onChange={(e) => setPriceRange([0, parseInt(e.target.value)])}
+								className="range range-primary w-full"
+							/>
+						</div>
+
+						{/* Category Filter */}
+						<div>
+							<select
+								value={selectedCategory}
+								onChange={(e) => setSelectedCategory(e.target.value)}
+								className="input w-40"
+							>
+								<option value="all">All Products</option>
+								<option value="promotional">On Sale</option>
+								<option value="regular">Regular Price</option>
+							</select>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			{/* GRID */}
+			<section className="px-4">
+				<div className="mx-auto max-w-[1280px] py-10">
 					{filteredProducts.length === 0 ? (
-						<Card className="p-12 text-center shadow-xl border-0 bg-white/80 backdrop-blur-sm">
-							<div className="text-6xl mb-4">🔍</div>
-							<h3 className="text-xl font-semibold text-base-content mb-2">No products found</h3>
-							<p className="text-base-content/70">Try adjusting your search or filters to find what you're looking for.</p>
-						</Card>
+						<div className="text-center py-16">
+							<h3 className="text-2xl font-light text-[var(--fg)] mb-4">No products found</h3>
+							<p className="text-[var(--fg-muted)]">Try adjusting your search or filters.</p>
+						</div>
 					) : (
-						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+						<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 							{filteredProducts.map((product) => {
 								const priceInfo = getDisplayPrice(product);
 								return (
-									<Card key={product.id} className="shadow-xl border-0 bg-white/80 backdrop-blur-sm hover:shadow-2xl transition-all duration-300 overflow-hidden group">
-										{/* Product Image */}
-										<div className="aspect-square bg-base-200 relative overflow-hidden">
-											{product.images && product.images.length > 0 ? (
-												<img
-													src={product.images[0].url}
-													alt={product.images[0].alt || product.title}
-													className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-												/>
-											) : (
-												<div className="w-full h-full flex items-center justify-center text-6xl">
-													🏊‍♂️
+									<Card
+										key={product.id}
+										className="overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--card)]"
+									>
+										<Link href={`/product/${product.slug}`} aria-label={product.title}>
+											<div className="relative aspect-[4/3] w-full">
+												{product.images && product.images.length > 0 ? (
+													<Image
+														src={product.images[0].url}
+														alt={product.images[0].alt || product.title}
+														fill
+														sizes="(max-width:768px) 100vw, (max-width:1200px) 50vw, 33vw"
+														className="object-cover transition-transform duration-500 hover:scale-[1.02]"
+													/>
+												) : (
+													<div className="w-full h-full flex items-center justify-center bg-[var(--muted)] text-6xl">
+														🏊
+													</div>
+												)}
+												{product.is_promotional && (
+													<span className="absolute left-3 top-3 rounded-full border border-[var(--border)] bg-[var(--card)]/90 px-3 py-1 text-[11px] uppercase tracking-wide text-[var(--fg-muted)] backdrop-blur">
+														SALE
+													</span>
+												)}
+											</div>
+										</Link>
+
+										<div className="p-5">
+											<Link href={`/product/${product.slug}`} className="block">
+												<h3 className="poppins-regular text-[var(--fg)] leading-tight">
+													{product.title}
+												</h3>
+												<div className="mt-2">
+													{priceInfo.discounted ? (
+														<div className="flex items-center gap-2">
+															<span className="text-lg font-bold text-[var(--fg)]">
+																{priceInfo.discounted}
+															</span>
+															<span className="text-sm text-[var(--fg-muted)] line-through">
+																{priceInfo.original}
+															</span>
+															<span className="text-xs bg-[var(--primary)] text-[var(--primary-foreground)] px-2 py-1 rounded">
+																-{product.promotion_discount_percent}%
+															</span>
+														</div>
+													) : (
+														<span className="text-lg font-bold text-[var(--fg)]">
+															{priceInfo.original}
+														</span>
+													)}
 												</div>
-											)}
-											{product.is_promotional && (
-												<Badge className="badge-error badge-sm absolute top-3 left-3 font-semibold">
-													SALE
-												</Badge>
-											)}
-										</div>
-
-										{/* Product Info */}
-										<div className="p-4">
-											<h3 className="font-semibold text-lg text-base-content mb-2 line-clamp-2">
-												{product.title}
-											</h3>
-											<p className="text-sm text-base-content/70 mb-3 line-clamp-2">
-												{product.description}
-											</p>
-
-											{/* Price */}
-																	<div className="mb-4">
-																		{priceInfo.discounted ? (
-																			<div className="flex items-center gap-2">
-																				<span className="text-lg font-bold text-error">
-																					{priceInfo.discounted}
-																				</span>
-																				<span className="text-sm text-base-content/50 line-through">
-																					{priceInfo.original}
-																				</span>
-																				<Badge className="badge-error badge-xs">
-																					-{product.promotion_discount_percent}%
-																				</Badge>
-																			</div>
-																		) : (
-																			<span className="text-lg font-bold text-base-content">
-																				{priceInfo.original}
-																			</span>
-																		)}
-																	</div>
-
-											{/* Action Buttons */}
-											<div className="space-y-2">
+											</Link>
+											<div className="mt-4 flex items-center gap-3">
+												<Button asChild>
+													<Link href={`/product/${product.slug}`}>View</Link>
+												</Button>
 												<button
 													onClick={() => addItem(product)}
-													className="w-full bg-success hover:bg-success-focus text-white font-medium py-2 px-4 rounded-lg transition-all duration-200"
+													className="btn-primary"
 												>
 													Add to Cart
 												</button>
-												<a
-													href={`/product/${product.slug}`}
-													className="w-full bg-primary hover:bg-primary-focus text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 text-center block"
-												>
-													View Details
-												</a>
 											</div>
 										</div>
 									</Card>
@@ -286,8 +293,59 @@ export default function ShopPage() {
 							})}
 						</div>
 					)}
+
+					{/* Pagination — simple, monochrome */}
+					<div className="mt-10 flex items-center justify-center gap-2">
+						<Link
+							href="/shop?page=1"
+							className="btn-outline rounded-full px-4 py-2 text-sm"
+						>
+							1
+						</Link>
+						<Link
+							href="/shop?page=2"
+							className="btn-outline rounded-full px-4 py-2 text-sm"
+						>
+							2
+						</Link>
+						<span className="text-[var(--fg-muted)] text-sm px-2">…</span>
+						<Link
+							href="/shop?page=next"
+							className="btn-outline rounded-full px-4 py-2 text-sm"
+						>
+							Next →
+						</Link>
+					</div>
 				</div>
-			</div>
-		</div>
+			</section>
+
+			{/* SOCIAL PROOF / REVIEWS — minimal, rounded, no stars */}
+			<Reviews />
+
+			{/* FABRICS STRIP — optional mini-inspo under reviews */}
+			<section className="px-4 pb-16">
+				<div className="mx-auto max-w-[1280px]">
+					<h3 className="poppins-light text-[22px] md:text-[26px] text-[var(--fg)] mb-6">
+						Fabrics &amp; Finishes
+					</h3>
+					<div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+						{["colors.jpg", "patterns.jpg", "kids.jpg", "dog.jpg"].map((img) => (
+							<div
+								key={img}
+								className="relative aspect-[4/3] overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--card)]"
+							>
+								<Image
+									src={`/${img}`}
+									alt={img}
+									fill
+									sizes="(max-width:768px) 50vw, 25vw"
+									className="object-cover"
+								/>
+							</div>
+						))}
+					</div>
+				</div>
+			</section>
+		</main>
 	);
 }

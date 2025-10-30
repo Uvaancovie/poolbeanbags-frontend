@@ -1,18 +1,13 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Poppins } from "next/font/google";
 import "./globals.css";
 import Navbar from "../components/Navbar";
 import { CartProvider } from "../components/CartContext";
 
-const inter = Inter({
+const poppins = Poppins({
   subsets: ["latin"],
-  variable: "--font-inter",
-  display: 'swap',
-});
-
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  variable: "--font-playfair",
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-poppins",
   display: 'swap',
 });
 
@@ -29,11 +24,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
+    <html lang="en" className={`${poppins.variable}`}>
       <head>
         <meta name="theme-color" content="#0B1220" />
       </head>
-      <body className="font-sans text-ink bg-white">
+      <body className="font-poppins text-black bg-white">
         <CartProvider>
           <Navbar />
           {children}

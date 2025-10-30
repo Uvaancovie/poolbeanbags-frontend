@@ -61,15 +61,15 @@ export default function FAQPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50">
+    <div className="min-h-screen bg-[var(--bg)]">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-green-500 via-blue-600 to-pink-500 py-20 px-4 sm:px-6 lg:px-8 shadow-xl">
+      <div className="bg-[var(--primary)] py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-6xl md:text-7xl font-bold text-white mb-6 drop-shadow-2xl">
-            ❓ Frequently Asked Questions
+          <h1 className="text-6xl md:text-7xl font-light text-[var(--primary-foreground)] mb-6">
+            Frequently Asked Questions
           </h1>
-          <p className="text-2xl text-white/95 max-w-2xl mx-auto leading-relaxed font-medium">
-            Everything you need to know about our pool beanbags. Can't find what you're looking for? Contact us! 💬
+          <p className="text-2xl text-[var(--primary-foreground)]/95 max-w-2xl mx-auto leading-relaxed font-light">
+            Everything you need to know about our pool beanbags. Can't find what you're looking for? Contact us.
           </p>
         </div>
       </div>
@@ -78,21 +78,17 @@ export default function FAQPage() {
         {/* FAQ List */}
         <div className="space-y-6 mb-16">
           {faqs.map((faq, index) => (
-            <Card key={index} className={`shadow-xl bg-white rounded-xl border-l-8 ${
-              index % 4 === 0 ? 'border-blue-500' :
-              index % 4 === 1 ? 'border-pink-500' :
-              index % 4 === 2 ? 'border-yellow-500' : 'border-green-500'
-            } hover:scale-102 transition-transform`}>
+            <div key={index} className="shadow-xl bg-[var(--card)] rounded-xl border border-[var(--border)]">
               <button
                 onClick={() => toggleFAQ(index)}
-                className="w-full text-left p-6 focus:outline-none focus:ring-2 focus:ring-primary rounded-lg"
+                className="w-full text-left p-6 focus:outline-none focus:ring-2 focus:ring-[var(--ring)] rounded-lg"
               >
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold text-base-content pr-4">
+                  <h3 className="text-lg font-light text-[var(--fg)] pr-4">
                     {faq.question}
                   </h3>
                   <div className={`transform transition-transform duration-200 ${openFAQ === index ? 'rotate-180' : ''}`}>
-                    <svg className="w-5 h-5 text-base-content/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 text-[var(--fg-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
                   </div>
@@ -101,36 +97,32 @@ export default function FAQPage() {
 
               {openFAQ === index && (
                 <div className="px-6 pb-6">
-                  <div className="border-t border-base-200 pt-4">
-                    <p className="text-base-content/80 leading-relaxed">
+                  <div className="border-t border-[var(--border)] pt-4">
+                    <p className="text-[var(--fg-muted)] leading-relaxed">
                       {faq.answer}
                     </p>
                   </div>
                 </div>
               )}
-            </Card>
+            </div>
           ))}
         </div>
 
         {/* Still Have Questions */}
-        <Card className="p-8 shadow-xl border-0 bg-white/90 backdrop-blur-sm text-center">
-          <h2 className="text-2xl font-bold text-base-content mb-4">Still Have Questions?</h2>
-          <p className="text-base-content/70 mb-6 text-lg">
+        <div className="p-8 shadow-xl border border-[var(--border)] bg-[var(--card)] text-center">
+          <h2 className="text-2xl font-light text-[var(--fg)] mb-4">Still Have Questions?</h2>
+          <p className="text-[var(--fg-muted)] mb-6 text-lg">
             Can't find the answer you're looking for? We're here to help!
           </p>
           <div className="flex flex-wrap justify-center gap-4">
-            <Link href="/contact">
-              <Button className="btn btn-primary btn-lg">
-                Contact Us
-              </Button>
-            </Link>
-            <Link href="/shop">
-              <Button className="btn btn-outline btn-lg">
-                Start Shopping
-              </Button>
-            </Link>
+            <a href="/contact" className="btn-primary">
+              Contact Us
+            </a>
+            <a href="/shop" className="px-8 py-4 border-2 border-[var(--border)] bg-[var(--secondary)] text-[var(--fg)] rounded-lg hover:bg-[var(--muted)] transition-colors">
+              Start Shopping
+            </a>
           </div>
-        </Card>
+        </div>
       </div>
     </div>
   );

@@ -1,192 +1,232 @@
-import Card from '../../components/ui/Card';
-import { Button } from '../../components/ui/Button';
-import Link from 'next/link';
-import { API_BASE } from 'lib/api';
+// app/announcements/page.tsx
+import type { Metadata } from "next"
+import Image from "next/image"
+import Link from "next/link"
 
-type Announcement = {
-  id: number;
-  slug: string;
-  title: string;
-  excerpt?: string;
-  body_richtext?: string;
-  banner_image?: string;
-  banner_image_url?: string;
-  published_at?: string;
-  start_at?: string;
-  end_at?: string;
-  is_featured: boolean;
-  created_at: string;
-};
+export const metadata: Metadata = {
+  title: "Announcements — Pool Bean Bags",
+  description: "Minimal, editorial announcements and updates.",
+}
 
-export default async function AnnouncementsPage() {
+type StaticAnnouncement = {
+  id: number
+  title: string
+  excerpt: string
+  date: string
+  image: string
+  featured?: boolean
+  body?: string
+}
 
-  let announcements: Announcement[] = [];
-  try {
-    // Allow Next to decide caching strategy during build; avoid `no-store` which forces dynamic server usage
-    const res = await fetch(`${API_BASE}/api/announcements`);
-    const data = await res.json();
-    announcements = data.announcements || [];
-  } catch (err) {
-    console.error('Failed to fetch announcements:', err);
-  }
+const ANNOUNCEMENTS: StaticAnnouncement[] = [
+  {
+    id: 1,
+    title: "Summer Sale — Up to 20% Off",
+    excerpt:
+      "Limited-time savings on our premium outdoor bean bags. Hand-finished details, weather-ready fabrics.",
+    date: "2025-11-01",
+    image: "/lifestyle-2.jpg",
+    featured: true,
+    body:
+      "Celebrate summer with elevated comfort. Our bestselling pool bean bags are on promotion for a limited time. Enjoy minimal aesthetics, durable stitching, and materials engineered for South African sun.",
+  },
+  {
+    id: 2,
+    title: "New Colours, Same Minimal Feel",
+    excerpt:
+      "A curated palette of neutral tones designed to complement contemporary outdoor spaces.",
+    date: "2025-10-20",
+    image: "/lifestyle-3.jpg",
+  },
+  {
+    id: 3,
+    title: "Durban Showroom — By Appointment",
+    excerpt:
+      "See textures and scale in person. Private viewings available weekdays 09:00–16:00.",
+    date: "2025-10-12",
+    image: "/family.jpg",
+  },
+  {
+    id: 4,
+    title: "Craft & Care",
+    excerpt:
+      "Reinforced seams, premium fillings, and simple care routines to extend product life.",
+    date: "2025-09-28",
+    image: "/kids.jpg",
+  },
+]
 
-  function formatDate(dateString?: string) {
-    if (!dateString) return '';
-    return new Date(dateString).toLocaleDateString('en-ZA', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  }
+function formatZA(dateISO: string) {
+  return new Date(dateISO).toLocaleDateString("en-ZA", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  })
+}
+
+export default function AnnouncementsPage() {
+  const featured = ANNOUNCEMENTS.find((a) => a.featured)
+  const regular = ANNOUNCEMENTS.filter((a) => !a.featured)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-white to-pink-50">
-      {/* Hero Section */}
-      <div className="bg-gradient-to-r from-yellow-400 via-pink-500 to-blue-600 py-20 px-4 sm:px-6 lg:px-8 shadow-xl">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-6xl md:text-7xl font-bold text-white mb-6 drop-shadow-2xl">
-            📢 Announcements & Updates
-          </h1>
-          <p className="text-2xl text-white/95 max-w-2xl mx-auto leading-relaxed font-medium">
-            Stay informed with our latest news, promotions, and important updates from Pool Beanbags! ✨
-          </p>
+    <div className="min-h-screen bg-[var(--bg)]">
+      {/* Hero */}
+      <section className="relative overflow-hidden">
+        <div className="relative h-[52vh] min-h-[420px]">
+          <Image
+            src="/lifestyle-1.jpg"
+            alt="Pool Bean Bags — lifestyle"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-black/60" />
+          <div className="relative z-10 h-full flex items-center justify-center px-4">
+            <div className="max-w-4xl text-center text-white">
+              <h1 className="poppins-light text-[40px] md:text-[64px] leading-tight tracking-tight">
+                Announcements
+              </h1>
+              <p className="poppins-extralight text-white/90 text-lg md:text-xl mt-3">
+                Quiet luxury. Minimal design. Updates that matter.
+              </p>
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        {announcements.length === 0 ? (
-          <div className="text-center py-16">
-            <div className="text-8xl mb-6">📢</div>
-            <h3 className="text-2xl font-semibold text-base-content mb-4">No active announcements</h3>
-            <p className="text-base-content/60 text-lg">Check back later for promotions and updates.</p>
-          </div>
-        ) : (
-          <div className="space-y-12">
-            {/* Featured Announcement - Hero Style */}
-            {announcements.filter(a => a.is_featured).length > 0 && (
-              <div className="mb-16">
-                <h2 className="text-3xl font-bold text-base-content mb-8 text-center">Featured Announcement</h2>
-                {announcements.filter(a => a.is_featured).map(announcement => (
-                  <Card key={announcement.id} className="overflow-hidden shadow-2xl border-0 bg-white/95 backdrop-blur-sm">
-                    {announcement.banner_image_url && (
-                      <div className="relative h-96 overflow-hidden">
-                        <img
-                          src={announcement.banner_image_url}
-                          alt={announcement.title}
-                          className="w-full h-full object-cover"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-                        <div className="absolute bottom-8 left-8 right-8">
-                          <div className="flex items-center gap-3 mb-4">
-                            <span className="badge badge-primary badge-lg text-white shadow-lg">Featured</span>
-                            <span className="text-white/90 text-sm font-medium">
-                              {formatDate(announcement.start_at)} - {formatDate(announcement.end_at)}
-                            </span>
-                          </div>
-                          <h2 className="text-4xl font-bold text-white mb-4 leading-tight">{announcement.title}</h2>
-                          {announcement.excerpt && (
-                            <p className="text-xl text-white/90 leading-relaxed max-w-2xl">{announcement.excerpt}</p>
-                          )}
-                        </div>
-                      </div>
-                    )}
-                    <div className="p-8">
-                      {!announcement.banner_image_url && (
-                        <>
-                          <div className="flex items-center gap-3 mb-6">
-                            <span className="badge badge-primary badge-lg">Featured</span>
-                            <span className="text-base-content/60 text-sm">
-                              {formatDate(announcement.start_at)} - {formatDate(announcement.end_at)}
-                            </span>
-                          </div>
-                          <h2 className="text-4xl font-bold text-base-content mb-6 leading-tight">{announcement.title}</h2>
-                          {announcement.excerpt && (
-                            <p className="text-xl text-base-content/80 mb-8 leading-relaxed">{announcement.excerpt}</p>
-                          )}
-                        </>
-                      )}
-                      {announcement.body_richtext && (
-                        <div
-                          className="prose prose-xl max-w-none text-base-content/90 leading-relaxed"
-                          dangerouslySetInnerHTML={{ __html: announcement.body_richtext }}
-                        />
-                      )}
-                    </div>
-                  </Card>
-                ))}
-              </div>
-            )}
-
-            {/* Regular Announcements - Blog Style Grid */}
-            {announcements.filter(a => !a.is_featured).length > 0 && (
-              <>
-                <h2 className="text-3xl font-bold text-base-content mb-8 text-center">Latest Updates</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {announcements.filter(a => !a.is_featured).map(announcement => (
-                    <Card key={announcement.id} className="group overflow-hidden shadow-xl border-0 bg-white/90 backdrop-blur-sm hover:shadow-2xl transition-all duration-300">
-                      {announcement.banner_image_url && (
-                        <div className="relative h-48 overflow-hidden">
-                          <img
-                            src={announcement.banner_image_url}
-                            alt={announcement.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                          />
-                          <div className="absolute top-4 right-4">
-                            <span className="badge badge-outline badge-sm bg-white/90 text-base-content shadow-lg">
-                              {formatDate(announcement.created_at)}
-                            </span>
-                          </div>
-                        </div>
-                      )}
-                      <div className="p-6">
-                        <div className="flex items-center justify-between mb-3">
-                          <span className="text-sm text-base-content/60 font-medium">
-                            {formatDate(announcement.start_at)} - {formatDate(announcement.end_at)}
-                          </span>
-                          {!announcement.banner_image_url && (
-                            <span className="badge badge-outline badge-sm">
-                              {formatDate(announcement.created_at)}
-                            </span>
-                          )}
-                        </div>
-                        <h3 className="text-2xl font-bold text-base-content mb-3 leading-tight group-hover:text-primary transition-colors">
-                          {announcement.title}
-                        </h3>
-                        {announcement.excerpt && (
-                          <p className="text-base-content/70 mb-4 leading-relaxed line-clamp-3">
-                            {announcement.excerpt}
-                          </p>
-                        )}
-                        {announcement.body_richtext && (
-                          <div
-                            className="prose prose-sm max-w-none text-base-content/80 line-clamp-4"
-                            dangerouslySetInnerHTML={{ __html: announcement.body_richtext.replace(/<[^>]*>/g, '').substring(0, 200) + '...' }}
-                          />
-                        )}
-                        <div className="mt-4 pt-4 border-t border-base-200">
-                          <div className="flex items-center justify-between text-sm text-base-content/60">
-                            <span>Published {formatDate(announcement.created_at)}</span>
-                            <span className="font-medium">Read more →</span>
-                          </div>
-                        </div>
-                      </div>
-                    </Card>
-                  ))}
+      <main className="mx-auto max-w-[1200px] px-4 md:px-6 lg:px-10 py-16 space-y-16">
+        {/* Featured */}
+        {featured && (
+          <section aria-labelledby="featured">
+            <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] overflow-hidden shadow-sm">
+              <div className="relative h-[420px]">
+                <Image
+                  src={featured.image}
+                  alt={featured.title}
+                  fill
+                  sizes="100vw"
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+                <div className="absolute bottom-8 left-8 right-8">
+                  <div className="flex items-center gap-3 mb-4">
+                    <span className="px-3 py-1 text-xs font-medium bg-[var(--card)] text-[var(--fg)] border border-[var(--border)] rounded-full">
+                      Featured
+                    </span>
+                    <span className="text-[var(--card)]/90 text-sm">
+                      {formatZA(featured.date)}
+                    </span>
+                  </div>
+                  <h2 className="poppins-light text-white text-4xl md:text-5xl leading-tight">
+                    {featured.title}
+                  </h2>
+                  <p className="text-white/90 text-lg md:text-xl max-w-2xl mt-3 poppins-extralight">
+                    {featured.excerpt}
+                  </p>
                 </div>
-              </>
-            )}
-          </div>
+              </div>
+              <div className="p-8 md:p-10">
+                <div className="grid md:grid-cols-3 gap-8">
+                  <div className="md:col-span-2">
+                    <p className="text-[var(--fg)]/90 leading-relaxed">
+                      {featured.body}
+                    </p>
+                  </div>
+                  <div className="flex md:justify-end">
+                    <Link
+                      href="/shop"
+                      className="btn-primary self-start"
+                      aria-label="Shop now"
+                    >
+                      Shop Now
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
         )}
 
-        <div className="text-center mt-16">
+        {/* Grid of updates */}
+        {regular.length > 0 && (
+          <section aria-labelledby="updates" className="space-y-6">
+            <h3 className="poppins-light text-2xl text-[var(--fg)]">Latest Updates</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {regular.map((a) => (
+                <article
+                  key={a.id}
+                  className="group rounded-xl border border-[var(--border)] bg-[var(--card)] overflow-hidden transition-shadow hover:shadow-lg"
+                >
+                  <div className="relative h-48">
+                    <Image
+                      src={a.image}
+                      alt={a.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  </div>
+                  <div className="p-6">
+                    <div className="text-xs text-[var(--fg-muted)] mb-2">
+                      {formatZA(a.date)}
+                    </div>
+                    <h4 className="poppins-light text-xl text-[var(--fg)] leading-tight mb-2">
+                      {a.title}
+                    </h4>
+                    <p className="text-[var(--fg-muted)]">{a.excerpt}</p>
+                    <div className="mt-4 pt-4 border-t border-[var(--border)] flex items-center justify-between text-sm">
+                      <span className="text-[var(--fg-muted)]">Read more</span>
+                      <span className="text-[var(--fg)] group-hover:opacity-70 transition-opacity">
+                        →
+                      </span>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Newsletter / CTA */}
+        <section
+          aria-labelledby="newsletter"
+          className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-8 md:p-10"
+        >
+          <div className="grid md:grid-cols-3 gap-6 items-center">
+            <div className="md:col-span-2">
+              <h3 className="poppins-light text-2xl text-[var(--fg)]">
+                Quiet updates, no noise.
+              </h3>
+              <p className="text-[var(--fg-muted)] mt-1">
+                Be first to hear about limited runs, restocks and events.
+              </p>
+            </div>
+            <form className="flex gap-3">
+              <input
+                type="email"
+                placeholder="Email address"
+                className="input"
+                aria-label="Email address"
+              />
+              <button type="submit" className="btn-primary">
+                Subscribe
+              </button>
+            </form>
+          </div>
+        </section>
+
+        {/* Back link */}
+        <div className="text-center">
           <Link
             href="/shop"
-            className="inline-flex items-center px-8 py-4 bg-primary hover:bg-primary-focus text-primary-content font-semibold rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl text-lg"
+            className="inline-flex items-center btn-outline"
+            aria-label="Back to shop"
           >
             ← Back to Shop
           </Link>
         </div>
-      </div>
+      </main>
     </div>
-  );
+  )
 }
