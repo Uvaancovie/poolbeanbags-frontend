@@ -29,8 +29,8 @@ export default function AdminDashboard() {
     }
 
     try {
-      const res = await fetch(${API_BASE}/api/auth/me, {
-        headers: { 'Authorization': Bearer  }
+      const res = await fetch(`${API_BASE}/api/auth/me`, {
+        headers: { 'Authorization': `Bearer ${token}` }
       });
 
       if (!res.ok) {
@@ -61,10 +61,10 @@ export default function AdminDashboard() {
       const token = localStorage.getItem('admin_token');
 
       const [productsRes, announcementsRes, ordersRes, contactsRes] = await Promise.all([
-        fetch(${API_BASE}/api/products),
-        fetch(${API_BASE}/api/announcements),
-        fetch(${API_BASE}/api/admin/orders, { headers: { 'Authorization': Bearer  } }),
-        fetch(${API_BASE}/api/admin/contacts, { headers: { 'Authorization': Bearer  } }),
+        fetch(`${API_BASE}/api/products`),
+        fetch(`${API_BASE}/api/announcements`),
+        fetch(`${API_BASE}/api/admin/orders`, { headers: { 'Authorization': `Bearer ${token}` } }),
+        fetch(`${API_BASE}/api/admin/contacts`, { headers: { 'Authorization': `Bearer ${token}` } }),
       ]);
 
       const products = await productsRes.json();
