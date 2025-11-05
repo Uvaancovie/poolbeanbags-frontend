@@ -241,7 +241,7 @@ export default function AdminAnnouncementsPage() {
               setEditingAnnouncement(null);
               setShowCreateForm(!showCreateForm);
             }}
-            className="bg-primary hover:bg-primary-focus text-primary-content font-medium py-3 px-6 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl"
+            className="bg-black hover:bg-gray-800 text-white font-medium py-3 px-6 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl"
           >
             {showCreateForm ? 'Cancel' : '+ New Announcement'}
           </Button>

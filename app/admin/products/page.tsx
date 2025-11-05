@@ -136,7 +136,7 @@ export default function AdminProductsPage() {
             <div className="flex gap-4">
               <Button
                 onClick={() => router.push('/shop/add')}
-                className="bg-primary hover:bg-primary-focus text-primary-content font-medium py-2 px-4 rounded-lg transition-all duration-200"
+                className="bg-black hover:bg-gray-800 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200"
               >
                 + Add Product
               </Button>
@@ -172,7 +172,7 @@ export default function AdminProductsPage() {
                 <p className="text-base-content/70 mb-4">Create your first product to get started</p>
                 <Button
                   onClick={() => router.push('/shop/add')}
-                  className="bg-primary hover:bg-primary-focus text-primary-content font-medium py-3 px-6 rounded-lg transition-all duration-200"
+                  className="bg-black hover:bg-gray-800 text-white font-medium py-3 px-6 rounded-lg transition-all duration-200"
                 >
                   Add Your First Product
                 </Button>
@@ -213,7 +213,7 @@ export default function AdminProductsPage() {
                       {/* Price */}
                       <div className="mb-4">
                         <span className="text-lg font-bold text-base-content">
-                          ${(product.base_price_cents || 0) / 100}
+                          R{(product.base_price_cents || 0) / 100}
                         </span>
                         {product.is_promotional && product.promotion_discount_percent && (
                           <span className="text-sm text-error ml-2">

@@ -166,56 +166,56 @@ export default function AdminDashboard() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <button
               onClick={() => router.push('/admin/products')}
-              className="p-4 border border-black bg-white hover:bg-black hover:text-white transition-colors rounded-lg text-left"
+              className="p-4 border border-black bg-white text-black hover:bg-black hover:text-white transition-colors rounded-lg text-left group"
             >
-              <div className="text-2xl mb-2"></div>
+              <div className="text-2xl mb-2">📦</div>
               <div className="font-bold">Manage Products</div>
-              <div className="text-sm opacity-70">Add, edit, delete products</div>
+              <div className="text-sm opacity-70 group-hover:opacity-100">Add, edit, delete products</div>
             </button>
 
             <button
               onClick={() => router.push('/admin/announcements')}
-              className="p-4 border border-black bg-white hover:bg-black hover:text-white transition-colors rounded-lg text-left"
+              className="p-4 border border-black bg-white text-black hover:bg-black hover:text-white transition-colors rounded-lg text-left group"
             >
-              <div className="text-2xl mb-2"></div>
+              <div className="text-2xl mb-2">📢</div>
               <div className="font-bold">Announcements</div>
-              <div className="text-sm opacity-70">Create and manage announcements</div>
+              <div className="text-sm opacity-70 group-hover:opacity-100">Create and manage announcements</div>
             </button>
 
             <button
               onClick={() => router.push('/admin/orders')}
-              className="p-4 border border-black bg-white hover:bg-black hover:text-white transition-colors rounded-lg text-left"
+              className="p-4 border border-black bg-white text-black hover:bg-black hover:text-white transition-colors rounded-lg text-left group"
             >
-              <div className="text-2xl mb-2"></div>
+              <div className="text-2xl mb-2">🛒</div>
               <div className="font-bold">View Orders</div>
-              <div className="text-sm opacity-70">Process and track orders</div>
+              <div className="text-sm opacity-70 group-hover:opacity-100">Process and track orders</div>
             </button>
 
             <button
               onClick={() => router.push('/admin/contacts')}
-              className="p-4 border border-black bg-white hover:bg-black hover:text-white transition-colors rounded-lg text-left"
+              className="p-4 border border-black bg-white text-black hover:bg-black hover:text-white transition-colors rounded-lg text-left group"
             >
-              <div className="text-2xl mb-2"></div>
+              <div className="text-2xl mb-2">💬</div>
               <div className="font-bold">Contact Messages</div>
-              <div className="text-sm opacity-70">View customer inquiries</div>
+              <div className="text-sm opacity-70 group-hover:opacity-100">View customer inquiries</div>
             </button>
 
             <button
               onClick={() => router.push('/admin/shipping')}
-              className="p-4 border border-black bg-white hover:bg-black hover:text-white transition-colors rounded-lg text-left"
+              className="p-4 border border-black bg-white text-black hover:bg-black hover:text-white transition-colors rounded-lg text-left group"
             >
-              <div className="text-2xl mb-2"></div>
+              <div className="text-2xl mb-2">🚚</div>
               <div className="font-bold">Shipping</div>
-              <div className="text-sm opacity-70">Manage shipping information</div>
+              <div className="text-sm opacity-70 group-hover:opacity-100">Manage shipping information</div>
             </button>
 
             <button
               onClick={() => router.push('/')}
-              className="p-4 border border-black bg-white hover:bg-black hover:text-white transition-colors rounded-lg text-left"
+              className="p-4 border border-black bg-white text-black hover:bg-black hover:text-white transition-colors rounded-lg text-left group"
             >
-              <div className="text-2xl mb-2"></div>
+              <div className="text-2xl mb-2">🏠</div>
               <div className="font-bold">View Store</div>
-              <div className="text-sm opacity-70">Go to main website</div>
+              <div className="text-sm opacity-70 group-hover:opacity-100">Go to main website</div>
             </button>
           </div>
         </div>
