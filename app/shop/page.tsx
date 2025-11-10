@@ -34,7 +34,7 @@ export default function ShopPage() {
 	const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [searchQuery, setSearchQuery] = useState('');
-	const [priceRange, setPriceRange] = useState<[number, number]>([0, 2000]);
+	const [priceRange, setPriceRange] = useState<[number, number]>([0, 4000]);
 	const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
 	async function fetchProducts() {
@@ -187,7 +187,7 @@ export default function ShopPage() {
 							<input
 								type="range"
 								min="0"
-								max="2000"
+								max="4000"
 								step="50"
 								value={priceRange[1]}
 								onChange={(e) => setPriceRange([0, parseInt(e.target.value)])}
