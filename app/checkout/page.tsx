@@ -36,7 +36,7 @@ export default function CheckoutPage() {
   }, [firstName, lastName, email, phone, address1, city, province, postalCode, deliveryType]);
 
   const subtotal_cents = items.reduce((t, i) => t + i.price * i.quantity, 0);
-  const shipping_cents = deliveryType === 'pickup' ? 0 : (items.length ? 20000 : 0);
+  const shipping_cents = deliveryType === 'pickup' ? 0 : (items.length ? SHIPPING_FLAT_CENTS : 0);
   const total_cents = subtotal_cents + shipping_cents;
 
   const formatPrice = (cents: number) => `R${(cents / 100).toFixed(2)}`;
@@ -131,7 +131,7 @@ export default function CheckoutPage() {
                     className="mt-1"
                   />
                   <div>
-                    <p className="font-medium text-[var(--fg)]">Delivery - {formatPrice(20000)}</p>
+                    <p className="font-medium text-[var(--fg)]">Delivery - {formatPrice(SHIPPING_FLAT_CENTS)}</p>
                     <p className="text-sm text-[var(--fg-muted)]">Nationwide delivery via {SHIPPING_PROVIDER}</p>
                   </div>
                 </label>
