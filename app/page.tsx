@@ -32,7 +32,11 @@ export default async function Page() {
     console.error('Failed to fetch announcements:', err)
   }
 
-  const latestAnnouncement = announcements.length > 0 ? announcements[0] : null
+  // Filter out summer sale announcements
+  const filteredAnnouncements = announcements.filter(
+    (announcement) => !announcement.title.toLowerCase().includes('summer sale')
+  )
+  const latestAnnouncement = filteredAnnouncements.length > 0 ? filteredAnnouncements[0] : null
 
   return (
     <main className="space-y-16 md:space-y-20">
@@ -106,8 +110,8 @@ export default async function Page() {
                   />
                 </div>
                 <div className="p-5">
-                  <h4 className="poppins-regular text-[var(--fg)]">Signature Beanbag {i + 1}</h4>
-                  <p className="text-sm text-[var(--fg-muted)] mt-1">From R1500</p>
+                  <h4 className="poppins-regular text-[var(--fg)]">Pool Bean Bags {i + 1}</h4>
+                  <p className="text-sm text-[var(--fg-muted)] mt-1">From R1200</p>
                 </div>
               </Card>
             ))}
@@ -131,19 +135,6 @@ export default async function Page() {
 
       {/* Reviews — your minimal, no-star version */}
       <Reviews />
-
-      {/* Showroom CTA — calmer, monochrome */}
-      <section className="px-4">
-        <div className="mx-auto max-w-[1280px] rounded-2xl border border-[var(--border)] bg-[var(--card)] p-10 text-center">
-          <h3 className="poppins-light text-[26px] text-[var(--fg)] mb-2">Visit our showroom</h3>
-          <p className="poppins-extralight text-[var(--fg-muted)] max-w-2xl mx-auto mb-6">
-            See textures and scale in person. Private appointments available on request.
-          </p>
-          <Button asChild>
-            <a href="/contact" className="btn-primary">Book a visit</a>
-          </Button>
-        </div>
-      </section>
 
       {/* Footer */}
       <footer className="px-4 pb-10">

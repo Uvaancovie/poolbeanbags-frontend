@@ -163,6 +163,39 @@ export default function ShopPage() {
 				</div>
 			</section>
 
+			{/* AVAILABLE FABRICS */}
+			<section className="px-4 py-10">
+				<div className="mx-auto max-w-[1280px]">
+					<h3 className="poppins-light text-[22px] md:text-[26px] text-[var(--fg)] mb-6">
+						Available Fabrics
+					</h3>
+					<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+						{[
+							"BLACK STRIPE",
+							"NAVY STRIPE",
+							"YELLOW STRIPE",
+							"RED STRIPE",
+							"DELICIOUS MONSTER ON WHITE",
+							"DELICIOUS MONSTER ON BLACK",
+							"DELICIOUS MONSTER BLUE",
+							"BLUE PALMS",
+							"PROTEA",
+							"WATERMELON",
+							"CYCADELIC"
+						].map((fabric) => (
+							<div
+								key={fabric}
+								className="rounded-xl border border-[var(--border)] bg-[var(--card)] p-4 text-center hover:border-[var(--primary)] transition-colors"
+							>
+								<p className="poppins-regular text-sm text-[var(--fg)] leading-tight">
+									{fabric}
+								</p>
+							</div>
+						))}
+					</div>
+				</div>
+			</section>
+
 			{/* FILTER / SORT BAR — monochrome, subtle */}
 			<section className="px-4">
 				<div className="mx-auto max-w-[1280px] py-6 flex flex-col gap-3 md:flex-row md:items-center md:justify-between border-b border-[var(--border)]">
@@ -321,31 +354,6 @@ export default function ShopPage() {
 
 			{/* SOCIAL PROOF / REVIEWS — minimal, rounded, no stars */}
 			<Reviews />
-
-			{/* FABRICS STRIP — optional mini-inspo under reviews */}
-			<section className="px-4 pb-16">
-				<div className="mx-auto max-w-[1280px]">
-					<h3 className="poppins-light text-[22px] md:text-[26px] text-[var(--fg)] mb-6">
-						Fabrics &amp; Finishes
-					</h3>
-					<div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-						{["colors.jpg", "patterns.jpg", "kids.jpg", "dog.jpg"].map((img) => (
-							<div
-								key={img}
-								className="relative aspect-[4/3] overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--card)]"
-							>
-								<Image
-									src={`/${img}`}
-									alt={img}
-									fill
-									sizes="(max-width:768px) 50vw, 25vw"
-									className="object-cover"
-								/>
-							</div>
-						))}
-					</div>
-				</div>
-			</section>
 		</main>
 	);
 }

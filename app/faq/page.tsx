@@ -45,7 +45,7 @@ const faqs: FAQ[] = [
   },
   {
     question: "Do you offer warranties?",
-    answer: "Yes, we offer a 2-year stitch guarantee on all our beanbags. We're confident in the quality of our construction."
+    answer: "Yes, we offer a 1 year warranty on all our beanbags. We're confident in the quality of our construction."
   },
   {
     question: "Can I order multiple beanbags?",

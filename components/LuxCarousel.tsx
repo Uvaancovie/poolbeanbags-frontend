@@ -64,14 +64,15 @@ export default function LuxCarousel() {
           <CarouselContent>
             {slides.map((s, i) => (
               <CarouselItem key={i}>
-                <div className="relative h-[58vh] min-h-[520px] w-full">
+                <div className="relative h-[58vh] min-h-[520px] w-full bg-black/10">
                   <Image
                     src={s.src}
                     alt={s.alt}
                     fill
                     priority={i === 0}
                     sizes="100vw"
-                    className="object-cover"
+                    className="object-cover md:object-contain"
+                    quality={90}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/20 to-transparent" />
 

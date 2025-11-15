@@ -22,6 +22,7 @@ export default function Navbar() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-4">
+            <Link href="/" className="text-gray-700 hover:text-black font-light transition-colors">Home</Link>
             <Link href="/announcements" className="text-gray-700 hover:text-black font-light transition-colors">Announcements</Link>
             <Link href="/about" className="text-gray-700 hover:text-black font-light transition-colors">About</Link>
             <Link href="/faq" className="text-gray-700 hover:text-black font-light transition-colors">FAQ</Link>
@@ -56,6 +57,7 @@ export default function Navbar() {
         {isMenuOpen && (
           <div className="md:hidden border-t bg-base-100/95 backdrop-blur">
             <nav className="flex flex-col gap-2 p-4">
+              <Link href="/" className="link link-hover py-2" onClick={() => setIsMenuOpen(false)}>Home</Link>
               <Link href="/announcements" className="link link-hover py-2" onClick={() => setIsMenuOpen(false)}>Announcements</Link>
               <Link href="/about" className="link link-hover py-2" onClick={() => setIsMenuOpen(false)}>About</Link>
               <Link href="/faq" className="link link-hover py-2" onClick={() => setIsMenuOpen(false)}>FAQ</Link>
