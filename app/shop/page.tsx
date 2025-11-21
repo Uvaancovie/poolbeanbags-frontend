@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import { useEffect, useState } from 'react';
@@ -13,6 +11,7 @@ import { useCart } from '../../components/CartContext';
 import Image from "next/image";
 import Link from "next/link";
 import Reviews from "@/components/Reviews";
+import { FabricsCarousel } from '../../components/FabricsCarousel';
 
 type Product = {
 	_id?: string;
@@ -40,40 +39,39 @@ export default function ShopPage() {
 	async function fetchProducts() {
 		try {
 			setLoading(true);
-			console.log('Fetching products from:', `${API_BASE}/api/products`);
-			const res = await fetch(`${API_BASE}/api/products`, {
-				cache: 'no-store', // Always fetch fresh data, no caching
-				headers: {
-					'Cache-Control': 'no-cache, no-store, must-revalidate',
-					'Pragma': 'no-cache'
-				}
-			});
-			console.log('Response status:', res.status);
+			
+			let res;
+			try {
+				// Try local proxy first for caching
+				res = await fetch(`/api/products`, { cache: 'force-cache' });
+				if (!res.ok) throw new Error(`Proxy error: ${res.status}`);
+			} catch (e) {
+				console.warn("Local proxy failed, falling back to direct API", e);
+				// Fallback to direct backend call
+				res = await fetch(`${API_BASE}/api/products`, {
+					cache: 'no-store',
+					headers: { 'Cache-Control': 'no-cache' }
+				});
+			}
 			
 			if (!res.ok) {
 				console.error(`API returned ${res.status}: ${res.statusText}`);
-				const errorText = await res.text();
-				console.error('Response body:', errorText);
 				setProducts([]);
 				setFilteredProducts([]);
 				return;
 			}
 			
 			const data = await res.json();
-			console.log('Raw API response:', data);
+			// Handle both { products: [...] } and [...] formats
+			const rawProducts = Array.isArray(data) ? data : (data.products || []);
 			
-			// MongoDB returns array directly, not wrapped in { products: [...] }
 			// Map _id to id for compatibility
-			const products = Array.isArray(data) 
-				? data.map(p => ({ ...p, id: p._id || p.id }))
-				: (data.products || []).map((p: any) => ({ ...p, id: p._id || p.id }));
-			console.log('Parsed products:', products);
+			const products = rawProducts.map((p: any) => ({ ...p, id: p._id || p.id }));
 			
 			setProducts(products);
 			setFilteredProducts(products);
 		} catch (err: any) {
 			console.error('Fetch error:', err.message);
-			console.error('Full error:', err);
 			setProducts([]);
 			setFilteredProducts([]);
 		} finally {
@@ -169,30 +167,7 @@ export default function ShopPage() {
 					<h3 className="poppins-light text-[22px] md:text-[26px] text-[var(--fg)] mb-6">
 						Available Fabrics
 					</h3>
-					<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-						{[
-							"BLACK STRIPE",
-							"NAVY STRIPE",
-							"YELLOW STRIPE",
-							"RED STRIPE",
-							"DELICIOUS MONSTER ON WHITE",
-							"DELICIOUS MONSTER ON BLACK",
-							"DELICIOUS MONSTER BLUE",
-							"BLUE PALMS",
-							"PROTEA",
-							"WATERMELON",
-							"CYCADELIC"
-						].map((fabric) => (
-							<div
-								key={fabric}
-								className="rounded-xl border border-[var(--border)] bg-[var(--card)] p-4 text-center hover:border-[var(--primary)] transition-colors"
-							>
-								<p className="poppins-regular text-sm text-[var(--fg)] leading-tight">
-									{fabric}
-								</p>
-							</div>
-						))}
-					</div>
+					<FabricsCarousel />
 				</div>
 			</section>
 

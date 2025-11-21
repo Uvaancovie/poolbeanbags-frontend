@@ -6,6 +6,7 @@ import Card from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import Reviews from '@/components/Reviews'
 import { API_BASE } from 'lib/api'
+import { FabricsCarousel } from '@/components/FabricsCarousel'
 
 type Announcement = {
   id: number
@@ -66,6 +67,13 @@ export default async function Page() {
             </p>
           </header>
           <LandingGallery />
+        </div>
+      </section>
+
+      {/* Fabrics Carousel */}
+      <section className="px-4">
+        <div className="mx-auto max-w-[1280px]">
+          <FabricsCarousel />
         </div>
       </section>
 
