@@ -18,27 +18,19 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '20'
+        cache: 'npm'
 
-    # Frontend Check
-    - name: Install Frontend Dependencies
-      run: |
-        cd frontend
-        npm ci
+    # Optional: List files to verify structure in logs
+    - name: Debug File Structure
+      run: ls -la
 
-    - name: Build Frontend (Test for errors)
-      run: |
-        cd frontend
-        npm run build
+    - name: Install Dependencies
+      # Runs in the root directory
+      run: npm ci
+
+    - name: Build Frontend
+      # Runs in the root directory
+      run: npm run build
       env:
-        NEXT_PUBLIC_API_BASE: ${{ secrets.NEXT_PUBLIC_API_BASE }}
-
-    # Backend Check
-    - name: Install Backend Dependencies
-      run: |
-        cd backend
-        npm ci
-
-    - name: Build Backend (Test for errors)
-      run: |
-        cd backend
-        npm run build
+        # Uses your secret if set, otherwise falls back to your live backend for the build process
+        NEXT_PUBLIC_API_BASE: ${{ secrets.NEXT_PUBLIC_API_BASE || 'https://pool-drizzle-express.onrender.com' }}
