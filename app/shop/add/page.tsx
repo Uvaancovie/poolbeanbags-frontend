@@ -13,6 +13,7 @@ export default function AddProductPage() {
   const [slug, setSlug] = useState('');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [category, setCategory] = useState('');
   const [price, setPrice] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -42,6 +43,7 @@ export default function AddProductPage() {
         slug,
         title,
         description,
+        category,
         base_price_cents: Math.round((parseFloat(price || '0') || 0) * 100),
         status: 'active',
         is_promotional: isPromotional,
@@ -192,6 +194,16 @@ export default function AddProductPage() {
                 onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)}
                 placeholder="Describe your product in detail..."
                 className="w-full min-h-[120px] resize-none"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-base-content">Category</label>
+              <Input
+                value={category}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCategory(e.target.value)}
+                placeholder="e.g., Loungers, Pool Pillows"
+                className="w-full"
               />
             </div>
 

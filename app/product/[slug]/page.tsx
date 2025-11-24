@@ -117,12 +117,11 @@ export default async function ProductPage({
           {/* CTA row */}
           <div className="flex flex-col sm:flex-row gap-3 pt-2">
             <AddToCartButton product={product} />
-            <a href="#details" className="btn-outline rounded-lg px-5 py-3 text-center">Learn more</a>
           </div>
 
           {/* Pill highlights */}
           <div className="flex flex-wrap gap-2 pt-2">
-            {["Weather-resistant fabric", "Reinforced seams", "Easy-care"].map((t) => (
+            {["Weather-resistant fabric",  "Easy-care"].map((t) => (
               <span
                 key={t}
                 className="text-[11px] uppercase tracking-wide text-[var(--fg-muted)] border border-[var(--border)] rounded-full px-3 py-1"
@@ -139,7 +138,7 @@ export default async function ProductPage({
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
             { title: "Fabric & Care", copy: "Fade-safe outdoor fabric. Clean with mild soap and water. Air-dry flat." },
-            { title: "Build", copy: "Double-stitched seams, durable zipper cover, premium filling for support." },
+            { title: "Build", copy: " Durable cover, premium filling for support." },
             { title: "Delivery", copy: "Nationwide delivery. Typical lead time 3–7 working days depending on stock." },
           ].map((s) => (
             <div key={s.title} className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-6">

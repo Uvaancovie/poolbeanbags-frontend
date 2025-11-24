@@ -19,6 +19,7 @@ type Product = {
 	slug: string;
 	title: string;
 	description?: string;
+	category?: string;
 	base_price_cents?: number;
 	is_promotional?: boolean;
 	promotion_text?: string;
@@ -35,6 +36,15 @@ export default function ShopPage() {
 	const [searchQuery, setSearchQuery] = useState('');
 	const [priceRange, setPriceRange] = useState<[number, number]>([0, 4000]);
 	const [selectedCategory, setSelectedCategory] = useState<string>('all');
+	const [selectedFabric, setSelectedFabric] = useState<string>('all');
+	const [showSuccess, setShowSuccess] = useState(false);
+
+	const FABRICS = [
+		"Black Stripe", "Navy Stripe", "Yellow Stripe", "Red Stripe",
+		"Delicious Monster on Black",
+		"Delicious Monster Blue", "Blue Palms", "Protea",
+		"Watermelon", "Cycadelic"
+	];
 
 	async function fetchProducts() {
 		try {
@@ -43,7 +53,7 @@ export default function ShopPage() {
 			let res;
 			try {
 				// Try local proxy first for caching
-				res = await fetch(`/api/products`, { cache: 'force-cache' });
+				res = await fetch(`/api/shop-products`, { cache: 'force-cache' });
 				if (!res.ok) throw new Error(`Proxy error: ${res.status}`);
 			} catch (e) {
 				console.warn("Local proxy failed, falling back to direct API", e);
@@ -105,10 +115,30 @@ export default function ShopPage() {
 			filtered = filtered.filter(product => product.is_promotional);
 		} else if (selectedCategory === 'regular') {
 			filtered = filtered.filter(product => !product.is_promotional);
+		} else if (selectedCategory === 'loungers') {
+			filtered = filtered.filter(product => 
+				product.title.toLowerCase().includes('lounger') || 
+				product.category?.toLowerCase() === 'loungers'
+			);
+		}
+
+		// Filter by fabric
+		if (selectedFabric !== 'all') {
+			let term = selectedFabric.toLowerCase();
+			// Custom mappings based on user request
+			if (selectedFabric === "Delicious Monster on Black") term = "delicious-monster-green-black";
+			if (selectedFabric === "Delicious Monster Blue") term = "blue-delicious-monster";
+			if (selectedFabric === "Cycadelic") term = "the-pool-bean-bag-cycadellic";
+
+			filtered = filtered.filter(product => 
+				product.title.toLowerCase().includes(term) ||
+				product.description?.toLowerCase().includes(term) ||
+				product.slug.toLowerCase().includes(term)
+			);
 		}
 
 		setFilteredProducts(filtered);
-	}, [products, searchQuery, priceRange, selectedCategory]);
+	}, [products, searchQuery, priceRange, selectedCategory, selectedFabric]);
 
 	const formatPrice = (cents: number) => formatPriceFromCents(cents);
 
@@ -140,9 +170,9 @@ export default function ShopPage() {
 		<main className="bg-[var(--bg)]">
 			{/* HERO — quiet and minimal */}
 			<section className="relative">
-				<div className="relative h-[34vh] min-h-[280px]">
+				<div className="relative h-screen">
 					<Image
-						src="/lifestyle.jpg"
+						src="/lifestyle-5.jpg"
 						alt="Pool Bean Bags — shop hero"
 						fill
 						priority
@@ -210,9 +240,24 @@ export default function ShopPage() {
 								onChange={(e) => setSelectedCategory(e.target.value)}
 								className="input w-40"
 							>
-								<option value="all">All Products</option>
+								<option value="all">All Categories</option>
+								<option value="loungers">Loungers</option>
 								<option value="promotional">On Sale</option>
 								<option value="regular">Regular Price</option>
+							</select>
+						</div>
+
+						{/* Fabric Filter */}
+						<div>
+							<select
+								value={selectedFabric}
+								onChange={(e) => setSelectedFabric(e.target.value)}
+								className="input w-40"
+							>
+								<option value="all">All Fabrics</option>
+								{FABRICS.map(fabric => (
+									<option key={fabric} value={fabric}>{fabric}</option>
+								))}
 							</select>
 						</div>
 					</div>
@@ -289,7 +334,11 @@ export default function ShopPage() {
 													<Link href={`/product/${product.slug}`}>View</Link>
 												</Button>
 												<button
-													onClick={() => addItem(product)}
+													onClick={() => {
+														addItem(product);
+														setShowSuccess(true);
+														setTimeout(() => setShowSuccess(false), 3000);
+													}}
 													className="btn-primary"
 												>
 													Add to Cart
@@ -301,34 +350,16 @@ export default function ShopPage() {
 							})}
 						</div>
 					)}
-
-					{/* Pagination — simple, monochrome */}
-					<div className="mt-10 flex items-center justify-center gap-2">
-						<Link
-							href="/shop?page=1"
-							className="btn-outline rounded-full px-4 py-2 text-sm"
-						>
-							1
-						</Link>
-						<Link
-							href="/shop?page=2"
-							className="btn-outline rounded-full px-4 py-2 text-sm"
-						>
-							2
-						</Link>
-						<span className="text-[var(--fg-muted)] text-sm px-2">…</span>
-						<Link
-							href="/shop?page=next"
-							className="btn-outline rounded-full px-4 py-2 text-sm"
-						>
-							Next →
-						</Link>
-					</div>
 				</div>
 			</section>
 
 			{/* SOCIAL PROOF / REVIEWS — minimal, rounded, no stars */}
 			<Reviews />
+			{showSuccess && (
+				<Card className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 border-none">
+					Added to cart!
+				</Card>
+			)}
 		</main>
 	);
 }

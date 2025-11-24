@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
+  console.log("GET /api/products hit");
   try {
     const RENDER_API = process.env.NEXT_PUBLIC_API_BASE || "https://pool-drizzle-express.onrender.com";
     

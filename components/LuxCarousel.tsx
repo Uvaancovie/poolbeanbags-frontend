@@ -21,7 +21,7 @@ type Slide = {
 
 const slides: Slide[] = [
   {
-    src: '/lifestyle.jpg',
+    src: '/lifestyle-5.jpg',
     alt: 'Pool bean bags by a sunlit pool',
     title: 'Luxury Poolside Comfort',
     blurb: 'Minimal shapes, weather-ready fabrics, built for the coast.',
@@ -64,14 +64,14 @@ export default function LuxCarousel() {
           <CarouselContent>
             {slides.map((s, i) => (
               <CarouselItem key={i}>
-                <div className="relative h-[58vh] min-h-[520px] w-full bg-black/10">
+                <div className="relative h-[58vh] min-h-[520px] w-full">
                   <Image
                     src={s.src}
                     alt={s.alt}
                     fill
                     priority={i === 0}
-                    sizes="100vw"
-                    className="object-cover md:object-contain"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1280px"
+                    className="object-cover"
                     quality={90}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/20 to-transparent" />
@@ -84,12 +84,6 @@ export default function LuxCarousel() {
                     className="absolute bottom-10 left-8 right-8 sm:left-12 sm:right-12"
                   >
                     <div className="max-w-xl text-white">
-                      {/* Brand mark */}
-                      <img
-                        src="/logo.jpg"
-                        alt="Pool Bean Bags"
-                        className="h-10 w-auto mb-4 rounded shadow-sm"
-                      />
                       {s.title && (
                         <h1 className="poppins-light text-[34px] md:text-[48px] leading-tight">
                           {s.title}

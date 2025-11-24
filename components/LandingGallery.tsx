@@ -3,8 +3,8 @@ import Image from 'next/image';
 const images = [
   { src: '/lifestyle-3.jpg', alt: 'Luxury outdoor living space' },
   { src: '/lifestyle-5.jpg', alt: 'Comfortable poolside seating' },
-  { src: '/lifestyle-6.jpg', alt: 'Premium outdoor furnishings' },
-  { src: '/colors.jpg', alt: 'Colorful pool bean bags' },
+  { src: '/lifestyle-2.jpg', alt: 'Premium outdoor furnishings' },
+  { src: '/lifestyle-1.jpg', alt: 'Colorful pool bean bags' },
   { src: '/dog.jpg', alt: 'Pet-friendly outdoor comfort' },
 ];
 

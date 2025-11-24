@@ -21,9 +21,9 @@ type StaticAnnouncement = {
 const ANNOUNCEMENTS: StaticAnnouncement[] = [
   {
     id: 1,
-    title: "Summer Sale — Up to 20% Off",
+    title: "Summer Is Coming",
     excerpt:
-      "Limited-time savings on our premium outdoor bean bags. Hand-finished details, weather-ready fabrics.",
+      " Hand-finished details, weather-ready fabrics.",
     date: "2025-11-01",
     image: "/lifestyle-2.jpg",
     featured: true,
@@ -40,11 +40,11 @@ const ANNOUNCEMENTS: StaticAnnouncement[] = [
   },
   {
     id: 3,
-    title: "Durban Showroom — By Appointment",
+    title: "Summer Colors",
     excerpt:
       "See textures and scale in person. Private viewings available weekdays 09:00–16:00.",
     date: "2025-10-12",
-    image: "/family.jpg",
+    image: "/lifestyle-1.jpg",
   },
   {
     id: 4,
@@ -72,7 +72,7 @@ export default function AnnouncementsPage() {
     <div className="min-h-screen bg-[var(--bg)]">
       {/* Hero */}
       <section className="relative overflow-hidden">
-        <div className="relative h-[52vh] min-h-[420px]">
+        <div className="relative h-screen">
           <Image
             src="/lifestyle-1.jpg"
             alt="Pool Bean Bags — lifestyle"
@@ -106,7 +106,7 @@ export default function AnnouncementsPage() {
                   alt={featured.title}
                   fill
                   sizes="100vw"
-                  className="object-cover"
+                  className="object-contain"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
                 <div className="absolute bottom-8 left-8 right-8">

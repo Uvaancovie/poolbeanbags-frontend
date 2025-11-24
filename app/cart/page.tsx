@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useCart } from '../../components/CartContext';
 import { Button } from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
-import { SHIPPING_FLAT_CENTS, SHIPPING_PROVIDER } from '../../lib/pricing';
+import { SHIPPING_FLAT_CENTS, SHIPPING_LOUNGER_CENTS, SHIPPING_PROVIDER } from '../../lib/pricing';
 
 export default function CartPage() {
   const { items, removeItem, updateQuantity, getTotal, clearCart, getSubtotalCents, getTotalCents } = useCart();
@@ -18,8 +18,9 @@ export default function CartPage() {
   };
 
   const subtotal = getSubtotalCents();
-  const shipping = items.length > 0 ? SHIPPING_FLAT_CENTS : 0;
-  const total = getTotalCents();
+  const hasLounger = items.some(item => item.title.toLowerCase().includes('lounger'));
+  const shipping = items.length > 0 ? (hasLounger ? SHIPPING_LOUNGER_CENTS : SHIPPING_FLAT_CENTS) : 0;
+  const total = subtotal + shipping;
 
   const handleCheckout = () => {
     if (items.length === 0) return;

@@ -132,7 +132,7 @@ export default async function Page() {
         <div className="mx-auto max-w-[1280px]">
           <h3 className="poppins-light text-[22px] md:text-[26px] text-[var(--fg)] mb-6">Fabrics &amp; Finishes</h3>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {['patterns.jpg', 'colors.jpg', 'kids.jpg', 'dog.jpg'].map((img) => (
+            {['lifestyle-1.jpg', 'lifestyle-2.jpg', 'kids.jpg', 'dog.jpg'].map((img) => (
               <div key={img} className="relative aspect-[4/3] overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--card)]">
                 <Image src={`/${img}`} alt={img} fill className="object-cover" sizes="(max-width: 768px) 50vw, 25vw" />
               </div>
