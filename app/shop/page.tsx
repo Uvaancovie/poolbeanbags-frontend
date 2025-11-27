@@ -110,15 +110,23 @@ export default function ShopPage() {
 			return price >= priceRange[0] && price <= priceRange[1];
 		});
 
-		// Filter by category (for now, we'll use promotional vs regular)
+		// Filter by category
 		if (selectedCategory === 'promotional') {
 			filtered = filtered.filter(product => product.is_promotional);
-		} else if (selectedCategory === 'regular') {
-			filtered = filtered.filter(product => !product.is_promotional);
-		} else if (selectedCategory === 'loungers') {
+		} else if (selectedCategory === 'pool-bean-bag') {
+			filtered = filtered.filter(product => {
+				const t = product.title.toLowerCase();
+				return t.includes('pool bean bag') && !t.includes('lounger') && !t.includes('pillow');
+			});
+		} else if (selectedCategory === 'super-lounger') {
 			filtered = filtered.filter(product => 
 				product.title.toLowerCase().includes('lounger') || 
 				product.category?.toLowerCase() === 'loungers'
+			);
+		} else if (selectedCategory === 'rolley-pillowhead') {
+			filtered = filtered.filter(product => 
+				product.title.toLowerCase().includes('pillow') || 
+				product.title.toLowerCase().includes('rolley')
 			);
 		}
 
@@ -168,6 +176,19 @@ export default function ShopPage() {
 
 	return (
 		<main className="bg-[var(--bg)]">
+			{/* Black Friday Banner */}
+			<div className="bg-yellow-50 border-b border-yellow-100">
+				<div className="mx-auto max-w-[1280px] px-4 py-4 text-center">
+					<h2 className="text-xl font-bold text-yellow-900 mb-2">BLACK FRIDAY SALE</h2>
+					<div className="flex flex-wrap justify-center gap-4 md:gap-8 text-sm md:text-base text-yellow-800">
+						<span className="font-medium">Buy 1: <span className="font-bold">5% OFF</span></span>
+						<span className="font-medium">Buy 2: <span className="font-bold">10% OFF</span></span>
+						<span className="font-medium">Buy 3+: <span className="font-bold">20% OFF</span></span>
+					</div>
+					<p className="text-xs text-yellow-700 mt-2">Valid until December 1st</p>
+				</div>
+			</div>
+
 			{/* HERO — quiet and minimal */}
 			<section className="relative">
 				<div className="relative h-screen">
@@ -238,12 +259,13 @@ export default function ShopPage() {
 							<select
 								value={selectedCategory}
 								onChange={(e) => setSelectedCategory(e.target.value)}
-								className="input w-40"
+								className="input w-48"
 							>
-								<option value="all">All Categories</option>
-								<option value="loungers">Loungers</option>
+								<option value="all">All Products</option>
+								<option value="pool-bean-bag">The Pool Bean Bag</option>
+								<option value="super-lounger">The Super Lounger</option>
+								<option value="rolley-pillowhead">The Rolley Pillowhead</option>
 								<option value="promotional">On Sale</option>
-								<option value="regular">Regular Price</option>
 							</select>
 						</div>
 

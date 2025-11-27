@@ -139,7 +139,10 @@ export default function OrdersPage() {
                       <div className="space-y-2">
                         {order.items.slice(0, 3).map((item, index) => (
                           <div key={index} className="flex justify-between items-center text-sm">
-                            <span>{item.product_title} (x{item.quantity})</span>
+                            <div className="flex flex-col">
+                              <span>{item.product_title} (x{item.quantity})</span>
+                              {item.fabric && <span className="text-xs text-base-content/70">Fabric: {item.fabric}</span>}
+                            </div>
                             <span>{formatPrice(item.total_price_cents)}</span>
                           </div>
                         ))}

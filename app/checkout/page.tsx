@@ -7,7 +7,7 @@ import OzowPayButton from '../../components/OzowPayButton';
 import { SHIPPING_FLAT_CENTS, SHIPPING_LOUNGER_CENTS, SHIPPING_PROVIDER } from '../../lib/pricing';
 
 export default function CheckoutPage() {
-  const { items, getSubtotalCents, getTotalCents, clearCart } = useCart();
+  const { items, getSubtotalCents, getTotalCents, getDiscountCents, clearCart } = useCart();
   const router = useRouter();
   
   const [deliveryType, setDeliveryType] = useState<'delivery' | 'pickup'>('delivery');
@@ -36,23 +36,26 @@ export default function CheckoutPage() {
   }, [firstName, lastName, email, phone, address1, city, province, postalCode, deliveryType]);
 
   const subtotal_cents = items.reduce((t, i) => t + i.price * i.quantity, 0);
+  const discount_cents = getDiscountCents();
   const hasLounger = items.some(item => item.title.toLowerCase().includes('lounger'));
   const shipping_cents = deliveryType === 'pickup' ? 0 : (items.length ? (hasLounger ? SHIPPING_LOUNGER_CENTS : SHIPPING_FLAT_CENTS) : 0);
-  const total_cents = subtotal_cents + shipping_cents;
+  const total_cents = subtotal_cents + shipping_cents - discount_cents;
 
   const formatPrice = (cents: number) => `R${(cents / 100).toFixed(2)}`;
 
   const payload = {
     items: items.map(item => ({
-      productId: item.id,
+      productId: item.productId,
       title: item.title,
       slug: item.slug || '',
       price: item.price,
       quantity: item.quantity,
-      image: item.image || ''
+      image: item.image || '',
+      fabric: item.fabric
     })),
     subtotal_cents,
     shipping_cents,
+    discount_cents,
     total_cents,
     customer: {
       first_name: firstName,
@@ -213,6 +216,9 @@ export default function CheckoutPage() {
                   <div key={item.id} className="flex justify-between text-sm">
                     <div>
                       <p className="text-[var(--fg)]">{item.title}</p>
+                      {item.fabric && (
+                        <p className="text-[var(--fg-muted)] text-xs">Fabric: {item.fabric}</p>
+                      )}
                       <p className="text-[var(--fg-muted)]">Qty: {item.quantity}</p>
                     </div>
                     <p className="text-[var(--fg)]">{formatPrice(item.price * item.quantity)}</p>
@@ -225,6 +231,12 @@ export default function CheckoutPage() {
                   <span className="text-[var(--fg-muted)]">Subtotal</span>
                   <span className="text-[var(--fg)]">{formatPrice(subtotal_cents)}</span>
                 </div>
+                {discount_cents > 0 && (
+                  <div className="flex justify-between text-sm text-green-600">
+                    <span>Discount</span>
+                    <span>-{formatPrice(discount_cents)}</span>
+                  </div>
+                )}
                 <div className="flex justify-between text-sm">
                   <span className="text-[var(--fg-muted)]">
                     Shipping {deliveryType === 'delivery' ? `(${SHIPPING_PROVIDER})` : '(Pickup)'}

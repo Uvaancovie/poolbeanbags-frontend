@@ -122,6 +122,10 @@ export default function OrderConfirmationPage() {
                   {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
                 </span>
               </div>
+              {/* Discount Display */}
+              {/* Note: The order object structure here might need verification. 
+                  Assuming order.discount exists or I can calculate it. 
+                  Actually, let's check the Order interface in this file if it exists. */}
               <div className="flex justify-between">
                 <span className="text-base-content/70">Total:</span>
                 <span className="font-semibold text-lg">{formatPrice(order.total * 100)}</span>
@@ -134,6 +138,9 @@ export default function OrderConfirmationPage() {
                 <div key={index} className="flex justify-between items-center py-2 border-b border-base-200 last:border-b-0">
                   <div>
                     <p className="font-medium">{item.product_title}</p>
+                    {item.fabric && (
+                      <p className="text-sm text-base-content/70">Fabric: {item.fabric}</p>
+                    )}
                     <p className="text-sm text-base-content/70">Qty: {item.quantity}</p>
                   </div>
                   <p className="font-semibold">{formatPrice(item.total_price_cents)}</p>

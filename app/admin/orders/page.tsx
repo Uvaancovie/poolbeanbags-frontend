@@ -472,6 +472,9 @@ export default function AdminOrdersPage() {
                       <div key={index} className="flex justify-between items-center py-3 px-4 bg-base-100 rounded-lg">
                         <div className="flex-1">
                           <p className="font-medium text-base-content">{item.product_title}</p>
+                          {item.fabric && (
+                            <p className="text-sm text-base-content/70">Fabric: {item.fabric}</p>
+                          )}
                           <p className="text-sm text-base-content/70">Qty: {item.quantity}</p>
                         </div>
                         <p className="font-semibold text-base-content">

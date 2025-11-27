@@ -9,7 +9,7 @@ import Card from '../../components/ui/Card';
 import { SHIPPING_FLAT_CENTS, SHIPPING_LOUNGER_CENTS, SHIPPING_PROVIDER } from '../../lib/pricing';
 
 export default function CartPage() {
-  const { items, removeItem, updateQuantity, getTotal, clearCart, getSubtotalCents, getTotalCents } = useCart();
+  const { items, removeItem, updateQuantity, getTotal, clearCart, getSubtotalCents, getDiscountCents } = useCart();
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -18,9 +18,10 @@ export default function CartPage() {
   };
 
   const subtotal = getSubtotalCents();
+  const discount = getDiscountCents();
   const hasLounger = items.some(item => item.title.toLowerCase().includes('lounger'));
   const shipping = items.length > 0 ? (hasLounger ? SHIPPING_LOUNGER_CENTS : SHIPPING_FLAT_CENTS) : 0;
-  const total = subtotal + shipping;
+  const total = subtotal + shipping - discount;
 
   const handleCheckout = () => {
     if (items.length === 0) return;
@@ -64,6 +65,9 @@ export default function CartPage() {
                   )}
                   <div className="flex-1 min-w-0">
                     <h3 className="poppins-regular text-[var(--fg)] text-lg mb-1">{item.title}</h3>
+                    {item.fabric && (
+                      <p className="text-[var(--fg-muted)] text-sm mb-1">Fabric: {item.fabric}</p>
+                    )}
                     <p className="text-[var(--fg-muted)] text-sm mb-3">{formatPrice(item.price)}</p>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
@@ -113,24 +117,35 @@ export default function CartPage() {
 
               <div className="space-y-2 mb-4">
                 <div className="flex justify-between">
-                  <span>Items ({items.reduce((sum, item) => sum + item.quantity, 0)})</span>
-                  <span>{formatPrice(getTotal() * 100)}</span>
+                  <span>Subtotal</span>
+                  <span>{formatPrice(subtotal)}</span>
                 </div>
+                {discount > 0 && (
+                  <div className="flex justify-between text-green-600">
+                    <span>Discount</span>
+                    <span>-{formatPrice(discount)}</span>
+                  </div>
+                )}
                 <div className="flex justify-between">
                   <span>Shipping</span>
-                  <span>TBD</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Tax</span>
-                  <span>TBD</span>
+                  <span>{formatPrice(shipping)}</span>
                 </div>
               </div>
 
               <div className="border-t border-base-300 pt-4 mb-6">
                 <div className="flex justify-between text-lg font-semibold">
                   <span>Total</span>
-                  <span>{formatPrice(getTotal() * 100)}</span>
+                  <span>{formatPrice(total)}</span>
                 </div>
+              </div>
+
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4 text-sm text-yellow-800">
+                <p className="font-semibold">Black Friday Deal (Ends Dec 1st):</p>
+                <ul className="list-disc list-inside mt-1">
+                  <li>Buy 1: 5% OFF</li>
+                  <li>Buy 2: 10% OFF</li>
+                  <li>Buy 3+: 20% OFF</li>
+                </ul>
               </div>
 
               <Button
