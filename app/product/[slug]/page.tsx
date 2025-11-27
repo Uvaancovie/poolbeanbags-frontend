@@ -60,6 +60,11 @@ export default async function ProductPage({
         <span className="px-2">/</span>
         <span className="text-[var(--fg)]">{product.title}</span>
       </nav>
+      <div className="mx-auto max-w-[1280px] px-4 mt-4">
+        <Link href="/shop" className="btn btn-outline">
+          Back to Shop
+        </Link>
+      </div>
 
       <section className="mx-auto max-w-[1280px] px-4 py-10 grid grid-cols-1 lg:grid-cols-2 gap-10">
         {/* Gallery */}

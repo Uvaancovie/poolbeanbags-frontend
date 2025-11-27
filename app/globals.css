@@ -188,6 +188,7 @@ body {
 
 .btn-primary:hover {
   background-color: var(--gold);
+  color: var(--ink);
   transform: translateY(-4px);
 }
 

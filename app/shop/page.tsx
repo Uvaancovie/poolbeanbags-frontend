@@ -355,7 +355,7 @@ export default function ShopPage() {
 												<Button asChild>
 													<Link href={`/product/${product.slug}`}>View</Link>
 												</Button>
-												<button
+												<Button
 													onClick={() => {
 														addItem(product);
 														setShowSuccess(true);
@@ -364,7 +364,7 @@ export default function ShopPage() {
 													className="btn-primary"
 												>
 													Add to Cart
-												</button>
+												</Button>
 											</div>
 										</div>
 									</Card>
