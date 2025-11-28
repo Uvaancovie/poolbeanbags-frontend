@@ -4,6 +4,7 @@ import Card from "@/components/ui/Card"
 import { API_BASE } from "lib/api"
 import { formatPriceFromCents } from "@/lib/formatPrice"
 import AddToCartButton from "./AddToCartButton"
+import { FabricSelector } from "@/components/FabricSelector"
 
 type ProductImage = { _id?: string; id?: string; url: string; alt?: string }
 type Product = {
@@ -136,6 +137,11 @@ export default async function ProductPage({
             ))}
           </div>
         </div>
+      </section>
+
+      {/* Fabric Selector & Carousel */}
+      <section className="mx-auto max-w-[1280px] px-4 py-10 border-t border-[var(--border)]">
+        <FabricSelector />
       </section>
 
       {/* Long form details */}

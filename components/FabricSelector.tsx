@@ -1,0 +1,130 @@
+"use client"
+
+import React, { useCallback, useState } from 'react'
+import useEmblaCarousel from 'embla-carousel-react'
+import Autoplay from 'embla-carousel-autoplay'
+import Image from 'next/image'
+import Link from 'next/link'
+import { ArrowLeft, ArrowRight } from 'lucide-react'
+
+const FABRICS = [
+  { name: "BLACK STRIPE", image: "/fabrics/black-stripe.jpg" },
+  { name: "NAVY STRIPE", image: "/fabrics/navy-stripe.jpg" },
+  { name: "YELLOW STRIPE", image: "/fabrics/yellow-stripe.jpeg" },
+  { name: "RED STRIPE", image: "/fabrics/red-stripe.jpg" },
+  { name: "DELICIOUS MONSTER ON WHITE", image: "/fabrics/delicous-monster-on-white.jpg" },
+  { name: "DELICIOUS MONSTER ON BLACK", image: "/fabrics/delicious-monster-on-black.jpeg" },
+  { name: "DELICIOUS MONSTER BLUE", image: "/fabrics/blue-delicous-monster.jpeg" },
+  { name: "BLUE PALMS", image: "/fabrics/blue-palms.jpeg" },
+  { name: "PROTEA", image: "/fabrics/protea.jpeg" },
+  { name: "WATERMELON", image: "/fabrics/watermelon.jpeg" },
+  { name: "CYCADELIC", image: "/fabrics/cycadelic.jpeg" },
+]
+
+export function FabricSelector() {
+  const [selectedFabric, setSelectedFabric] = useState<string>('')
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: 'start' }, [
+    Autoplay({ delay: 2000, stopOnInteraction: false })
+  ])
+
+  const scrollPrev = useCallback(() => {
+    if (emblaApi) emblaApi.scrollPrev()
+  }, [emblaApi])
+
+  const scrollNext = useCallback(() => {
+    if (emblaApi) emblaApi.scrollNext()
+  }, [emblaApi])
+
+  // Filter fabrics based on selection
+  const displayFabrics = selectedFabric 
+    ? FABRICS.filter(f => f.name.toLowerCase().includes(selectedFabric.toLowerCase()))
+    : FABRICS
+
+  return (
+    <div className="w-full space-y-6">
+      {/* Fabric Dropdown */}
+      <div className="space-y-3">
+        <label htmlFor="fabric-select" className="block text-sm font-medium text-[var(--fg)]">
+          Select Fabric
+        </label>
+        <select
+          id="fabric-select"
+          value={selectedFabric}
+          onChange={(e) => setSelectedFabric(e.target.value)}
+          className="w-full px-4 py-2 border border-[var(--border)] rounded-lg bg-[var(--card)] text-[var(--fg)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+        >
+          <option value="">All Fabrics</option>
+          {FABRICS.map((fabric) => (
+            <option key={fabric.name} value={fabric.name}>
+              {fabric.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Fabric Carousel - Only show if a fabric is selected */}
+      {selectedFabric && (
+        <div className="w-full space-y-6 pt-4 border-t border-[var(--border)]">
+          <div className="text-center space-y-2">
+            <h3 className="poppins-light text-[24px] md:text-[28px] leading-tight text-[var(--fg)]">
+              {selectedFabric} Options
+            </h3>
+            <p className="poppins-extralight text-[var(--fg-muted)] text-sm">
+              Explore available options in this fabric
+            </p>
+          </div>
+
+          <div className="relative group">
+            <div className="w-full overflow-hidden" ref={emblaRef}>
+              <div className="flex -ml-4">
+                {displayFabrics.map((fabric, index) => (
+                  <div key={index} className="flex-[0_0_50%] sm:flex-[0_0_33.33%] md:flex-[0_0_25%] lg:flex-[0_0_20%] min-w-0 pl-4">
+                    <Link href="/shop" className="block">
+                      <div className="relative aspect-square rounded-xl overflow-hidden border border-[var(--border)] bg-[var(--card)] group/item cursor-pointer">
+                        <Image
+                          src={fabric.image}
+                          alt={fabric.name}
+                          fill
+                          className="object-cover transition-transform duration-700 group-hover/item:scale-110"
+                          sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
+                          priority={index < 5}
+                        />
+                        <div className="absolute inset-0 bg-black/40 flex items-end p-4 opacity-0 group-hover/item:opacity-100 transition-opacity duration-300">
+                          <p className="text-white text-sm font-medium text-center w-full tracking-wide">{fabric.name}</p>
+                        </div>
+                      </div>
+                    </Link>
+                    <Link href="/shop" className="block mt-3 text-xs text-center text-[var(--fg-muted)] md:hidden font-medium hover:text-[var(--fg)] transition-colors">
+                      {fabric.name}
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {displayFabrics.length > 0 && (
+              <>
+                <button 
+                  onClick={scrollPrev} 
+                  className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-black p-3 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110 z-10 border border-gray-100"
+                  aria-label="Previous slide"
+                >
+                  <ArrowLeft className="w-5 h-5" />
+                </button>
+                
+                <button 
+                  onClick={scrollNext} 
+                  className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-black p-3 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110 z-10 border border-gray-100"
+                  aria-label="Next slide"
+                >
+                  <ArrowRight className="w-5 h-5" />
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
