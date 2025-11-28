@@ -21,7 +21,7 @@ type Slide = {
 
 const slides: Slide[] = [
   {
-    src: '/lifestyle-5.jpg',
+    src: '/lifestyle-10.jpg',
     alt: 'Pool bean bags by a sunlit pool',
     title: 'Luxury Poolside Comfort',
     blurb: 'Minimal shapes, weather-ready fabrics, built for the coast.',
@@ -29,7 +29,7 @@ const slides: Slide[] = [
     ctaLabel: 'Shop Now',
   },
   {
-    src: '/lifestyle-1.jpg',
+    src: '/lifestyle-8.jpg',
     alt: 'Close-up of stitching and fabric texture',
     title: 'Craft in the Details',
     blurb: 'Hand-finished seams and premium fillings.',
@@ -37,7 +37,7 @@ const slides: Slide[] = [
     ctaLabel: 'View Collection',
   },
   {
-    src: '/family.jpg',
+    src: '/lifestyle-9.jpg',
     alt: 'Family relaxing on outdoor bean bags',
     title: 'Relaxed Living',
     blurb: 'Comfort that works from pool deck to patio.',

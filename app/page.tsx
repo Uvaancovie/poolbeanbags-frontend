@@ -119,20 +119,24 @@ export default async function Page() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {['lifestyle-1.jpg', 'lifestyle-2.jpg', 'lifestyle-3.jpg'].map((src, i) => (
-              <Card key={src} className="p-0 overflow-hidden rounded-2xl border border-[var(--border)]">
+            {[
+              { src: 'lifestyle-1.jpg', title: 'Yellow Stripe Pool Bean Bag', subtitle: 'From R1,200' },
+              { src: 'lifestyle-2.jpg', title: 'Blue Palms Pool Bean Bag', subtitle: 'From R1,200' },
+              { src: 'lifestyle-3.jpg', title: 'Red Stripe Pool Bean Bag', subtitle: 'From R1,200' }
+            ].map((item, i) => (
+              <Card key={item.src} className="p-0 overflow-hidden rounded-2xl border border-[var(--border)]">
                 <div className="relative aspect-[4/3] w-full">
                   <Image
-                    src={`/${src}`}
-                    alt={`Pool bean bag ${i + 1}`}
+                    src={`/${item.src}`}
+                    alt={item.title}
                     fill
                     sizes="(max-width: 768px) 100vw, 33vw"
                     className="object-cover"
                   />
                 </div>
                 <div className="p-5">
-                  <h4 className="poppins-regular text-[var(--fg)]">Pool Bean Bags {i + 1}</h4>
-                  <p className="text-sm text-[var(--fg-muted)] mt-1">From R1200</p>
+                  <h4 className="poppins-regular text-[var(--fg)]">{item.title} {}</h4>
+                  <p className="text-sm text-[var(--fg-muted)] mt-1">{item.subtitle}</p>
                 </div>
               </Card>
             ))}
