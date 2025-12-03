@@ -7,7 +7,7 @@ import OzowPayButton from '../../components/OzowPayButton';
 import { SHIPPING_FLAT_CENTS, SHIPPING_LOUNGER_CENTS, SHIPPING_PROVIDER } from '../../lib/pricing';
 
 export default function CheckoutPage() {
-  const { items, getSubtotalCents, getTotalCents, getDiscountCents, clearCart } = useCart();
+  const { items, getSubtotalCents, getTotalCents, clearCart } = useCart();
   const router = useRouter();
   
   const [deliveryType, setDeliveryType] = useState<'delivery' | 'pickup'>('delivery');
@@ -36,10 +36,10 @@ export default function CheckoutPage() {
   }, [firstName, lastName, email, phone, address1, city, province, postalCode, deliveryType]);
 
   const subtotal_cents = items.reduce((t, i) => t + i.price * i.quantity, 0);
-  const discount_cents = getDiscountCents();
+  const discount_cents = 0; // Discounts disabled — always 0
   const hasLounger = items.some(item => item.title.toLowerCase().includes('lounger'));
   const shipping_cents = deliveryType === 'pickup' ? 0 : (items.length ? (hasLounger ? SHIPPING_LOUNGER_CENTS : SHIPPING_FLAT_CENTS) : 0);
-  const total_cents = subtotal_cents + shipping_cents - discount_cents;
+  const total_cents = subtotal_cents + shipping_cents;
 
   const formatPrice = (cents: number) => `R${(cents / 100).toFixed(2)}`;
 

@@ -176,18 +176,7 @@ export default function ShopPage() {
 
 	return (
 		<main className="bg-[var(--bg)]">
-			{/* Black Friday Banner */}
-			<div className="bg-yellow-50 border-b border-yellow-100">
-				<div className="mx-auto max-w-[1280px] px-4 py-4 text-center">
-					<h2 className="text-xl font-bold text-yellow-900 mb-2">BLACK FRIDAY SALE</h2>
-					<div className="flex flex-wrap justify-center gap-4 md:gap-8 text-sm md:text-base text-yellow-800">
-						<span className="font-medium">Buy 1: <span className="font-bold">5% OFF</span></span>
-						<span className="font-medium">Buy 2: <span className="font-bold">10% OFF</span></span>
-						<span className="font-medium">Buy 3+: <span className="font-bold">20% OFF</span></span>
-					</div>
-					<p className="text-xs text-yellow-700 mt-2">Valid until December 1st</p>
-				</div>
-			</div>
+			{/* Promotional banner removed — normal pricing restored */}
 
 			{/* HERO — quiet and minimal */}
 			<section className="relative">

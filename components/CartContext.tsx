@@ -111,17 +111,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
     // const now = new Date();
     // if (now > new Date('2025-12-01T23:59:59')) return 0;
 
-    let percent = 0;
-    if (count >= 3) percent = 20;
-    else if (count === 2) percent = 10;
-    else if (count >= 1) percent = 5;
     
-    return Math.round(subtotal * (percent / 100));
+      // Discounts disabled — return 0 to restore normal pricing
+      return 0;
   };
 
   const getTotalCents = () => {
     const subtotal = getSubtotalCents();
-    const discount = getDiscountCents();
     const shipping = items.length > 0 ? SHIPPING_FLAT_CENTS : 0;
     // Note: Shipping logic might need to match cart/checkout page (lounger check)
     // But for now, let's stick to what was here or improve it.
@@ -132,7 +128,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     // Actually, CartContext's getTotalCents seems to use SHIPPING_FLAT_CENTS constant.
     // Checkout page has more complex logic. 
     // Let's just subtract discount from the result.
-    return subtotal + (items.length > 0 ? SHIPPING_FLAT_CENTS : 0) - discount;
+      return subtotal + (items.length > 0 ? SHIPPING_FLAT_CENTS : 0);
   };
 
   return (

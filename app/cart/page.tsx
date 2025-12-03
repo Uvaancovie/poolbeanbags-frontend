@@ -139,14 +139,7 @@ export default function CartPage() {
                 </div>
               </div>
 
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4 text-sm text-yellow-800">
-                <p className="font-semibold">Black Friday Deal (Ends Dec 1st):</p>
-                <ul className="list-disc list-inside mt-1">
-                  <li>Buy 1: 5% OFF</li>
-                  <li>Buy 2: 10% OFF</li>
-                  <li>Buy 3+: 20% OFF</li>
-                </ul>
-              </div>
+              {/* Promotional info removed — pricing is back to normal */}
 
               <Button
                 onClick={handleCheckout}
