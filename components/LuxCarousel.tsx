@@ -37,7 +37,7 @@ const slides: Slide[] = [
     ctaLabel: 'View Collection',
   },
   {
-    src: '/lifestyle-9.jpg',
+    src: '/lifestyle-9.JPG',
     alt: 'Family relaxing on outdoor bean bags',
     title: 'Relaxed Living',
     blurb: 'Comfort that works from pool deck to patio.',
