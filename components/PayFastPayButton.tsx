@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { API_BASE } from "../lib/api";
 
 interface PayFastPayButtonProps {
   items: any[];
@@ -34,8 +35,7 @@ export default function PayFastPayButton({
       setLoading(true);
 
       // Call backend to create PayFast payment
-      const apiBase = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:4000";
-      const response = await fetch(`${apiBase}/api/payfast/create`, {
+      const response = await fetch(`${API_BASE}/api/payfast/create`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -61,7 +61,7 @@ export default function PayFastPayButton({
       const form = document.createElement("form");
       form.method = "POST";
       form.action = process.env.NEXT_PUBLIC_PAYFAST_PAYMENT_URL || 
-        "https://sandbox.payfast.co.za/eng/process";
+        "https://www.payfast.co.za/eng/process";
 
       Object.entries(data.post).forEach(([key, value]) => {
         const input = document.createElement("input");
