@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '../../components/CartContext';
-import OzowPayButton from '../../components/OzowPayButton';
+import PayFastPayButton from '../../components/PayFastPayButton';
 import { SHIPPING_FLAT_CENTS, SHIPPING_LOUNGER_CENTS, SHIPPING_PROVIDER } from '../../lib/pricing';
 
 export default function CheckoutPage() {
@@ -251,7 +251,16 @@ export default function CheckoutPage() {
 
               <div className="mt-6">
                 {canSubmit ? (
-                  <OzowPayButton payload={payload} />
+                  <PayFastPayButton
+                    items={payload.items}
+                    subtotal={payload.subtotal_cents}
+                    shipping={payload.shipping_cents}
+                    discount={payload.discount_cents}
+                    total={payload.total_cents}
+                    shippingInfo={payload.shipping}
+                    customer={payload.customer}
+                    onError={(error) => alert(error)}
+                  />
                 ) : (
                   <button
                     disabled
@@ -263,7 +272,7 @@ export default function CheckoutPage() {
               </div>
 
               <p className="text-xs text-[var(--fg-muted)] text-center mt-4">
-                Secure payment powered by Ozow
+                Secure payment powered by PayFast
               </p>
             </div>
           </div>
