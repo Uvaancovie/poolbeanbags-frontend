@@ -20,9 +20,7 @@ export default function EditProductPage({ params }: { params: Promise<{ slug: st
   const [price, setPrice] = useState('');
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [isPromotional, setIsPromotional] = useState(false);
-  const [promotionText, setPromotionText] = useState('');
-  const [promotionDiscountPercent, setPromotionDiscountPercent] = useState('');
+  // promotional fields have been removed from the edit form
 
   useEffect(() => {
     checkAuth();
@@ -64,15 +62,14 @@ export default function EditProductPage({ params }: { params: Promise<{ slug: st
 
   async function loadProduct() {
     const res = await fetch(`${API_BASE}/api/products/${encodeURIComponent(slug)}`);
-    const data = await res.json();
-    setProduct(data); // API returns product directly, not wrapped
+    const json = await res.json();
+    const data = json?.product || json || null; // unwrap product if backend returns { product: ... }
+    setProduct(data);
     if (data) {
       setTitle(data.title || '');
       setDescription(data.description || '');
-  setPrice((((data.base_price_cents || 0) / 100)).toFixed(2));
-      setIsPromotional(!!data.is_promotional);
-      setPromotionText(data.promotion_text || '');
-      setPromotionDiscountPercent(data.promotion_discount_percent ? String(data.promotion_discount_percent) : '');
+      setPrice((((data.base_price_cents || 0) / 100)).toFixed(2));
+      // no longer set promotional properties here
       if (data.images && data.images.length > 0) {
         setImagePreview(data.images[0].url);
       }
@@ -88,10 +85,7 @@ export default function EditProductPage({ params }: { params: Promise<{ slug: st
     const body = {
       title,
       description,
-      base_price_cents: Math.round((parseFloat(price || '0') || 0) * 100),
-      is_promotional: isPromotional,
-      promotion_text: promotionText || undefined,
-      promotion_discount_percent: promotionDiscountPercent ? Number(promotionDiscountPercent) : undefined
+      base_price_cents: Math.round((parseFloat(price || '0') || 0) * 100)
     };
 
     const res = await fetch(`${API_BASE}/api/admin/products/${product._id}`, {
@@ -150,49 +144,7 @@ export default function EditProductPage({ params }: { params: Promise<{ slug: st
   return (
     <div className="min-h-screen bg-gradient-to-br from-base-200 via-base-100 to-base-200 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-base-content mb-4">Edit Product</h1>
-          <p className="text-lg text-base-content/70 max-w-2xl mx-auto">Update your product details, pricing, and images to keep your storefront current.</p>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Current Product Preview */}
-          <div className="lg:col-span-1">
-            <Card className="p-6 shadow-xl border-0 bg-white/80 backdrop-blur-sm">
-              <h2 className="text-xl font-semibold text-base-content mb-4">Current Product</h2>
-              <div className="space-y-4">
-                <div className="relative h-48 bg-gradient-to-br from-base-200 to-base-300 rounded-lg overflow-hidden">
-                  {imagePreview ? (
-                    <img
-                      src={imagePreview}
-                      alt={product.title}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-4xl text-base-content/30">
-                      📷
-                    </div>
-                  )}
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold text-base-content">{product.title}</h3>
-                  <p className="text-base-content/70 text-sm mt-1">{product.description || 'No description'}</p>
-                  <p className="text-primary font-semibold text-lg mt-2">
-                    R{(((product.base_price_cents || 0) / 100)).toFixed(2)}
-                  </p>
-                </div>
-              </div>
-            </Card>
-          </div>
-
-          {/* Edit Form */}
-          <div className="lg:col-span-1">
-            <Card className="p-8 shadow-xl border-0 bg-white/80 backdrop-blur-sm">
-              <div className="mb-6">
-                <h2 className="text-2xl font-semibold text-base-content mb-2">Update Details</h2>
-                <p className="text-sm text-base-content/60">Make changes to your product information below.</p>
-              </div>
-
+                {/* promotional fields removed from edit form */}
               <form onSubmit={handleSave} className="space-y-6">
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-base-content">Product Title</label>
@@ -229,50 +181,7 @@ export default function EditProductPage({ params }: { params: Promise<{ slug: st
                   </div>
                 </div>
 
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-3">
-                    <input
-                      type="checkbox"
-                      id="isPromotional"
-                      checked={isPromotional}
-                      onChange={(e) => setIsPromotional(e.target.checked)}
-                      className="checkbox checkbox-primary"
-                    />
-                    <label htmlFor="isPromotional" className="text-sm font-medium text-base-content">
-                      Mark as Promotional
-                    </label>
-                  </div>
-
-                  {isPromotional && (
-                    <div className="space-y-3 pl-7 border-l-2 border-primary/20">
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium text-base-content">Promotion Text</label>
-                        <Input
-                          value={promotionText}
-                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPromotionText(e.target.value)}
-                          placeholder="e.g., Limited Time Offer!"
-                          className="w-full"
-                        />
-                      </div>
-
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium text-base-content">Discount Percentage</label>
-                        <div className="flex">
-                          <Input
-                            type="number"
-                            min="0"
-                            max="100"
-                            value={promotionDiscountPercent}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPromotionDiscountPercent(e.target.value)}
-                            placeholder="20"
-                            className="rounded-r-none border-r-0"
-                          />
-                          <span className="inline-flex items-center px-3 text-sm text-base-content bg-base-200 border border-l-0 border-base-300 rounded-r-md">%</span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
+                {/* promotional fields removed from edit form */}
 
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-base-content">Replace Image</label>
@@ -283,11 +192,23 @@ export default function EditProductPage({ params }: { params: Promise<{ slug: st
                       onChange={e => {
                         const f = e.target.files?.[0] || null;
                         setImageFile(f);
-                        if (f) setImagePreview(URL.createObjectURL(f));
+                        if (f) setImagePreview(URL.createObjectURL(f)); else setImagePreview(null);
                       }}
                       className="file-input file-input-bordered w-full file-input-primary"
                     />
                   </div>
+                  {imagePreview && (
+                    <div className="mt-4 relative group">
+                      <img
+                        src={imagePreview}
+                        alt="Product preview"
+                        className="w-full h-48 object-cover rounded-lg shadow-md transition-transform group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-black/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <span className="text-white text-sm font-medium">Preview</span>
+                      </div>
+                    </div>
+                  )}
                   <p className="text-xs text-base-content/50">Leave empty to keep the current image</p>
                 </div>
 
@@ -295,7 +216,7 @@ export default function EditProductPage({ params }: { params: Promise<{ slug: st
                   <Button
                     type="submit"
                     disabled={saving}
-                    className="flex-1 bg-primary hover:bg-primary-focus text-primary-content font-medium py-3 px-6 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl"
+                    className="flex-1 bg-primary hover:bg-primary-focus text-white font-medium py-3 px-6 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl"
                   >
                     {saving ? (
                       <>
@@ -314,9 +235,6 @@ export default function EditProductPage({ params }: { params: Promise<{ slug: st
                   </a>
                 </div>
               </form>
-            </Card>
-          </div>
-        </div>
       </div>
     </div>
   );

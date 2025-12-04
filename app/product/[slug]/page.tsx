@@ -67,6 +67,11 @@ export default async function ProductPage({
         </Link>
       </div>
 
+      {/* Fabric Selector - First thing on the page */}
+      <section className="mx-auto max-w-[1280px] px-4 py-10">
+        <FabricSelector />
+      </section>
+
       <section className="mx-auto max-w-[1280px] px-4 py-10 grid grid-cols-1 lg:grid-cols-2 gap-10">
         {/* Gallery */}
         <div className="space-y-4">
@@ -137,11 +142,6 @@ export default async function ProductPage({
             ))}
           </div>
         </div>
-      </section>
-
-      {/* Fabric Selector & Carousel */}
-      <section className="mx-auto max-w-[1280px] px-4 py-10 border-t border-[var(--border)]">
-        <FabricSelector />
       </section>
 
       {/* Long form details */}

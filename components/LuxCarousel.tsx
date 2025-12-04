@@ -9,6 +9,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel'
+import { Button } from '@/components/ui/Button'
 
 type Slide = {
   src: string
@@ -95,9 +96,9 @@ export default function LuxCarousel() {
                         </p>
                       )}
                       {s.ctaHref && s.ctaLabel && (
-                        <a href={s.ctaHref} className="btn-primary inline-flex mt-6">
-                          {s.ctaLabel}
-                        </a>
+                        <Button asChild className="mt-6">
+                          <a href={s.ctaHref}>{s.ctaLabel}</a>
+                        </Button>
                       )}
                     </div>
                   </motion.div>
