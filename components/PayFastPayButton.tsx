@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { API_BASE } from "../lib/api";
 
 interface PayFastPayButtonProps {
   items: any[];
@@ -34,8 +33,8 @@ export default function PayFastPayButton({
     try {
       setLoading(true);
 
-      // Call backend to create PayFast payment
-      const response = await fetch(`${API_BASE}/api/payfast/create`, {
+      // Use Next.js API route as proxy (more reliable than direct Render call)
+      const response = await fetch(`/api/checkout/payfast`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
