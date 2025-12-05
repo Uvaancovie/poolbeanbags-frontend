@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '../../components/CartContext';
 import PayFastPayButton from '../../components/PayFastPayButton';
-import { SHIPPING_FLAT_CENTS, SHIPPING_LOUNGER_CENTS, SHIPPING_PROVIDER } from '../../lib/pricing';
+import { SHIPPING_PROVIDER, calculateShipping } from '../../lib/pricing';
 
 export default function CheckoutPage() {
   const { items, getSubtotalCents, getTotalCents, clearCart } = useCart();
@@ -37,8 +37,7 @@ export default function CheckoutPage() {
 
   const subtotal_cents = items.reduce((t, i) => t + i.price * i.quantity, 0);
   const discount_cents = 0; // Discounts disabled — always 0
-  const hasLounger = items.some(item => item.title.toLowerCase().includes('lounger'));
-  const shipping_cents = deliveryType === 'pickup' ? 0 : (items.length ? (hasLounger ? SHIPPING_LOUNGER_CENTS : SHIPPING_FLAT_CENTS) : 0);
+  const shipping_cents = deliveryType === 'pickup' ? 0 : calculateShipping(items);
   const total_cents = subtotal_cents + shipping_cents;
 
   const formatPrice = (cents: number) => `R${(cents / 100).toFixed(2)}`;
@@ -135,7 +134,7 @@ export default function CheckoutPage() {
                     className="mt-1"
                   />
                   <div>
-                    <p className="font-medium text-[var(--fg)]">Delivery - {formatPrice(hasLounger ? SHIPPING_LOUNGER_CENTS : SHIPPING_FLAT_CENTS)}</p>
+                    <p className="font-medium text-[var(--fg)]">Delivery - {formatPrice(calculateShipping(items))}</p>
                     <p className="text-sm text-[var(--fg-muted)]">Nationwide delivery via {SHIPPING_PROVIDER}</p>
                   </div>
                 </label>

@@ -52,8 +52,8 @@ export default function ShopPage() {
 			
 			let res;
 			try {
-				// Try local proxy first for caching
-				res = await fetch(`/api/shop-products`, { cache: 'force-cache' });
+				// Use no-store to always get fresh data
+				res = await fetch(`/api/shop-products`, { cache: 'no-store' });
 				if (!res.ok) throw new Error(`Proxy error: ${res.status}`);
 			} catch (e) {
 				console.warn("Local proxy failed, falling back to direct API", e);

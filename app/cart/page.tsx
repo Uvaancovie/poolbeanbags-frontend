@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useCart } from '../../components/CartContext';
 import { Button } from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
-import { SHIPPING_FLAT_CENTS, SHIPPING_LOUNGER_CENTS, SHIPPING_PROVIDER } from '../../lib/pricing';
+import { SHIPPING_PROVIDER, calculateShipping } from '../../lib/pricing';
 
 export default function CartPage() {
   const { items, removeItem, updateQuantity, getTotal, clearCart, getSubtotalCents, getDiscountCents } = useCart();
@@ -19,8 +19,7 @@ export default function CartPage() {
 
   const subtotal = getSubtotalCents();
   const discount = getDiscountCents();
-  const hasLounger = items.some(item => item.title.toLowerCase().includes('lounger'));
-  const shipping = items.length > 0 ? (hasLounger ? SHIPPING_LOUNGER_CENTS : SHIPPING_FLAT_CENTS) : 0;
+  const shipping = items.length > 0 ? calculateShipping(items) : 0;
   const total = subtotal + shipping - discount;
 
   const handleCheckout = () => {
@@ -126,9 +125,26 @@ export default function CartPage() {
                     <span>-{formatPrice(discount)}</span>
                   </div>
                 )}
-                <div className="flex justify-between">
-                  <span>Shipping</span>
-                  <span>{formatPrice(shipping)}</span>
+                <div className="flex flex-col gap-1">
+                  <div className="flex justify-between">
+                    <span>Shipping</span>
+                    <span>{formatPrice(shipping)}</span>
+                  </div>
+                  {items.length > 0 && (
+                    <div className="text-xs text-[var(--fg-muted)] pl-2 space-y-0.5">
+                      {items.map((item, idx) => {
+                        const isLounger = item.title.toLowerCase().includes('lounger');
+                        const perItemRate = isLounger ? 100000 : 25000; // R1000 or R250
+                        const itemShipping = perItemRate * item.quantity;
+                        return (
+                          <div key={idx} className="flex justify-between">
+                            <span>{item.quantity}x {item.title.length > 25 ? item.title.slice(0, 25) + '...' : item.title}</span>
+                            <span>{formatPrice(itemShipping)}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
               </div>
 

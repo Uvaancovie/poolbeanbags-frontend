@@ -28,7 +28,7 @@ export default async function ProductPage({
   let product: Product | null = null
   try {
     const res = await fetch(`${API_BASE}/api/products/${encodeURIComponent(slug)}`, {
-      next: { revalidate: 120 }, // ISR
+      cache: 'no-store', // Always fetch fresh data
     })
     if (res.ok) {
       const data = await res.json()

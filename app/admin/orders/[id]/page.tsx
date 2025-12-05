@@ -33,17 +33,22 @@ interface Order {
     };
   }[];
   delivery: any;
+  provider?: string;
   shipping_address?: {
-    first_name: string;
-    last_name: string;
-    email: string;
-    phone: string;
-    address_line_1: string;
+    first_name?: string;
+    last_name?: string;
+    email?: string;
+    phone?: string;
+    address_line_1?: string;
+    address_1?: string;
+    address1?: string;
     address_line_2?: string;
-    city: string;
+    city?: string;
     state?: string;
-    postal_code: string;
-    country: string;
+    province?: string;
+    postal_code?: string;
+    postalCode?: string;
+    country?: string;
   };
   billing_address?: {
     first_name: string;
@@ -117,41 +122,75 @@ export default function AdminOrderDetailPage() {
       if (response.ok) {
         const data = await response.json();
         const order = data;
-        const customer = order.shipping_address ? {
-          name: `${order.shipping_address.first_name} ${order.shipping_address.last_name}`,
-          email: order.shipping_address.email,
-          phone: order.shipping_address.phone
-        } : order.billing_address ? {
-          name: `${order.billing_address.first_name} ${order.billing_address.last_name}`,
-          email: order.billing_address.email,
-          phone: order.billing_address.phone
-        } : null;
+        
+        // Handle customer info - works for both legacy and PayFast orders
+        let customer = null;
+        if (order.customer) {
+          // PayFast order or normalized customer object
+          customer = {
+            name: order.customer.name || `${order.customer.first_name || ''} ${order.customer.last_name || ''}`.trim(),
+            email: order.customer.email || order.customer.email_address,
+            phone: order.customer.phone || ''
+          };
+        } else if (order.shipping_address) {
+          customer = {
+            name: `${order.shipping_address.first_name || ''} ${order.shipping_address.last_name || ''}`.trim(),
+            email: order.shipping_address.email,
+            phone: order.shipping_address.phone
+          };
+        } else if (order.billing_address) {
+          customer = {
+            name: `${order.billing_address.first_name || ''} ${order.billing_address.last_name || ''}`.trim(),
+            email: order.billing_address.email,
+            phone: order.billing_address.phone
+          };
+        }
 
-        const mappedItems = order.items.map((item: any) => ({
-          id: item._id,
-          quantity: item.quantity,
-          price: item.unit_price_cents / 100,
-          fabric: item.fabric,
-          product: {
-            id: item.product_id._id,
-            name: item.product_id.name,
-            image: item.product_id.image,
-            slug: item.product_id.slug
+        // Handle items - works for both legacy and PayFast orders
+        const mappedItems = (order.items || []).map((item: any) => {
+          // PayFast order items have different structure
+          if (item.productId || item.title) {
+            return {
+              id: item.productId || item._id,
+              quantity: item.quantity || 1,
+              price: (item.price || 0) / 100,
+              fabric: item.fabric || '',
+              product: {
+                id: item.productId || '',
+                name: item.title || 'Unknown Product',
+                image: item.image || '',
+                slug: item.slug || ''
+              }
+            };
           }
-        }));
+          // Legacy order items with populated product_id
+          return {
+            id: item._id,
+            quantity: item.quantity,
+            price: (item.unit_price_cents || item.price || 0) / 100,
+            fabric: item.fabric || '',
+            product: {
+              id: item.product_id?._id || item.product_id || '',
+              name: item.product_id?.name || item.title || 'Unknown Product',
+              image: item.product_id?.image || item.image || '',
+              slug: item.product_id?.slug || item.slug || ''
+            }
+          };
+        });
 
         setOrder({
-          id: order._id,
-          orderNo: order.order_no,
+          id: order._id || order.id,
+          orderNo: order.order_no || order.orderNo,
           status: order.status,
-          paymentStatus: order.payment_status,
-          total: order.total_cents / 100,
-          createdAt: order.created_at,
+          paymentStatus: order.payment_status || order.paymentStatus,
+          total: (order.total_cents || order.total * 100 || 0) / 100,
+          createdAt: order.created_at || order.createdAt,
           customer,
           items: mappedItems,
           delivery: order.delivery,
           shipping_address: order.shipping_address,
-          billing_address: order.billing_address
+          billing_address: order.billing_address,
+          provider: order.provider
         });
       } else {
         router.push('/admin/orders');
