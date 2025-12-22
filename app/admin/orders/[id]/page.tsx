@@ -187,8 +187,18 @@ export default function AdminOrderDetailPage() {
           createdAt: order.created_at || order.createdAt,
           customer,
           items: mappedItems,
-          delivery: order.delivery,
-          shipping_address: order.shipping_address,
+          delivery: order.delivery || order.shipping,
+          shipping_address: order.shipping_address || (order.shipping ? {
+            first_name: order.customer?.first_name || order.customer?.name?.split(' ')[0] || '',
+            last_name: order.customer?.last_name || order.customer?.name?.split(' ').slice(1).join(' ') || '',
+            email: order.customer?.email_address || order.customer?.email || '',
+            phone: order.shipping.phone,
+            address_line_1: order.shipping.address1,
+            city: order.shipping.city,
+            state: order.shipping.province,
+            postal_code: order.shipping.postalCode,
+            country: 'South Africa'
+          } : undefined),
           billing_address: order.billing_address,
           provider: order.provider
         });
@@ -418,8 +428,8 @@ export default function AdminOrderDetailPage() {
             <Card className="p-6 shadow-lg border-0 bg-white/90 backdrop-blur-sm">
               <h2 className="text-xl font-semibold text-base-content mb-4">Ordered Products</h2>
               <div className="space-y-4">
-                {order.items.map((item) => (
-                  <div key={item.id} className="flex items-center gap-4 p-4 border border-base-300 rounded-lg">
+                {order.items.map((item, index) => (
+                  <div key={`${item.id}-${index}`} className="flex items-center gap-4 p-4 border border-base-300 rounded-lg">
                     <div className="w-16 h-16 relative rounded-lg overflow-hidden bg-base-200">
                       <Image
                         src={item.product.image || '/placeholder-product.jpg'}
@@ -442,6 +452,77 @@ export default function AdminOrderDetailPage() {
 
           {/* Customer & Addresses */}
           <div className="space-y-6">
+            {/* Delivery / Pickup Info */}
+            {order.delivery && (
+              <Card className={`p-6 shadow-lg border-0 backdrop-blur-sm ${
+                (order.delivery.delivery_method === 'pickup' || order.delivery.type === 'pickup') ? 'bg-blue-50/90' : 'bg-white/90'
+              }`}>
+                <h2 className="text-xl font-semibold text-base-content mb-4 flex items-center gap-2">
+                  {(order.delivery.delivery_method === 'pickup' || order.delivery.type === 'pickup') ? (
+                    <>
+                      <span>🏪</span> Pickup Information
+                    </>
+                  ) : (
+                    <>
+                      <span>🚚</span> Delivery Information
+                    </>
+                  )}
+                </h2>
+                
+                {(order.delivery.delivery_method === 'pickup' || order.delivery.type === 'pickup') ? (
+                  <div className="space-y-2">
+                    <div className="alert alert-info text-sm">
+                      Customer will pick up this order.
+                    </div>
+                    {order.delivery.pickup_date && (
+                      <p><strong>Pickup Date:</strong> {new Date(order.delivery.pickup_date).toLocaleDateString()}</p>
+                    )}
+                    {order.delivery.pickup_time && (
+                      <p><strong>Pickup Time:</strong> {order.delivery.pickup_time}</p>
+                    )}
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    <div>
+                      <p className="text-sm font-semibold text-base-content/70">Status</p>
+                      <p>{order.delivery.delivery_status || 'Pending'}</p>
+                    </div>
+                    
+                    {order.delivery.tracking_number && (
+                      <div>
+                        <p className="text-sm font-semibold text-base-content/70">Tracking Number</p>
+                        <p className="font-mono bg-base-100 px-2 py-1 rounded inline-block">
+                          {order.delivery.tracking_number}
+                        </p>
+                      </div>
+                    )}
+
+                    {(order.delivery.address1 || order.delivery.address_line_1 || order.delivery.city || order.delivery.province || order.delivery.postalCode) && (
+                      <div className="pt-3 border-t border-base-200">
+                        <p className="text-sm font-semibold text-base-content/70 mb-1">Shipping Address</p>
+                        <div className="text-sm">
+                          <p>{order.delivery.address1 || order.delivery.address_line_1}</p>
+                          {(order.delivery.address2 || order.delivery.address_line_2) && (
+                            <p>{order.delivery.address2 || order.delivery.address_line_2}</p>
+                          )}
+                          <p>
+                            {[
+                              order.delivery.city,
+                              order.delivery.province || order.delivery.state,
+                              order.delivery.postalCode || order.delivery.postal_code
+                            ].filter(Boolean).join(', ')}
+                          </p>
+                          {order.delivery.phone && (
+                            <p className="mt-1">📞 {order.delivery.phone}</p>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </Card>
+            )}
+
             {/* Customer Info */}
             <Card className="p-6 shadow-lg border-0 bg-white/90 backdrop-blur-sm">
               <h2 className="text-xl font-semibold text-base-content mb-4">Customer Information</h2>
