@@ -25,7 +25,7 @@ export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
 
-  
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -187,7 +187,7 @@ export default function ContactPage() {
               <div className="space-y-6">
                 <div>
                   <h3 className="font-light text-[var(--fg)]">Email</h3>
-                  <p className="text-[var(--fg-muted)]">info@poolbeanbags.co.za</p>
+                  <p className="text-[var(--fg-muted)]">orders@poolbeanbags.co.za</p>
                 </div>
 
                 <div>
